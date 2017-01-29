@@ -10,6 +10,6 @@ $(document).ready(function() {
     }).then(function(data) {
        $('.user-id').append(data.id);
        $('.user-firstname').append(data.firstname);
-       $('.user-lastname').append(data.lastname);
+       $('.user-lastname').append();
     });
 });
