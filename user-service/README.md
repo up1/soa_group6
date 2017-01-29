@@ -6,3 +6,5 @@ $java -jar ./target/user-service.jar
 ```
 
 And go to URL http://localhost:9001/user
+
+You need to create your database
