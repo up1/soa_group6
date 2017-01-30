@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,23 +29,41 @@ public class UserRepository {
     }
 
     @Transactional(readOnly = true)
-    public List<User> findAllLimit(Long limit) {
+    public List<User> findAllLimit(int page, int limit) {
 //        int intID = Integer.parseInt(id.toString());
 //        List<User> cus = new ArrayList<User>();
 //        List<Map> rows = this.jdbcTemplate.queryForList("SELECT * FROM users WHERE id>0");
 //        List<User> rows = this.jdbcTemplate.queryForList("SELECT * FROM users WHERE LIMIT ?",new Object[]{limit}, (Class<User>) new User().getClass());
 
+        int countRow;
+//        countRow = this.jdbcTemplate.query("SELECT * FROM users", ResultSet::);
+//        System.out.println(countRow+"xxxxxxxxx");
+
         List<User> rows;
 
-        rows = this.jdbcTemplate.query("SELECT * FROM users LIMIT ?", new Object[]{limit},  new UserRowMapper());
+
+
+        rows = this.jdbcTemplate.query("SELECT * FROM users LIMIT ?, ?", new Object[]{(page-1)*limit, limit},  new UserRowMapper());
 //        List<User> rows = this.jdbcTemplate.queryForList("SELECT * FROM users LIMIT ?", new BeanPropertyRowMapper(User.class));
+
+        countRow = rows.size();
 
         try {
             return rows;
 //            return this.jdbcTemplate.queryForList("SELECT * FROM users WHERE id>?", new Object[]{limit}, new UserRowMapper());
         }catch (Exception exception) {
-            throw new UserNotFoundException(limit);
+            throw new UserNotFoundException((long)limit);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public int getPageAll(int limit){
+        List<User> rows;
+
+        rows = this.jdbcTemplate.query("SELECT * FROM users", new Object[]{},  new UserRowMapper());
+
+        return (int) Math.ceil((double) rows.size()/limit);
+//        return rows.size()/limit;
     }
 
     @Transactional

@@ -6,7 +6,7 @@
 
 $(document).ready(function() {
     $.ajax({
-        url: "http://192.168.1.6:9001/user"
+        url: "http://10.0.102.218:9001/user?id=2"
     }).then(function(data) {
        $('.user-id').append(data.id);
        $('.user-firstname').append(data.firstname);
