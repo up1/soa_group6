@@ -9,7 +9,11 @@ Perform a find user information with id `1`.
 ===
 
 * `Status: 200`
-* `Content-Type: "application/json;charset=UTF-8"`
+* `Content-Type: "application/json;charset=utf8"`
  ```
-{"id":555,"firstname":"555","lastname":"555"}
+{
+	"id":555,
+	"firstname":"555",
+	"lastname":"555"
+}
  ```
