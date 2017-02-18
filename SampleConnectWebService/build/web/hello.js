@@ -6,7 +6,7 @@
 
 $(document).ready(function() {
     $.ajax({
-        url: "http://10.0.102.218:9001/user?id=2"
+        url: "http://localhost:9001/user?id=2"
     }).then(function(data) {
        $('.user-id').append(data.id);
        $('.user-firstname').append(data.firstname);

@@ -29,6 +29,9 @@
             <button id="posButton" >>></button>
             
         </div>
+        <div>
+            <a id="post_text">abcc</a>
+        </div>
         
         <script src="showUser.js"></script>
 

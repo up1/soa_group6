@@ -19,7 +19,7 @@ function arrayToTable(tableData) {
 function getAllPage(item_per_page){
     $.ajax({
         type: "GET",
-        url: "http://10.0.102.218:9001/getPageAll?item_per_page="+item_per_page,
+        url: "http://localhost:9001/getPageAll?item_per_page="+item_per_page,
         dataType: 'json',
         success: function (data) {
             $('#posText').text(data);
@@ -37,7 +37,7 @@ function showUser(){
     
     $.ajax({
         type: "GET",
-        url: "http://10.0.102.218:9001/user2?item_per_page=" + $("#inputnum").val()+"&page="+$("#preText").text(),
+        url: "http://localhost:9001/user2?item_per_page=" + $("#inputnum").val()+"&page="+$("#preText").text(),
         dataType: 'json',
         success: function (data) {
 
@@ -50,8 +50,10 @@ function showUser(){
 
         }
     });
+    
 }
 showUser();
+getAllPage($("#inputnum").val());
 
 //OnValueChange
 $("#inputnum").change('change keydown paste input', function () {
@@ -77,3 +79,26 @@ $("#posButton").click(function (){
     showUser();
 });
 
+var search = {
+      "item_per_page" : "10"
+   }
+
+$.ajax({
+    
+        type: "POST",
+        url: "http://localhost:9001/sss",
+        contentType: "application/json",
+        data:JSON.stringify(search),
+        dataType: 'json',
+        
+        success: function (data) {
+
+            console.log("hhh");
+            $('#post_text').text("POST->"+data.item_per_page);
+
+
+        },
+        error: function (e){
+            console.log("error"+e);
+        }
+    });
