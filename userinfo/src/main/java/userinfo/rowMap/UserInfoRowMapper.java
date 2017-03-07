@@ -15,7 +15,6 @@ public class UserInfoRowMapper implements RowMapper<UserInfo> {
     public UserInfo mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
         UserInfo userInfo = new UserInfo();
 
-        System.out.println(""+resultSet.getString("user_id"));
         userInfo.setUser_id(resultSet.getInt("user_id"));
         userInfo.setUser_username(resultSet.getString("user_username"));
         userInfo.setUser_firstname_th(resultSet.getString("user_fname_th"));

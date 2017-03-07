@@ -1,14 +1,15 @@
 package userinfo.userInfo;
 
+/**
+ * Created by jongzazaal on 6/3/2560.
+ */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import userinfo.rowMap.UserInfoRowMapper;
 
-/**
- * Created by jongzazaal on 6/3/2560.
- */
+
 @Repository
 public class UserInfoRepository {
     @Autowired
