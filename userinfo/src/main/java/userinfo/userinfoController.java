@@ -28,9 +28,7 @@ public class UserinfoController {
 
     @GetMapping("/userinfo")
     public UserInfo getUserInfo(@RequestParam(value="userid", defaultValue="1") int userid) {
-
         return userInfoRepository.getUserInfoByID(userid);
-
     }
 
     @PostMapping("/userinfo")
@@ -43,7 +41,7 @@ public class UserinfoController {
         userInfoRepository.deleteUserInfoByID(userInfo);
     }
 
-    @PutMapping("userinfo")
+    @PutMapping("/userinfo")
     public @ResponseBody void putUserInfo(@RequestBody UserInfo userInfo){
         userInfoRepository.putUserInfoByID(userInfo);
     }
