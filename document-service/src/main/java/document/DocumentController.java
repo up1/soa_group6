@@ -1,7 +1,5 @@
-package authentication;
+package document;
 
-import authentication.auth.UserPass.UserPassResult;
-import authentication.auth.whoIsUser.WhoIsUserResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,21 +7,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Created by jongzazaal on 6/3/2560.
+ * Created by jongzazaal on 18/3/2560.
  */
+
 @CrossOrigin
 @Controller
 @RestController
-public class AuthenticationController {
+public class DocumentController {
 
-    private final AuthRepository authRepository;
+
+    private final DocumentRepository documentRepository;
 
     @Autowired
-    public AuthenticationController(AuthRepository authRepository){
-        this.authRepository = authRepository;
+    public DocumentController(DocumentRepository documentRepository){
+        this.documentRepository = documentRepository;
     }
 
-    @PostMapping("/authentication")
+    @GetMapping("/document")
     public @ResponseBody ResponseEntity<WhoIsUserResult> postUserInfo(@RequestBody UserPassResult userPass){
 
         if(authRepository.isUser(userPass)){

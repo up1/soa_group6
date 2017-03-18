@@ -1,4 +1,4 @@
-package authentication.auth;
+package authentication;
 
 import authentication.auth.UserPass.AuthRowMapper;
 import authentication.auth.UserPass.UserPassResult;
