@@ -7,7 +7,6 @@ public class DocumentResult {
 
     private int doc_id, user_id;
     private String doc_title, doc_desc, revision_date, doc_tag, user_fname, user_lname;
-//    private List<Integer> doc_sharewith = new ArrayList<Integer>();
 
 
     public DocumentResult() {
