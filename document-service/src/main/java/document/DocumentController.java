@@ -1,5 +1,6 @@
 package document;
 
+import com.google.gson.Gson;
 import document.docu.PostDocument.PostDocResource;
 import document.docu.PostDocument.PostDocStatus;
 import document.docu.documentResult.DocumentResult;
@@ -104,11 +105,16 @@ public class DocumentController {
 
     @PostMapping("/")
     public String handleFileUpload(@RequestParam("file") MultipartFile[] mfile,
-                                   RedirectAttributes redirectAttributes) {
+                                   RedirectAttributes redirectAttributes, @RequestParam("info") String s){
 
+
+//        JSONObject jsonObj = new JSONObject(s);
+//        Gson gsonObj = new Gson();
+        PostDocResource ps = new Gson().fromJson(s, PostDocResource.class);
+        System.out.println(ps.getDoc_title());
         for(MultipartFile file:mfile) {
 
-            storageService.store(file);
+              storageService.store(file);
 //            redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
         }
         return "redirect:/";

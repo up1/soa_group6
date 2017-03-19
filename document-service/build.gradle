@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
@@ -35,5 +36,9 @@ dependencies {
 // https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2
     compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.1.1'
     compile 'mysql:mysql-connector-java:5.1.40'
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+//    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
+    compile 'com.google.code.gson:gson:2.8.0'
 
 }
