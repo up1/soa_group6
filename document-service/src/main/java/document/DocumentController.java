@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,19 +41,19 @@ public class DocumentController {
     private final StorageService storageService;
 
     @Autowired
-    public DocumentController(DocumentRepository documentRepository, StorageService storageService){
+    public DocumentController(DocumentRepository documentRepository, StorageService storageService) {
         this.documentRepository = documentRepository;
         this.storageService = storageService;
     }
 
 
-
-
     @GetMapping("/document")
-    public @ResponseBody ResponseEntity<List<DocumentResult>> getAllDocument(
-            @RequestParam(value="user_id", defaultValue="0") String user_id){
+    public
+    @ResponseBody
+    ResponseEntity<List<DocumentResult>> getAllDocument(
+            @RequestParam(value = "user_id", defaultValue = "0") String user_id) {
 
-        if(documentRepository.isUser(user_id)){
+        if (documentRepository.isUser(user_id)) {
             return new ResponseEntity<>(documentRepository.allDocumentById(Integer.parseInt(user_id)), HttpStatus.FOUND);
         }
 
@@ -59,19 +61,35 @@ public class DocumentController {
     }
 
     @PostMapping("/document")
-    public @ResponseBody ResponseEntity<PostDocStatus> postUserInfo(@RequestBody PostDocResource postDocResource){
+    public
+    @ResponseBody
+    ResponseEntity<PostDocStatus> postUserInfo(@RequestParam("file") MultipartFile[] mfile,
+                                               RedirectAttributes redirectAttributes,
+                                               @RequestParam("info") String s) throws IOException {
 
-                PostDocStatus ps = documentRepository.createDoc(postDocResource);
-                if(ps.isResponse()){
-                    return new ResponseEntity<PostDocStatus>(ps, HttpStatus.FOUND);
-                }
+        //upload File
+        List<String> linkload = new ArrayList<>();
+        for (MultipartFile file : mfile) {
+            //rename file
+            int lastIndex = file.getOriginalFilename().lastIndexOf('.');
+            String oriFilename = UUID.randomUUID().toString() + file.getOriginalFilename().substring(lastIndex, file.getOriginalFilename().length());
+            MultipartFile xFile = new MockMultipartFile(file.getOriginalFilename(), oriFilename, file.getContentType(), file.getBytes());
+            //upload file
+            storageService.store(xFile);
+            linkload.add(oriFilename);
+        }
+
+        System.out.println(storageService.loadAll());
+
+        //string json to POJO
+        PostDocResource postDocResource = new Gson().fromJson(s, PostDocResource.class);
+
+        //createDoc
+        PostDocStatus ps = documentRepository.createDoc(postDocResource, linkload);
+        if (ps.isResponse()) {
+            return new ResponseEntity<PostDocStatus>(ps, HttpStatus.FOUND);
+        }
         return new ResponseEntity<PostDocStatus>(ps, HttpStatus.NO_CONTENT);
-//        if(authRepository.isUser(userPass)){
-//            WhoIsUserResult whoIsUserResult =  authRepository.whoIsUser(userPass.getUser_username(),
-//                    userPass.getUser_password());
-//            return new ResponseEntity<>(whoIsUserResult, HttpStatus.FOUND);
-//        }
-//        return new ResponseEntity<>(new WhoIsUserResult(), HttpStatus.NO_CONTENT);
     }
 
 
@@ -99,22 +117,23 @@ public class DocumentController {
         Resource file = storageService.loadAsResource(filename);
         return ResponseEntity
                 .ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+file.getFilename()+"\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
 
     @PostMapping("/")
     public String handleFileUpload(@RequestParam("file") MultipartFile[] mfile,
-                                   RedirectAttributes redirectAttributes, @RequestParam("info") String s){
+                                   RedirectAttributes redirectAttributes, @RequestParam("info") String s) throws IOException {
 
 
-//        JSONObject jsonObj = new JSONObject(s);
-//        Gson gsonObj = new Gson();
         PostDocResource ps = new Gson().fromJson(s, PostDocResource.class);
         System.out.println(ps.getDoc_title());
-        for(MultipartFile file:mfile) {
+        for (MultipartFile file : mfile) {
 
-              storageService.store(file);
+            System.out.println(file.getOriginalFilename().lastIndexOf('.'));
+            int lastIndex = file.getOriginalFilename().lastIndexOf('.');
+            MultipartFile xFile = new MockMultipartFile("name", UUID.randomUUID().toString() + file.getOriginalFilename().substring(lastIndex, file.getOriginalFilename().length()), file.getContentType(), file.getBytes());
+            storageService.store(xFile);
 //            redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
         }
         return "redirect:/";
@@ -125,6 +144,13 @@ public class DocumentController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping("/t")
+    public
+    @ResponseBody
+    ResponseEntity<PostDocStatus> Testre(@RequestBody PostDocResource postDocResource) {
 
+
+        return new ResponseEntity<PostDocStatus>(documentRepository.intt(postDocResource), HttpStatus.FOUND);
+    }
 
 }
