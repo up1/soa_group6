@@ -1,6 +1,8 @@
 package document;
 
 import com.google.gson.Gson;
+import document.docu.DeleteDocById.DeleteDocStatus;
+import document.docu.GetDocById.GetDocByIdResource;
 import document.docu.PostDocument.PostDocResource;
 import document.docu.PostDocument.PostDocStatus;
 import document.docu.documentResult.DocumentResult;
@@ -91,6 +93,39 @@ public class DocumentController {
         }
         return new ResponseEntity<PostDocStatus>(ps, HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/document/{doc_id}")
+    public ResponseEntity<GetDocByIdResource> getDocInfoByid(@PathVariable(value="doc_id") String id){
+
+
+        List<GetDocByIdResource> getDocByIdResource = documentRepository.getDocById(Integer.parseInt(id));
+
+        if(getDocByIdResource.size()>0){
+            return new ResponseEntity<GetDocByIdResource>(getDocByIdResource.get(0), HttpStatus.FOUND);
+        }
+        else{
+            return new ResponseEntity<GetDocByIdResource>(new GetDocByIdResource(), HttpStatus.NO_CONTENT);
+        }
+
+
+    }
+
+    @DeleteMapping("/document/{doc_id}")
+    public ResponseEntity<DeleteDocStatus> deleteDocInfoByid(@PathVariable(value="doc_id") String id){
+
+
+        DeleteDocStatus deleteDocStatus = documentRepository.deleteUserInfoByID(Integer.parseInt(id));
+
+        if(deleteDocStatus.isResponse()){
+            return new ResponseEntity<DeleteDocStatus>(deleteDocStatus, HttpStatus.FOUND);
+        }
+        else{
+            return new ResponseEntity<DeleteDocStatus>(deleteDocStatus, HttpStatus.NO_CONTENT);
+        }
+
+
+    }
+
 
 
     @GetMapping("/")

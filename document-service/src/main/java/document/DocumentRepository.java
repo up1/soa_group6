@@ -1,5 +1,8 @@
 package document;
 
+import document.docu.DeleteDocById.DeleteDocStatus;
+import document.docu.GetDocById.GetDocByIdResource;
+import document.docu.GetDocById.GetDocByIdRowMapper;
 import document.docu.PostDocument.PostDocResource;
 import document.docu.PostDocument.PostDocStatus;
 import document.docu.UserPass.UserPassResult;
@@ -13,10 +16,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -115,12 +115,6 @@ public class DocumentRepository {
         }
     }
 
-    public File multipartFileToFile(MultipartFile multipartFile) throws IllegalStateException, IOException {
-        File convFile = new File(multipartFile.getOriginalFilename());
-        multipartFile.transferTo(convFile);
-        return convFile;
-    }
-
 
     @Transactional(readOnly = false)
     public PostDocStatus intt(PostDocResource postDocResource) {
@@ -144,12 +138,38 @@ public class DocumentRepository {
                 },
                 keyHolder);
 
-        System.out.println("2//" + keyHolder.getKeyList());
-//        return new PostDocStatus(true, "sucess//"+keyHolder.getKey());
-
-        System.out.println("3");
         return new PostDocStatus(true, "sucess");
     }
 
+    @Transactional(readOnly = true)
+    public List<GetDocByIdResource> getDocById (int doc_id) {
 
+
+        List<GetDocByIdResource> list = jdbcTemplate.query("SELECT d.doc_id, d.doc_title, d.doc_desc, d.user_id, " +
+                        "d.doc_date, d.doc_tag, GROUP_CONCAT(s.shares_id SEPARATOR ', ') AS 'shares_id', " +
+                        "GROUP_CONCAT(dep.dep_name SEPARATOR ', ') AS 'dep_name'\n" +
+                        "FROM docs d\n" +
+                        "JOIN shares s\n" +
+                        "ON (d.doc_id = s.doc_id)\n" +
+                        "JOIN dep dep\n" +
+                        "ON(s.shares_id = dep.dep_id)\n" +
+                        "WHERE d.doc_id = ?\n" +
+                        "GROUP BY d.doc_id"
+                , new Object[]{doc_id}, new GetDocByIdRowMapper());
+        return list;
+    }
+
+    @Transactional(readOnly = false)
+    public DeleteDocStatus deleteUserInfoByID(int doc_id){
+        try {
+            this.jdbcTemplate.update("DELETE FROM docs WHERE doc_id = ?", new Object[]{doc_id});
+            return new DeleteDocStatus(true, "sucess");
+        }
+        catch (Exception e){
+            return new DeleteDocStatus(false, "error");
+        }
+
+
+
+    }
 }
