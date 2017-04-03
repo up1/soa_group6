@@ -5,6 +5,8 @@ import document.docu.DeleteDocById.DeleteDocStatus;
 import document.docu.GetDocById.GetDocByIdResource;
 import document.docu.PostDocument.PostDocResource;
 import document.docu.PostDocument.PostDocStatus;
+import document.docu.PutDocById.PutDocResult;
+import document.docu.PutDocById.PutDocStatus;
 import document.docu.documentResult.DocumentResult;
 import document.uploadfile.StorageFileNotFoundException;
 import document.uploadfile.StorageService;
@@ -123,6 +125,19 @@ public class DocumentController {
             return new ResponseEntity<DeleteDocStatus>(deleteDocStatus, HttpStatus.NO_CONTENT);
         }
 
+
+    }
+
+    @PutMapping("/document")
+    public ResponseEntity<PutDocStatus> putDocInfoByid(@RequestBody PutDocResult putDocResult){
+
+        PutDocStatus putDocStatus = documentRepository.putUserInfoByID(putDocResult);
+        if (putDocStatus.isResponse()){
+            return new ResponseEntity<PutDocStatus>(putDocStatus, HttpStatus.FOUND);
+        }
+        else {
+            return new ResponseEntity<PutDocStatus>(putDocStatus, HttpStatus.NO_CONTENT);
+        }
 
     }
 

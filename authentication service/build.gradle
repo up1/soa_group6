@@ -35,5 +35,7 @@ dependencies {
 // https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2
     compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.1.1'
     compile 'mysql:mysql-connector-java:5.1.40'
+    compile 'io.jsonwebtoken:jjwt:0.7.0'
+    compile 'com.google.code.gson:gson:2.8.0'
 
 }
