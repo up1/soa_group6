@@ -30,10 +30,10 @@
         <tr>
           <th><input type="checkbox" v-model="selectAll"></th>
           <th>Tag</th>
-          <th @click="sortBy('docId')">Document ID</th>
-          <th @click="sortBy('docName')">Document name</th>
-          <th @click="sortBy('lastUpdated')">Last updated</th>
-          <th @click="sortBy('owner')">Owner</th>
+          <th>Document ID</th>
+          <th>Document name</th>
+          <th>Last updated</th>
+          <th>Owner</th>
         </tr>
       </thead>
       <tbody>

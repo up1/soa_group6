@@ -11,12 +11,21 @@
                   <h2 class="subtitle is-marginless">A document management system</h2>
                 </div>
               </div>
-              <error-message v-if="error" :message="errorMessage" @close="showErrorMessage = false" />
+              <!-- <error-message v-if="error" :message="errorMessage" @close="showErrorMessage = false" /> -->
+              <div class="columns" v-if="error">
+                <div class="column">
+                  <article class="message is-danger">
+                    <div class="message-body">
+                      {{ errorMessage }}
+                    </div>
+                  </article>
+                </div>
+              </div>
               <div class="columns">
                 <div class="column">
                   <div class="field">
                     <p class="control has-icon">
-                      <input class="input" type="email" placeholder="Username" v-model="username">
+                      <input :class="['input', {'is-danger': error}]" type="email" placeholder="Username" v-model="credentials.username">
                       <span class="icon is-small">
                         <i class="fa fa-user"></i>
                       </span>
@@ -24,18 +33,10 @@
                   </div>
                   <div class="field">
                     <p class="control has-icon">
-                      <input class="input" type="password" placeholder="Password" v-model="password" @keyup.enter="login">
+                      <input :class="['input', {'is-danger': error}]" type="password" placeholder="Password" v-model="credentials.password" @keyup.enter="login">
                       <span class="icon is-small">
                         <i class="fa fa-lock"></i>
                       </span>
-                    </p>
-                  </div>
-                  <div class="field">
-                    <p class="control" style="text-align: center">
-                      <label class="checkbox">
-                        <input type="checkbox" v-model="remember">
-                        Remember me
-                      </label>
                     </p>
                   </div>
                   <div class="field">
@@ -56,57 +57,31 @@
 </template>
 
 <script>
-import Vue from 'vue'
-
-const errorMessage = Vue.extend({
-  template: `
-    <div class="columns">
-      <div class="column">
-        <div class="notification is-danger">
-          <button class="delete" @click="close"></button>
-          {{ message }}
-        </div>
-      </div>
-    </div>
-  `,
-  props: ['message'],
-  methods: {
-    close () {
-      this.$emit('close')
-    }
-  }
-})
-
-const ErrorMessageComponent = Vue.component('error-message', errorMessage)
-
 export default {
   name: 'login',
-  components: {
-    ErrorMessageComponent
-  },
   data () {
     return {
-      username: '',
-      password: '',
-      remember: false,
+      credentials: {
+        username: '',
+        password: ''
+      },
       correctCredentials: false,
-      errorMessage: 'Incorrect username or password',
-      showErrorMessage: true
+      errorMessage: ''
     }
   },
   computed: {
     error () {
-      return this.$route.query.error === null && this.showErrorMessage
+      return this.errorMessage && this.$route.query.error === null
     }
   },
   methods: {
     login () {
-      this.correctCredentials = this.username === 'test' && this.password === 'test'
+      this.correctCredentials = this.credentials.username === 'test' && this.credentials.password === 'test'
 
       if (this.correctCredentials) {
         this.$router.push('/')
       } else {
-        this.showErrorMessage = true
+        this.errorMessage = 'Incorrect username or password'
         this.$router.push({ name: 'login', query: { error: null } })
       }
     }
