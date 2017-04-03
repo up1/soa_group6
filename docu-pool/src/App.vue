@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <navbar v-show="$route.path !== '/login'" />
+    <navbar v-if="exception" />
     <router-view></router-view>
   </div>
 </template>
@@ -10,7 +10,13 @@ import Navbar from '@/components/Navbar'
 
 export default {
   name: 'app',
-  components: { Navbar }
+  components: { Navbar },
+  computed: {
+    exception () {
+      const routeNames = ['notFound', 'login']
+      return !routeNames.includes(this.$router.matcher.match(this.$route.path).name)
+    }
+  }
 }
 </script>
 

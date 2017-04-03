@@ -9,8 +9,7 @@
         </div>
 
         <div class="column">
-          <recent v-if="$store.state.currentMenu === 'recent'" />
-          <accounts v-if="$store.state.currentMenu === 'accounts'" />
+          <component :is="$store.state.currentMenu" />
         </div>
       </div>
     </div>

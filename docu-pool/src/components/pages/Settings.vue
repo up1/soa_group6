@@ -52,7 +52,7 @@
           </div>
           <div class="field is-grouped">
             <p class="control">
-              <button class="button is-success">Save</button>
+              <button class="button is-success" @click="save">Save</button>
             </p>
             <p class="control">
               <button class="button" @click="cancel">Cancel</button>
@@ -69,6 +69,9 @@ export default {
   name: 'settings',
   methods: {
     cancel () {
+      this.$router.replace('/')
+    },
+    save () {
       this.$router.replace('/')
     }
   }

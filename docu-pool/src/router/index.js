@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Dashboard from '@/components/pages/Dashboard'
 import Login from '@/components/pages/Login'
 import Settings from '@/components/pages/Settings'
+import NotFound from '@/components/pages/NotFound'
 import 'bulma/css/bulma.css'
 
 Vue.use(Router)
@@ -24,6 +25,11 @@ export default new Router({
       path: '/settings',
       name: 'settings',
       component: Settings
+    },
+    {
+      path: '*',
+      name: 'notFound',
+      component: NotFound
     }
   ]
 })

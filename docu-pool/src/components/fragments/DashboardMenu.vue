@@ -2,7 +2,7 @@
   <aside class="menu">
     <ul class="menu-list">
       <li>
-        <a :class="{'is-active': isActive('recent')}" @click="setCurrentMenu('recent')">
+        <a :class="{'is-active': isActive('recent')}" @click="setActive('recent')">
           <span class="icon">
             <i class="fa fa-clock-o"></i>
           </span>
@@ -13,7 +13,7 @@
         </a>
       </li>
       <li>
-        <a :class="{'is-active': isActive('departmentInbox')}" @click="setCurrentMenu('departmentInbox')">
+        <a :class="{'is-active': isActive('departmentInbox')}" @click="setActive('departmentInbox')">
           <span class="icon">
             <i class="fa fa-inbox"></i>
           </span>
@@ -24,7 +24,7 @@
         </a>
       </li>
       <li>
-        <a :class="{'is-active': isActive('departmentsPool')}" @click="setCurrentMenu('departmentsPool')">
+        <a :class="{'is-active': isActive('departmentsPool')}" @click="setActive('departmentsPool')">
           <span class="icon">
             <i class="fa fa-folder"></i>
           </span>
@@ -32,7 +32,7 @@
         </a>
       </li>
       <li>
-        <a :class="{'is-active': isActive('myPendingDocuments')}" @click="setCurrentMenu('myPendingDocuments')">
+        <a :class="{'is-active': isActive('myPendingDocuments')}" @click="setActive('myPendingDocuments')">
           <span class="icon">
             <i class="fa fa-hourglass"></i>
           </span>
@@ -46,7 +46,7 @@
       </p>
       <ul class="menu-list">
         <li>
-          <a :class="{'is-active': isActive('allDocumentsInCompany')}" @click="setCurrentMenu('allDocumentsInCompany')">
+          <a :class="{'is-active': isActive('allDocumentsInCompany')}" @click="setActive('allDocumentsInCompany')">
             <span class="icon">
               <i class="fa fa-globe"></i>
             </span>
@@ -54,7 +54,7 @@
           </a>
         </li>
         <li>
-          <a :class="{'is-active': isActive('accounts')}" @click="setCurrentMenu('accounts')">
+          <a :class="{'is-active': isActive('accounts')}" @click="setActive('accounts')">
             <span class="icon">
               <i class="fa fa-users"></i>
             </span>
@@ -70,7 +70,7 @@
 export default {
   name: 'dashboardMenu',
   methods: {
-    setCurrentMenu (menu) {
+    setActive (menu) {
       this.$store.state.currentMenu = menu
     },
     isActive (menu) {

@@ -6,7 +6,7 @@
         <div class="level-item">
           <div class="field is-grouped">
             <p class="control">
-              <a class="button is-danger is-disabled">
+              <a class="button is-danger" :class="{'is-disabled': selectedDocuments.length <= 0}" @click="deleteDocument">
                 <span class="icon">
                   <i class="fa fa-trash"></i>
                 </span>
@@ -28,33 +28,33 @@
     <table class="table">
       <thead>
         <tr>
-          <th><input type="checkbox"></th>
+          <th><input type="checkbox" v-model="selectAll"></th>
           <th>Tag</th>
-          <th>Document ID</th>
-          <th>Document name</th>
-          <th>Last updated</th>
-          <th>Owner</th>
+          <th @click="sortBy('docId')">Document ID</th>
+          <th @click="sortBy('docName')">Document name</th>
+          <th @click="sortBy('lastUpdated')">Last updated</th>
+          <th @click="sortBy('owner')">Owner</th>
         </tr>
       </thead>
       <tbody>
         <tr
           v-for="data in mockupData"
-          :style="{cursor: 'pointer'}"
-          :key="data.docId"
-          @click="selectedDocument = data; activateDocumentInfoModal = true">
-          <td><input type="checkbox"></td>
-          <td>
+          :style="{ cursor: 'pointer' }"
+          :key="data.docId">
+          <td><input type="checkbox" :value="data.docId" v-model="selectedDocuments"></td>
+          <td @click="showDocumentInfo(data)">
             <span class="icon" v-for="tag in data.tags">
               <i :class="'fa fa-' + tag"></i>
             </span>
           </td>
-          <td>{{data.docId}}</td>
-          <td>{{data.docName}}</td>
-          <td>{{data.lastUpdated}}</td>
-          <td>{{data.owner}}</td>
+          <td @click="showDocumentInfo(data)">{{ data.docId }}</td>
+          <td @click="showDocumentInfo(data)">{{ data.docName }}</td>
+          <td @click="showDocumentInfo(data)">{{ data.lastUpdated }}</td>
+          <td @click="showDocumentInfo(data)">{{ data.owner }}</td>
         </tr>
       </tbody>
     </table>
+    {{ selectedDocuments }}
 
     <new-document-modal
       :active="activateNewDocumentModal"
@@ -108,7 +108,42 @@ export default {
       mockupData: mockupData,
       activateNewDocumentModal: false,
       activateDocumentInfoModal: false,
-      selectedDocument: null
+      selectedDocument: null,
+      selectedDocuments: []
+    }
+  },
+  computed: {
+    selectAll: {
+      get () {
+        return this.mockupData ? (this.mockupData.length > 0 ? this.selectedDocuments.length === this.mockupData.length : false) : false
+      },
+      set (value) {
+        const selectedDocuments = []
+
+        if (value) {
+          this.mockupData.forEach((document) => {
+            selectedDocuments.push(document.docId)
+          })
+        }
+
+        this.selectedDocuments = selectedDocuments
+      }
+    }
+  },
+  methods: {
+    showDocumentInfo (document) {
+      this.selectedDocument = document
+      this.activateDocumentInfoModal = true
+    },
+    deleteDocument () {
+      const ok = confirm('Are you sure?')
+
+      if (ok) {
+        this.mockupData = this.mockupData.filter((document) => {
+          return this.selectedDocuments.indexOf(document.docId) === -1
+        })
+        this.selectedDocuments = []
+      }
     }
   }
 }

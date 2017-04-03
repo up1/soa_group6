@@ -3,7 +3,6 @@
     <nav class="nav">
       <div class="nav-left">
         <router-link :to="'/'" class="nav-item">
-          <!-- <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma logo"> -->
           <h1 class="subtitle">DocuPool</h1>
         </router-link>
         <div class="field has-addons nav-item is-hidden-mobile">
