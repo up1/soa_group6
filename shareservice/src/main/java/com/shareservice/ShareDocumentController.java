@@ -53,7 +53,7 @@ public class ShareDocumentController {
         }
     }
 
-    @GetMapping("/share/")
+    @GetMapping("/share/department/")
     public @ResponseBody
     ResponseEntity<List<Department>> getShareDepartmentByDoc
             (@RequestParam (value = "doc_id") int doc_id){
@@ -67,12 +67,12 @@ public class ShareDocumentController {
         }
     }
 
-    @GetMapping("/share/department/")
+    @GetMapping("/department/expect")
     public @ResponseBody
     ResponseEntity<List<Department>> getListDepartmentExceptMe
             (@RequestParam (value = "dep_id") int dep_id){
         List<Department> listdep;
-        listdep = shareDocumentRepository.getListShareDepartmentByDoc(dep_id);
+        listdep = shareDocumentRepository.getListDepartmentExceptMe(dep_id);
         if(listdep.size() > 0){
             return new ResponseEntity<List<Department>>(listdep, HttpStatus.FOUND);
         }
@@ -80,4 +80,21 @@ public class ShareDocumentController {
             return new ResponseEntity<List<Department>>(new ArrayList<Department>(){}, HttpStatus.NO_CONTENT);
         }
     }
+
+    @GetMapping("/department")
+    public @ResponseBody
+    ResponseEntity<List<Department>> getListDepartmentAll
+            (){
+        List<Department> listdep;
+        listdep = shareDocumentRepository.getListDepartmentAll();
+        if(listdep.size() > 0){
+            return new ResponseEntity<List<Department>>(listdep, HttpStatus.FOUND);
+        }
+        else{
+            return new ResponseEntity<List<Department>>(new ArrayList<Department>(){}, HttpStatus.NO_CONTENT);
+        }
+    }
+
+
+
 }

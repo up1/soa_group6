@@ -69,10 +69,19 @@ public class ShareDocumentRepository {
     }
 
     @Transactional(readOnly = true)
-    public List<Department> getListDepartmentExceptMe(int dep_id, int doc_id){
+    public List<Department> getListDepartmentExceptMe(int dep_id){
         List<Department> listdep;
         String sql = "SELECT * FROM dep WHERE NOT dep_id = ?";
         listdep = this.jdbcTemplate.query(sql, new Object[]{dep_id}, new DepartmentRowMapper());
+
+        return listdep;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Department> getListDepartmentAll(){
+        List<Department> listdep;
+        String sql = "SELECT * FROM dep";
+        listdep = this.jdbcTemplate.query(sql, new Object[]{}, new DepartmentRowMapper());
 
         return listdep;
     }
