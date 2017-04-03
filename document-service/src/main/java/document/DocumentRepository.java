@@ -35,7 +35,16 @@ public class DocumentRepository {
     @Transactional(readOnly = true)
     public List<DocumentResult> allDocumentById(int user_id) {
 
-        List<DocumentResult> list = jdbcTemplate.query("SELECT d.doc_id, d.doc_title, d.doc_desc, u.user_fname, u.user_lname , r.revision_date, d.doc_tag FROM docs d JOIN shares s ON (d.doc_id = s.doc_id) JOIN dep dep ON (s.shares_id = dep.dep_id ) JOIN (SELECT doc_id, MAX(revision_date) AS 'revision_date' FROM revision GROUP BY doc_id) r ON (d.doc_id = r.doc_id) JOIN users u ON (d.user_id = u.user_id) WHERE d.user_id = ? OR s.shares_id = ? GROUP BY d.doc_id"
+        List<DocumentResult> list = jdbcTemplate.query("SELECT d.doc_id, d.doc_title, d.doc_desc, u.user_fname, u.user_lname , r.revision_date, d.doc_tag\n" +
+                        "FROM docs d\n" +
+                        "LEFT JOIN users u\n" +
+                        "ON (d.user_id = u.user_id)\n" +
+                        "JOIN (SELECT doc_id, MAX(revision_date) AS 'revision_date' FROM revision GROUP BY doc_id) r \n" +
+                        "ON (d.doc_id = r.doc_id)\n" +
+                        "LEFT JOIN shares s\n" +
+                        "ON (d.doc_id = s.doc_id)\n" +
+                        "WHERE d.user_id = ? OR s.shares_id = (SELECT dep_id FROM users WHERE user_id = ?)\n" +
+                        "GROUP BY d.doc_id"
                 , new Object[]{user_id, user_id}, new DocumentRowMapper());
 
         if (list.size() > 0) {
@@ -147,16 +156,13 @@ public class DocumentRepository {
     public List<GetDocByIdResource> getDocById (int doc_id) {
 
 
-        List<GetDocByIdResource> list = jdbcTemplate.query("SELECT d.doc_id, d.doc_title, d.doc_desc, d.user_id, " +
-                        "d.doc_date, d.doc_tag, GROUP_CONCAT(s.shares_id SEPARATOR ', ') AS 'shares_id', " +
-                        "GROUP_CONCAT(dep.dep_name SEPARATOR ', ') AS 'dep_name'\n" +
+        List<GetDocByIdResource> list = jdbcTemplate.query("SELECT d.doc_id, d.doc_title, d.doc_desc, d.user_id, d.doc_date, d.doc_tag, GROUP_CONCAT(s.shares_id SEPARATOR ', ') AS 'shares_id', GROUP_CONCAT(dep.dep_name SEPARATOR ', ') AS 'dep_name'\n" +
                         "FROM docs d\n" +
-                        "JOIN shares s\n" +
+                        "LEFT JOIN shares s\n" +
                         "ON (d.doc_id = s.doc_id)\n" +
                         "JOIN dep dep\n" +
                         "ON(s.shares_id = dep.dep_id)\n" +
-                        "WHERE d.doc_id = ?\n" +
-                        "GROUP BY d.doc_id"
+                        "WHERE d.doc_id = ?\n"
                 , new Object[]{doc_id}, new GetDocByIdRowMapper());
         return list;
     }

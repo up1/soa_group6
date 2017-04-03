@@ -25,15 +25,30 @@ public class GetDocByIdRowMapper implements RowMapper<GetDocByIdResource> {
 
         String shares_id = rs.getString("shares_id");
         List<Integer> sharesList = new ArrayList<>();
-        for(String s:shares_id.split(", ")){
-            sharesList.add(Integer.parseInt(s));
+        try {
+            for(String s:shares_id.split(", ")){
+                sharesList.add(Integer.parseInt(s));
+            }
         }
+        catch (Exception e){
+
+        }
+
         getDocByIdResource.setShares_id(sharesList);
+
+
 
         String dep_name = rs.getString("dep_name");
         List<String> depNameList = new ArrayList<>();
-        for(String s:dep_name.split(", ")){
-            depNameList.add(s);
+
+
+        try {
+            for(String s:dep_name.split(", ")){
+                depNameList.add(s);
+            }
+        }
+        catch (Exception e){
+
         }
         getDocByIdResource.setDep_name(depNameList);
 

@@ -44,6 +44,7 @@ public class AuthenticationController {
     }
 
     Key key = MacProvider.generateKey();
+
     @PostMapping("/genToken")
     public @ResponseBody TokenResult genToken(@RequestBody Token token){
         String compactJws = Jwts.builder()
@@ -56,6 +57,21 @@ public class AuthenticationController {
         Token t = new Gson().fromJson(c.toString(), Token.class);
 
         System.out.println(t.getUsername()+"//"+t.getPassword());
+
+        System.out.println(compactJws);
         return new TokenResult(compactJws);
+    }
+
+    @GetMapping("/checkToken")
+    public Token getDocInfoByid( @RequestParam(value = "token", defaultValue = "0") String token){
+
+
+        System.out.println(token);
+        Claims c = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+
+        Token t = new Gson().fromJson(c.toString(), Token.class);
+
+        return t;
+
     }
 }
