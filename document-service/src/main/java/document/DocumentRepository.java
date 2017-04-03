@@ -5,6 +5,8 @@ import document.docu.GetDocById.GetDocByIdResource;
 import document.docu.GetDocById.GetDocByIdRowMapper;
 import document.docu.PostDocument.PostDocResource;
 import document.docu.PostDocument.PostDocStatus;
+import document.docu.PutDocById.PutDocResult;
+import document.docu.PutDocById.PutDocStatus;
 import document.docu.UserPass.UserPassResult;
 import document.docu.UserPass.UserPassRowMapper;
 import document.docu.documentResult.DocumentResult;
@@ -168,8 +170,23 @@ public class DocumentRepository {
         catch (Exception e){
             return new DeleteDocStatus(false, "error");
         }
+    }
 
-
+    @Transactional(readOnly = false)
+    public PutDocStatus putUserInfoByID(PutDocResult putDocResult){
+        try {
+            this.jdbcTemplate.update("UPDATE docs SET doc_title = ?, doc_desc = ?, doc_tag = ?" +
+                            " WHERE doc_id = ?",
+                    new Object[]{putDocResult.getDoc_title(), putDocResult.getDoc_desc(), putDocResult.getDog_tag(),
+                            putDocResult.getDoc_id()
+                    });
+            return new PutDocStatus(true, "success");
+        }
+        catch (Exception e){
+            return new PutDocStatus(false, "error");
+        }
 
     }
+
+
 }
