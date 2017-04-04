@@ -34,7 +34,7 @@
         </a>
       </li>
     </ul>
-    <template v-if="$store.state.role === 'admin'">
+    <template v-if="$store.state.user.username === 'admin'">
       <p class="menu-label">
         Administration
       </p>

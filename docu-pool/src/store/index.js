@@ -8,7 +8,6 @@ export default new Vuex.Store({
   state: {
     authenticated: auth.checkAuth(),
     user: {},
-    role: 'admin',
     department: 'Shimada Department',
     currentMenu: 'recent'
   }
