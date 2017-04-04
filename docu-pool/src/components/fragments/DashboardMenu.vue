@@ -7,9 +7,6 @@
             <i class="fa fa-clock-o"></i>
           </span>
           Recent
-          <span class="tag is-danger">
-            1
-          </span>
         </a>
       </li>
       <li>
@@ -18,9 +15,6 @@
             <i class="fa fa-inbox"></i>
           </span>
           Department inbox
-          <span class="tag is-danger">
-            1
-          </span>
         </a>
       </li>
       <li>

@@ -3,7 +3,7 @@
     <nav class="nav">
       <div class="nav-left">
         <router-link :to="'/'" class="nav-item">
-          <h1 class="subtitle">DocuPool</h1>
+          <h1 class="subtitle">DocuPool <sup style="color: skyblue"><small>Alpha</small></sup></h1>
         </router-link>
         <div class="field has-addons nav-item is-hidden-mobile">
           <p class="control">
@@ -34,6 +34,11 @@
           </span>
           {{$store.state.user.username}}
         </a>
+        <a class="nav-item">
+          <a class="button is-danger" @click="logout">
+            Logout
+          </a>
+        </a>
         <router-link :to="'settings'" replace class="nav-item">
           <span class="icon">
             <i class="fa fa-cog"></i>
@@ -45,8 +50,16 @@
 </template>
 
 <script>
+import auth from '@/services/auth'
+
 export default {
-  name: 'navbar'
+  name: 'navbar',
+  methods: {
+    logout () {
+      const ok = confirm('Are you sure to log out?')
+      ok ? auth.logout() : false
+    }
+  }
 }
 
 </script>

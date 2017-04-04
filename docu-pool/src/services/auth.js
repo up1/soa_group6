@@ -13,11 +13,13 @@ export default {
         router.push('/')
       }
     }, error => {
-      context.errorMessage = error
+      error
+      context.errorMessage = 'Invalid username or password'
     })
   },
   logout () {
     localStorage.removeItem('token')
+    router.push('login')
   },
   checkAuth () {
     const jwt = localStorage.getItem('token')

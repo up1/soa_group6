@@ -7,7 +7,7 @@
             <div class="level-item" style="flex-direction: column;">
               <div class="columns">
                 <div class="column has-text-centered">
-                  <h1 class="title is-marginless">DocuPool</h1>
+                  <h1 class="title is-marginless">DocuPool <sup style="color: skyblue"><small>Alpha</small></sup></h1>
                   <h2 class="subtitle is-marginless">A document management system</h2>
                 </div>
               </div>
@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     error () {
-      return this.errorMessage && this.$route.query.error === null
+      return this.errorMessage
     }
   },
   methods: {
