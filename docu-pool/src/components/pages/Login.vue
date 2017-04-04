@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import auth from '@/services/auth'
+
 export default {
   name: 'login',
   data () {
@@ -76,14 +78,20 @@ export default {
   },
   methods: {
     login () {
-      this.correctCredentials = this.credentials.username === 'test' && this.credentials.password === 'test'
-
-      if (this.correctCredentials) {
-        this.$router.push('/')
-      } else {
-        this.errorMessage = 'Incorrect username or password'
-        this.$router.push({ name: 'login', query: { error: null } })
+      // this.correctCredentials = this.credentials.username === 'test' && this.credentials.password === 'test'
+      //
+      // if (this.correctCredentials) {
+      //   this.$router.push('/')
+      // } else {
+      //   this.errorMessage = 'Incorrect username or password'
+      //   this.$router.push({ name: 'login', query: { error: null } })
+      // }
+      const credentials = {
+        username: this.credentials.username,
+        password: this.credentials.password
       }
+
+      auth.login(this, credentials, '/')
     }
   }
 }

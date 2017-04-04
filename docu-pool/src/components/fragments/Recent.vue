@@ -54,7 +54,6 @@
         </tr>
       </tbody>
     </table>
-    {{ selectedDocuments }}
 
     <new-document-modal
       :active="activateNewDocumentModal"

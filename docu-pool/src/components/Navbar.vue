@@ -32,7 +32,7 @@
           <span class="icon">
             <i class="fa fa-user"></i>
           </span>
-          {{$store.state.username}}
+          {{$store.state.user.username}}
         </a>
         <router-link :to="'settings'" replace class="nav-item">
           <span class="icon">
