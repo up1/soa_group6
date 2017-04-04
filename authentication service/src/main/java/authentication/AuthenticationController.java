@@ -63,7 +63,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/checkToken")
-    public Token getDocInfoByid( @RequestParam(value = "token", defaultValue = "0") String token){
+    public WhoIsUserResult getDocInfoByid( @RequestParam(value = "token", defaultValue = "0") String token){
 
 
         System.out.println(token);
@@ -71,7 +71,9 @@ public class AuthenticationController {
 
         Token t = new Gson().fromJson(c.toString(), Token.class);
 
-        return t;
+
+
+        return  authRepository.whoIsUser(t.getUsername(), t.getPassword());
 
     }
 }
