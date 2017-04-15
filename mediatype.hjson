@@ -1,0 +1,300 @@
+/* Login */
+
+/*
+  POST /auth
+  User credentials authentication
+*/
+
+// Request
+{
+  "username": "user",
+  "password": "pass"
+}
+
+// Response
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.pOYMuAGu_3P-itsY8MfikZgRW-aaC5fmk-O4lds94Xs",
+  "data": {
+    "user": {
+      "id": 1,
+      "department": {
+        "id": 1,
+        "name": "Developer"
+      },
+      "username": "jongzazal",
+      "first_name": "Suchaj",
+      "last_name": "Jongprasit"
+    }
+  }
+}
+
+/*
+  GET /auth?token={token}
+  Token checking
+*/
+
+// Response
+{
+  "username": "user"
+}
+
+
+/* Documents */
+
+/*
+  GET /documents
+  Get all documents
+*/
+
+// Response
+[
+  {
+    "document": {
+      "id": 1,
+      "title": "Sample Text 1",
+      "description": "The quick brown fox jumps over the lazy dog.",
+      "revision_date": "2017-04-15T18:23:06.882Z",
+      "tag": "urgent",
+    },
+    "user": {
+      "id": 1,
+      "first_name": "Suchaj",
+      "last_name": "Jongprasit"
+    }
+  },
+  {
+    "document": {
+      "id": 2,
+      "title": "Sample Text 2",
+      "description": "Uvuvwevwevwe Onyetenyevwe Ugwemubwem Ossas",
+      "revision_date": "2017-04-15T18:23:06.882Z",
+      "tag": "non-urgent",
+    },
+    "user": {
+      "id": 2,
+      "first_name": "Seksan",
+      "last_name": "Neramitthanasombat"
+    }
+  }
+]
+
+/*
+  POST /documents
+  Create a document
+*/
+
+// Request
+{
+  "user_id": 2,
+  "document": {
+    "title": "Document 71",
+    "description": "Document 71 description",
+    "tag": "urgent"
+  }
+}
+
+// Response
+{
+  "success": true,
+  "message": "Document 71 has been created"
+}
+
+/*
+  GET /documents/:id
+  Get a document information
+*/
+
+// Response
+{
+  {
+    "document": {
+      "id": 1,
+      "title": "Sample Text 1",
+      "description": "The quick brown fox jumps over the lazy dog.",
+      "revision_date": "2017-04-15T18:23:06.882Z",
+      "tag": "urgent",
+    },
+    "user": {
+      "id": 1,
+      "first_name": "Suchaj",
+      "last_name": "Jongprasit"
+    }
+  }
+}
+
+/*
+  PUT /documents/:id
+  Update a document
+*/
+
+// Request
+{
+  "id": 6,
+  "title": "Edited title 5",
+  "description": "Edited description 5",
+  "tag": "general"
+}
+
+// Response
+{
+  "success": true,
+  "message": "Document 6 has been updated"
+}
+
+/*
+  DELETE /documents/:id
+  Delete a document
+*/
+
+// Response
+{
+  "success": true,
+  "message": "Document 1 has been deleted"
+}
+
+/*
+  GET /documents/:id/share
+  Get all departments that a document has been shared
+*/
+
+// Response
+[
+  {
+    "id": 1,
+    "name": "Developer"
+  },
+  {
+    "id": 3,
+    "name": "HR"
+  }
+]
+
+/*
+  POST /documents/:id/share
+  Share a document to a department
+*/
+
+// Request
+{
+  "department_id": 3
+}
+
+// Response
+{
+  "success": true,
+  "message": "This document has been shared to HR"
+}
+
+/*
+  DELETE /documents/:id/share
+  Revoke a department sharing status from a document
+*/
+
+// Request
+{
+  "department_id": 3
+}
+
+// Response
+{
+  "success": true,
+  "message": "HR has been revoked from this document"
+}
+
+/*
+  GET /documents/department/:id
+  Get all documents from a department
+*/
+
+// Response
+{
+  "department_name": "Art",
+  "documents": [
+    {
+      "document": {
+        "id": 2,
+        "title": "Title 2",
+        "description": "Description 2",
+        "revision_date": "2017-04-15T18:23:06.882Z",
+        "tag": "non-urgent"
+      },
+      "user": {
+        "first_name": "Seksan",
+        "last_name": "Neramitthanasombat",
+      },
+      "file_names": [
+        "aaasss",
+        "ossas"
+      ]
+    },
+    {
+      "document": {
+        "id": 5,
+        "title": "Title 5",
+        "description": "Description 5",
+        "revision_date": "2017-04-15T18:23:06.882Z",
+        "tag": "general"
+      },
+      "user": {
+        "first_name": "Seksan",
+        "last_name": "Neramitthanasombat",
+      },
+      "file_names": [
+        "doc5_1"
+      ]
+    }
+  ]
+}
+
+
+/* File download */
+
+/*
+  GET /files/{file_name}
+  Get a file
+*/
+
+// Response
+Content-Type: "application/octet-stream"
+Content-Disposition: attachment; filename="{file_name}"
+
+
+/* Departments */
+
+/*
+  GET /departments
+  Get all departments
+*/
+
+// Response
+[
+  {
+    "id": 1,
+    "name": "Developer"
+  },
+  {
+    "id": 2,
+    "name": "Art"
+  },
+  {
+    "id": 3,
+    "name": "HR"
+  }
+]
+
+/*
+  GET /departments/except/:id
+  Get all departments except this one
+*/
+
+// Response
+[
+  {
+    "id": 2,
+    "name": "Art"
+  },
+  {
+    "id": 3,
+    "name": "HR"
+  }
+]
