@@ -22,7 +22,7 @@ public class DepartmentRepository {
 
     public GetDepNameResponse GetDepName(Integer dep_id){
         try {
-            GetDepNameResponse getDepNameResponse = jdbcTemplate.queryForObject("SELECT dep_name FROM dep WHERE dep_id = ?",
+            GetDepNameResponse getDepNameResponse = jdbcTemplate.queryForObject("SELECT dep_name FROM department WHERE dep_id = ?",
                     new Object[]{dep_id}, new GetDepNameRowMapping());
             return getDepNameResponse;
         }
@@ -34,7 +34,7 @@ public class DepartmentRepository {
 
     public List<GetAllDepResponse> GetAllDep(){
 
-        List<GetAllDepResponse> getAllDepResponses = jdbcTemplate.query("SELECT dep_id, dep_name FROM dep", new GetAllDepRowMapping());
+        List<GetAllDepResponse> getAllDepResponses = jdbcTemplate.query("SELECT dep_id, dep_name FROM department", new GetAllDepRowMapping());
         return getAllDepResponses;
     }
 }
