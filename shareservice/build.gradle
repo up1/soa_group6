@@ -32,4 +32,9 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.0'
 	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+	compile 'org.springframework.boot:spring-boot-starter-actuator:1.5.2.RELEASE'
+	// https://mvnrepository.com/artifact/com.moelholm/prometheus-spring-boot-starter
+	compile group: 'com.moelholm', name: 'prometheus-spring-boot-starter', version: '1.0.1'
+
 }

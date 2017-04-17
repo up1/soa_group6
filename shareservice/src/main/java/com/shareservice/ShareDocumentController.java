@@ -95,6 +95,11 @@ public class ShareDocumentController {
         }
     }
 
+    @GetMapping("/trace")
+    public String p(){
+                return "abc";
+    }
+
 
 
 }
