@@ -183,7 +183,7 @@
 
 // Request
 {
-  "department_id": 3
+  "departmentId": 3
 }
 
 // Response
@@ -199,7 +199,7 @@
 
 // Request
 {
-  "department_id": 3
+  "departmentId": 3
 }
 
 // Response
@@ -215,39 +215,52 @@
 
 // Response
 {
-  "department_name": "Art",
+  "departmentName": "Art",
   "documents": [
     {
-      "document": {
-        "id": 2,
-        "title": "Title 2",
-        "description": "Description 2",
-        "revision_date": "2017-04-15T18:23:06.882Z",
-        "tag": "non-urgent"
-      },
-      "user": {
-        "first_name": "Seksan",
-        "last_name": "Neramitthanasombat",
-      },
-      "file_names": [
-        "aaasss",
-        "ossas"
+      "id": 1,
+      "tag": "non-urgent",
+      "title": "I need healing!",
+      "description": "Lorem ipsum dolor sit amet...",
+      "lastUpdated": 1492447382967,
+      "owner": "Shimada Department",
+      "shared": true,
+      "files": [
+        {
+          "name": "Receipt_from_angela.pdf",
+          "size": "69 KB",
+          "datetime": 1492447382967,
+          "currentRevision": 1
+        },
+        {
+          "name": "genji.jpg",
+          "size": "1 MB",
+          "datetime": 1492447382967,
+          "currentRevision": 2
+        }
       ]
     },
     {
-      "document": {
-        "id": 5,
-        "title": "Title 5",
-        "description": "Description 5",
-        "revision_date": "2017-04-15T18:23:06.882Z",
-        "tag": "general"
-      },
-      "user": {
-        "first_name": "Seksan",
-        "last_name": "Neramitthanasombat",
-      },
-      "file_names": [
-        "doc5_1"
+      "id": 1,
+      "tag": "non-urgent",
+      "title": "I need healing!",
+      "description": "Lorem ipsum dolor sit amet...",
+      "lastUpdated": 1492447382967,
+      "owner": "Shimada Department",
+      "shared": true,
+      "files": [
+        {
+          "name": "Receipt_from_angela.pdf",
+          "size": "69 KB",
+          "datetime": 1492447382967,
+          "currentRevision": 1
+        },
+        {
+          "name": "genji.jpg",
+          "size": "1 MB",
+          "datetime": 1492447382967,
+          "currentRevision": 2
+        }
       ]
     }
   ]
