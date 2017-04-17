@@ -1,4 +1,4 @@
-package demo.config;
+package com.teamsmokeweed;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+
+/**
+ * Created by jongzazaal on 13/4/2560.
+ */
 
 @Configuration
 @ComponentScan
