@@ -13,19 +13,7 @@
 
 // Response
 {
-  "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.pOYMuAGu_3P-itsY8MfikZgRW-aaC5fmk-O4lds94Xs",
-  "data": {
-    "user": {
-      "id": 1,
-      "department": {
-        "id": 1,
-        "name": "Developer"
-      },
-      "username": "jongzazal",
-      "first_name": "Suchaj",
-      "last_name": "Jongprasit"
-    }
-  }
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.pOYMuAGu_3P-itsY8MfikZgRW-aaC5fmk-O4lds94Xs"
 }
 
 /*
@@ -33,7 +21,7 @@
   Token checking
 */
 
-// Response
+// Response (Approx.)
 {
   "username": "user"
 }
@@ -49,32 +37,44 @@
 // Response
 [
   {
-    "document": {
-      "id": 1,
-      "title": "Sample Text 1",
-      "description": "The quick brown fox jumps over the lazy dog.",
-      "revision_date": "2017-04-15T18:23:06.882Z",
-      "tag": "urgent",
-    },
-    "user": {
-      "id": 1,
-      "first_name": "Suchaj",
-      "last_name": "Jongprasit"
-    }
+    "id": 1,
+    "tag": "non-urgent",
+    "title": "I need healing!",
+    "description": "Lorem ipsum dolor sit amet...",
+    "lastUpdated": 1492447382967,
+    "owner": "Shimada Department",
+    "shared": true,
+    "files": [
+      {
+        "name": "Receipt_from_angela.pdf",
+        "size": "69 KB",
+        "datetime": 1492447382967,
+        "currentRevision": 1
+      },
+      {
+        "name": "genji.jpg",
+        "size": "1 MB",
+        "datetime": 1492447382967,
+        "currentRevision": 2
+      }
+    ]
   },
   {
-    "document": {
-      "id": 2,
-      "title": "Sample Text 2",
-      "description": "Uvuvwevwevwe Onyetenyevwe Ugwemubwem Ossas",
-      "revision_date": "2017-04-15T18:23:06.882Z",
-      "tag": "non-urgent",
-    },
-    "user": {
-      "id": 2,
-      "first_name": "Seksan",
-      "last_name": "Neramitthanasombat"
-    }
+    "id": 2,
+    "tag": "urgent",
+    "title": "xDDDDDD",
+    "description": "Lorem ipsum dolor sit amet...",
+    "lastUpdated": 1492447382967,
+    "owner": "Human Resource Department",
+    "shared": false,
+    "files": [
+      {
+        "name": "test.pdf",
+        "size": "420 KB",
+        "datetime": 1492447382967,
+        "currentRevision": 1
+      }
+    ]
   }
 ]
 
@@ -85,11 +85,11 @@
 
 // Request
 {
-  "user_id": 2,
+  "userId": 2,
   "document": {
     "title": "Document 71",
     "description": "Document 71 description",
-    "tag": "urgent"
+    "tag": "general"
   }
 }
 
@@ -106,20 +106,27 @@
 
 // Response
 {
-  {
-    "document": {
-      "id": 1,
-      "title": "Sample Text 1",
-      "description": "The quick brown fox jumps over the lazy dog.",
-      "revision_date": "2017-04-15T18:23:06.882Z",
-      "tag": "urgent",
+  "id": 1,
+  "tag": "non-urgent",
+  "title": "I need healing!",
+  "description": "Lorem ipsum dolor sit amet...",
+  "lastUpdated": 1492447382967,
+  "owner": "Shimada Department",
+  "shared": true,
+  "files": [
+    {
+      "name": "Receipt_from_angela.pdf",
+      "size": "69 KB",
+      "datetime": 1492447382967,
+      "currentRevision": 1
     },
-    "user": {
-      "id": 1,
-      "first_name": "Suchaj",
-      "last_name": "Jongprasit"
+    {
+      "name": "genji.jpg",
+      "size": "1 MB",
+      "datetime": 1492447382967,
+      "currentRevision": 2
     }
-  }
+  ]
 }
 
 /*
@@ -176,7 +183,7 @@
 
 // Request
 {
-  "department_id": 3
+  "departmentId": 3
 }
 
 // Response
@@ -192,7 +199,7 @@
 
 // Request
 {
-  "department_id": 3
+  "departmentId": 3
 }
 
 // Response
@@ -208,39 +215,52 @@
 
 // Response
 {
-  "department_name": "Art",
+  "departmentName": "Art",
   "documents": [
     {
-      "document": {
-        "id": 2,
-        "title": "Title 2",
-        "description": "Description 2",
-        "revision_date": "2017-04-15T18:23:06.882Z",
-        "tag": "non-urgent"
-      },
-      "user": {
-        "first_name": "Seksan",
-        "last_name": "Neramitthanasombat",
-      },
-      "file_names": [
-        "aaasss",
-        "ossas"
+      "id": 1,
+      "tag": "non-urgent",
+      "title": "I need healing!",
+      "description": "Lorem ipsum dolor sit amet...",
+      "lastUpdated": 1492447382967,
+      "owner": "Shimada Department",
+      "shared": true,
+      "files": [
+        {
+          "name": "Receipt_from_angela.pdf",
+          "size": "69 KB",
+          "datetime": 1492447382967,
+          "currentRevision": 1
+        },
+        {
+          "name": "genji.jpg",
+          "size": "1 MB",
+          "datetime": 1492447382967,
+          "currentRevision": 2
+        }
       ]
     },
     {
-      "document": {
-        "id": 5,
-        "title": "Title 5",
-        "description": "Description 5",
-        "revision_date": "2017-04-15T18:23:06.882Z",
-        "tag": "general"
-      },
-      "user": {
-        "first_name": "Seksan",
-        "last_name": "Neramitthanasombat",
-      },
-      "file_names": [
-        "doc5_1"
+      "id": 1,
+      "tag": "non-urgent",
+      "title": "I need healing!",
+      "description": "Lorem ipsum dolor sit amet...",
+      "lastUpdated": 1492447382967,
+      "owner": "Shimada Department",
+      "shared": true,
+      "files": [
+        {
+          "name": "Receipt_from_angela.pdf",
+          "size": "69 KB",
+          "datetime": 1492447382967,
+          "currentRevision": 1
+        },
+        {
+          "name": "genji.jpg",
+          "size": "1 MB",
+          "datetime": 1492447382967,
+          "currentRevision": 2
+        }
       ]
     }
   ]
