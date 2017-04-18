@@ -26,78 +26,56 @@ public class ShareDocumentController {
         this.shareDocumentRepository = shareDocumentRepository;
     }
 
-    @DeleteMapping("/share/revoke/")
+    @DeleteMapping("/documents/{doc_id}/share")
     public @ResponseBody
-    ResponseEntity<ServiceStatus> revokeDepartmentFromDoc (@RequestParam(value="doc_id") int doc_id,
-                                         @RequestParam(value="dep_id")int dep_id){
-        ServiceStatus status = shareDocumentRepository.revokeDepartmentFromDoc(doc_id, dep_id);
+    ResponseEntity<ServiceStatus> revokeDepartmentFromDoc (@PathVariable String doc_id,
+                                                           @RequestBody Map<String, Integer> dep_id){
+        ServiceStatus status = shareDocumentRepository.revokeDepartmentFromDoc(Integer.parseInt(doc_id), dep_id.get("dep_id"));
         if(status.isResponse()){
             return new ResponseEntity<ServiceStatus>(status, HttpStatus.FOUND);
         }
         else{
-            return new ResponseEntity<ServiceStatus>(status, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<ServiceStatus>(status, HttpStatus.NOT_FOUND);
         }
 
     }
 
-    @PostMapping("/share/addDep/")
+    @PostMapping("/documents/{doc_id}/share")
     public @ResponseBody
-    ResponseEntity<ServiceStatus> addDepartmentToDoc (@RequestParam(value="doc_id") int doc_id,
-                             @RequestParam(value="dep_id") int dep_id){
-        ServiceStatus status = shareDocumentRepository.postShareToOtherDepartment(doc_id, dep_id);
+    ResponseEntity<ServiceStatus> addDepartmentToDoc (@PathVariable String doc_id,
+                                                      @RequestBody Map<String, Integer> dep_id){
+        ServiceStatus status = shareDocumentRepository.postShareToOtherDepartment(Integer.parseInt(doc_id), dep_id.get("dep_id"));
+        System.out.println(dep_id.get("dep_id"));
+        System.out.println(status.getMessage());
+
         if(status.isResponse()){
             return new ResponseEntity<ServiceStatus>(status, HttpStatus.FOUND);
         }
         else{
-            return new ResponseEntity<ServiceStatus>(status, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<ServiceStatus>(status, HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/share/department/")
+    @GetMapping("/documents/{doc_id}/share")
     public @ResponseBody
     ResponseEntity<List<Department>> getShareDepartmentByDoc
-            (@RequestParam (value = "doc_id") int doc_id){
+            (@PathVariable String doc_id){
+
         List<Department> listdep;
-        listdep = shareDocumentRepository.getListShareDepartmentByDoc(doc_id);
+        listdep = shareDocumentRepository.getListShareDepartmentByDoc(Integer.parseInt(doc_id));
         if(listdep.size() > 0){
             return new ResponseEntity<List<Department>>(listdep, HttpStatus.FOUND);
         }
         else{
-            return new ResponseEntity<List<Department>>(new ArrayList<Department>(){}, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<Department>>(new ArrayList<Department>(){}, HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/department/expect")
-    public @ResponseBody
-    ResponseEntity<List<Department>> getListDepartmentExceptMe
-            (@RequestParam (value = "dep_id") int dep_id){
-        List<Department> listdep;
-        listdep = shareDocumentRepository.getListDepartmentExceptMe(dep_id);
-        if(listdep.size() > 0){
-            return new ResponseEntity<List<Department>>(listdep, HttpStatus.FOUND);
-        }
-        else{
-            return new ResponseEntity<List<Department>>(new ArrayList<Department>(){}, HttpStatus.NO_CONTENT);
-        }
-    }
 
-    @GetMapping("/department")
-    public @ResponseBody
-    ResponseEntity<List<Department>> getListDepartmentAll
-            (){
-        List<Department> listdep;
-        listdep = shareDocumentRepository.getListDepartmentAll();
-        if(listdep.size() > 0){
-            return new ResponseEntity<List<Department>>(listdep, HttpStatus.FOUND);
-        }
-        else{
-            return new ResponseEntity<List<Department>>(new ArrayList<Department>(){}, HttpStatus.NO_CONTENT);
-        }
-    }
 
-    @GetMapping("/trace")
-    public String p(){
-                return "abc";
+    @PostMapping("/debug/documents/{documentId}/share")
+    public Integer getDocument(@PathVariable String documentId, @RequestBody Map<String, Integer> department) {
+        return department.get("departmentId");
     }
 
 

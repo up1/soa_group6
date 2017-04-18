@@ -7,14 +7,14 @@ import java.util.List;
  */
 public class ShareDocument {
     private int doc_id;
-    private int shares_id;
+    private int dep_id;
 
     public ShareDocument() {
     }
 
-    public ShareDocument(int doc_id, int shares_id) {
+    public ShareDocument(int doc_id, int dep_id) {
         this.setDoc_id(doc_id);
-        this.setShares_id(shares_id);
+        this.setDep_id(dep_id);
     }
 
 
@@ -26,12 +26,12 @@ public class ShareDocument {
         this.doc_id = doc_id;
     }
 
-    public int getShares_id() {
-        return shares_id;
+    public int getDep_id() {
+        return dep_id;
     }
 
-    public void setShares_id(int shares_id) {
-        this.shares_id = shares_id;
+    public void setDep_id(int dep_id) {
+        this.dep_id = dep_id;
     }
 
 }
