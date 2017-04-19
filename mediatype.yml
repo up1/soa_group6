@@ -1,0 +1,307 @@
+---
+######################
+# Authentication API #
+######################
+
+# POST /auth
+# Get token
+
+# [Request]
+username: user
+password: pass
+
+# [Response]
+token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.pOYMuAGu_3P-itsY8MfikZgRW-aaC5fmk-O4lds94Xs
+
+# GET /auth?token={token}
+# Get token data
+
+# [Response]
+iss: DocuPool
+sub: user
+iat: 1492447382967
+id: 11
+username: melonmint
+admin: false
+first_name: Thanaphat
+last_name: Thanawatpanya
+password_changed: false
+department:
+  id: 2
+  name: Developer
+
+# GET /auth/refreshtoken
+# Refresh a token to the new one
+
+# [Response]
+token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.pOYMuAGu_3P-itsY8MfikZgRW-aaC5fmk-O4lds94Xs
+
+################
+# Document API #
+################
+
+# GET /documents
+# Get all documents
+
+# [Response]
+- id: 1
+  tag: non-urgent
+  title: I need healing!
+  description: Lorem ipsum dolor sit amet...
+  lastUpdated: 1492447382967
+  department:
+    id: 3
+    name: Shimada Department
+  shared: true
+  files:
+  - name: Receipt_from_angela.pdf
+    size: 69 KB
+    time: 1492447382967
+    revision: 1
+  - name: genji.jpg
+    size: 1 MB
+    time: 1492447382967
+    revision: 2
+- id: 2
+  tag: urgent
+  title: xDDDDDD
+  description: Lorem ipsum dolor sit amet...
+  lastUpdated: 1492447382967
+  department:
+    id: 2
+    name: Human Resource Department
+  shared: false
+  files:
+  - name: test.pdf
+    size: 420 KB
+    time: 1492447382967
+    revision: 1
+
+# POST /documents
+# Create a document
+
+# [Request]
+title: Sample Document
+description: Sample Document Description
+tag: general
+
+# [Response]
+# Success
+success:
+  message: Sample Document has been created
+# Error
+error:
+  message: Sample Document cannot be created
+
+# GET /documents/:id
+# Get a document
+
+# [Response]
+- id: 1
+  tag: non-urgent
+  title: I need healing!
+  description: Lorem ipsum dolor sit amet...
+  lastUpdated: 1492447382967
+  department:
+    id: 3
+    name: Shimada Department
+  shared: true
+  files:
+  - name: Receipt_from_angela.pdf
+    size: 69 KB
+    time: 1492447382967
+    revision: 1
+  - name: genji.jpg
+    size: 1 MB
+    time: 1492447382967
+    revision: 2
+
+# PUT /documents/:id
+# Update a document
+
+# [Request]
+title: Edited Title 5
+description: Edited Description 5
+tag: general
+
+# [Response]
+# Success
+success:
+  message: Title 5 has been updated
+# Error
+error:
+  message: Title 5 cannot be updated
+
+# DELETE /documents/:id
+# Delete a document
+
+# [Response]
+# Success
+success:
+  message: Document 1 has been deleted
+# Error
+error:
+  message: Document 1 cannot be deleted
+
+# GET /documents/departments/:id
+# Get documents from a department
+
+# [Response]
+- id: 1
+  tag: non-urgent
+  title: I need healing!
+  description: Lorem ipsum dolor sit amet...
+  lastUpdated: 1492447382967
+  department:
+    id: 3
+    name: Shimada Department
+  shared: true
+  files:
+  - name: Receipt_from_angela.pdf
+    size: 69 KB
+    time: 1492447382967
+    revision: 1
+  - name: genji.jpg
+    size: 1 MB
+    time: 1492447382967
+    revision: 2
+- id: 4
+  tag: non-urgent
+  title: I need healing!
+  description: Lorem ipsum dolor sit amet...
+  lastUpdated: 1492447382967
+  department:
+    id: 3
+    name: Shimada Department
+  shared: true
+  files:
+  - name: Receipt_from_angela.pdf
+    size: 69 KB
+    time: 1492447382967
+    revision: 1
+  - name: genji.jpg
+    size: 1 MB
+    time: 1492447382967
+    revision: 2
+
+#############
+# Share API #
+#############
+
+# GET /documents/:id/shares
+# Get sharing statuses from a document
+
+# [Response]
+- department:
+    id: 1
+    name: Developer
+  shared: true
+- department:
+    id: 2
+    name: Shimada Department
+  shared: false
+- department:
+    id: 3
+    name: HR
+  shared: true
+
+# POST /documents/:id/shares
+# Share a document
+
+# [Request]
+departmentId: 3
+
+# [Response]
+# Success
+success:
+  message: Sample document has been shared to HR
+# Error
+error:
+  message: Sample document cannot be shared to HR
+
+# DELETE /documents/:id/shares
+# Revoke sharing from a document
+
+# [Request]
+departmentId: 3
+
+# [Response]
+# Success
+success:
+  message: Sample document has been revoked from HR
+# Error
+error:
+  message: Sample document cannot be revoked from HR
+
+##################
+# Department API #
+##################
+
+# GET /departments
+# Get all departments
+
+# [Response]
+- id: 1
+  name: Developer
+- id: 2
+  name: Art
+- id: 3
+  name: HR
+
+# GET /departments/:id
+# Get a department
+
+# [Response]
+id: 1
+name: Developer
+
+############
+# User API #
+############
+
+# POST /users
+# Create a user
+
+# [Request]
+username: melonmint
+first_name: Thanaphat
+last_name: Thanawatpanya
+role: 0
+department:
+  id: 4
+
+# [Response]
+# Success
+success:
+  message: User has been created
+  username: melonmint
+  password: 6c8a9f5d-ee05-4e96-a3ff-8462d9fe7129
+# Error
+error:
+  message: User cannot be created
+
+# GET /users/:id
+# GET /users?u={username}
+# Get a user information
+
+# [Response]
+id: 11
+username: melonmint
+first_name: Thanaphat
+last_name: Thanawatpanya
+role: 0
+department:
+  id: 2
+  name: Developer
+password_changed: false
+
+############
+# File API #
+############
+
+# GET /files/{filename}
+# Download a file
+
+# [Response]
+# Content-Type: "application/octet-stream"
+# Content-Disposition: attachment; filename="{filename}"
