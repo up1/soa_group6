@@ -14,7 +14,7 @@ public class ShareDocumentRowMapper implements RowMapper<ShareDocument>{
     public ShareDocument mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
         ShareDocument shareDocument = new ShareDocument();
         shareDocument.setDoc_id(resultSet.getInt("doc_id"));
-        shareDocument.setShares_id(resultSet.getInt("shares_id"));
+        shareDocument.setDep_id(resultSet.getInt("dep_id"));
 
         return shareDocument;
     }
