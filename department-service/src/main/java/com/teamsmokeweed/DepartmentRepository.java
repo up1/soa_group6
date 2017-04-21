@@ -23,7 +23,7 @@ public class DepartmentRepository {
     public GetDepNameResponse GetDepName(Integer dep_id){
         try {
             GetDepNameResponse getDepNameResponse = jdbcTemplate.queryForObject("SELECT dep_name FROM department WHERE dep_id = ?",
-                    new Object[]{dep_id}, new GetDepNameRowMapping());
+                    new Object[]{dep_id}, new GetDepNameRowMapping(dep_id));
             return getDepNameResponse;
         }
         catch (Exception e){

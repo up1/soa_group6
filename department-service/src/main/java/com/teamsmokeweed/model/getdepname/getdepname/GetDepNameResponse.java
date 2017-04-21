@@ -4,20 +4,30 @@ package com.teamsmokeweed.model.getdepname.getdepname;
  * Created by Armerino on 14/4/2560.
  */
 public class GetDepNameResponse {
-    private String dep_name;
+    int id;
+    String name;
 
-    public GetDepNameResponse(String dep_name) {
-        this.dep_name = dep_name;
+    public GetDepNameResponse(int dep_id, String dep_name) {
+        this.id = dep_id;
+        this.name = dep_name;
     }
 
     public GetDepNameResponse() {
     }
 
-    public String getDep_name() {
-        return dep_name;
+    public int getId() {
+        return id;
     }
 
-    public void setDep_name(String dep_name) {
-        this.dep_name = dep_name;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

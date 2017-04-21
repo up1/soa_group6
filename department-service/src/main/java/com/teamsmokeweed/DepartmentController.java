@@ -23,12 +23,14 @@ public class DepartmentController {
         this.departmentRepository = departmentRepository;
     }
 
-    @GetMapping("/dep/{dep_id}")
-    public GetDepNameResponse GetDepName(@PathVariable (value = "dep_id") String dep_id){
+
+//    id->departmentID
+    @GetMapping("/departments/{id}")
+    public GetDepNameResponse GetDepName(@PathVariable (value = "id") String dep_id){
         return this.departmentRepository.GetDepName(Integer.parseInt(dep_id));
     }
 
-    @GetMapping("/dep")
+    @GetMapping("/departments")
     public List<GetAllDepResponse> GetAllDep(){
         return this.departmentRepository.GetAllDep();
     }
