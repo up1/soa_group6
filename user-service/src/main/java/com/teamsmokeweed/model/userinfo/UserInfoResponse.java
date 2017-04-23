@@ -1,24 +1,38 @@
 package com.teamsmokeweed.model.userinfo;
 
+import com.teamsmokeweed.model.dep.Department;
+
 /**
  * Created by jongzazaal on 13/4/2560.
  */
 public class UserInfoResponse {
-    int user_id, dep_id, user_role, user_ispasswordchange;
-    String user_username, user_fname, user_lname, dep_name;
+    int user_id, user_role, user_ispasswordchange;
+    String user_username, user_fname, user_lname;
+    Department department;
 
     public UserInfoResponse() {
     }
 
-    public UserInfoResponse(int user_id, int dep_id, int user_role, int user_ispasswordchange, String user_username, String user_fname, String user_lname, String dep_name) {
+    public UserInfoResponse(int user_id, int user_role, int user_ispasswordchange, String user_username, String user_fname, String user_lname, Department department) {
         this.user_id = user_id;
-        this.dep_id = dep_id;
+        this.department = department;
         this.user_role = user_role;
         this.user_ispasswordchange = user_ispasswordchange;
         this.user_username = user_username;
         this.user_fname = user_fname;
         this.user_lname = user_lname;
-        this.dep_name = dep_name;
+
+    }
+    public UserInfoResponse(int user_id, int dep_id, int user_role, int user_ispasswordchange, String user_username, String user_fname, String user_lname, String dep_name){
+        this.user_id = user_id;
+        this.department.setId(dep_id);
+        this.department.setName(dep_name);
+        this.user_role = user_role;
+        this.user_ispasswordchange = user_ispasswordchange;
+        this.user_username = user_username;
+        this.user_fname = user_fname;
+        this.user_lname = user_lname;
+
     }
 
     public int getUser_id() {
@@ -29,13 +43,9 @@ public class UserInfoResponse {
         this.user_id = user_id;
     }
 
-    public int getDep_id() {
-        return dep_id;
-    }
 
-    public void setDep_id(int dep_id) {
-        this.dep_id = dep_id;
-    }
+
+
 
     public int getUser_role() {
         return user_role;
@@ -77,11 +87,24 @@ public class UserInfoResponse {
         this.user_lname = user_lname;
     }
 
-    public String getDep_name() {
-        return dep_name;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setDep_name(String dep_name) {
-        this.dep_name = dep_name;
+    public void setDepartment(Department department) {
+        this.department = department;
     }
+    public void setDep_id(int id) {
+        this.department.setId(id);
+    }
+    public int getDep_id() {
+        return this.department.getId();
+    }
+    public void setDep_name(String name){
+        this.department.setName(name);
+    }
+    public String getDep_name(){
+        return this.department.getName();
+    }
+
 }

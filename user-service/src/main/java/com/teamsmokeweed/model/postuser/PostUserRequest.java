@@ -1,11 +1,14 @@
 package com.teamsmokeweed.model.postuser;
 
+import com.teamsmokeweed.model.dep.Department;
+
 /**
  * Created by jongzazaal on 14/4/2560.
  */
 public class PostUserRequest {
     String user_username, user_password, user_fname, user_lname;
     int dep_id, user_role, user_ispasswordchange;
+
 
     public PostUserRequest() {
     }

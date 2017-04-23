@@ -49,13 +49,13 @@ public class UserController {
     public @ResponseBody
     ResponseEntity<PostUserResponse> PostUser(@RequestBody PostUserRequest postUserRequest){
         if(!(this.userRepository.checkUniqueUsername(postUserRequest.getUser_username()).isUnique())){
-            return  new ResponseEntity<PostUserResponse>(new PostUserResponse("Username is not Unique"), HttpStatus.OK);
+            return  new ResponseEntity<PostUserResponse>(new PostUserResponse("Username is already Exists!"), HttpStatus.OK);
         }
         String uniqueID = UUID.randomUUID().toString();
         postUserRequest.setUser_password(uniqueID);
         postUserRequest.setUser_password(userRepository.md5(postUserRequest.getUser_password()));
         this.userRepository.PostUser(postUserRequest);
-        return new ResponseEntity<PostUserResponse>(new PostUserResponse(postUserRequest.getUser_username(), uniqueID, "sucess"), HttpStatus.OK);
+        return new ResponseEntity<PostUserResponse>(new PostUserResponse(postUserRequest.getUser_username(), uniqueID, "User has been created!"), HttpStatus.OK);
     }
 
     @GetMapping("/UniqueUsername")
