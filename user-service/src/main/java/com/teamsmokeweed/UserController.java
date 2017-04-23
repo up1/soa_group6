@@ -41,7 +41,7 @@ public class UserController {
     ResponseEntity<UserInfoResponse> UserInfo(@RequestBody UserInfoRequest userRequest){
 
         //password md5
-        userRequest.setPassword(userRepository.md5(userRequest.getPassword()));
+        userRequest.setPassword(userRepository.md5(userRequest.getPassword()).substring(0,7));
         return new ResponseEntity<UserInfoResponse>(this.userRepository.getUser(userRequest), HttpStatus.OK);
     }
 
