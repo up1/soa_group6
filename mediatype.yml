@@ -84,6 +84,7 @@ token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.p
 title: Sample Document
 description: Sample Document Description
 tag: general
+user_id: 2
 
 # [Response]
 # Success
@@ -97,7 +98,7 @@ error:
 # Get a document
 
 # [Response]
-- id: 1
+  id: 1
   tag: non-urgent
   title: I need healing!
   description: Lorem ipsum dolor sit amet...
@@ -127,10 +128,10 @@ tag: general
 # [Response]
 # Success
 success:
-  message: Title 5 has been updated
+  message: Document has been updated
 # Error
 error:
-  message: Title 5 cannot be updated
+  message: Document cannot be updated
 
 # DELETE /documents/:id
 # Delete a document
@@ -138,10 +139,10 @@ error:
 # [Response]
 # Success
 success:
-  message: Document 1 has been deleted
+  message: This document has been deleted
 # Error
 error:
-  message: Document 1 cannot be deleted
+  message: This document cannot be deleted
 
 # GET /documents/departments/:id
 # Get documents from a department
@@ -183,6 +184,16 @@ error:
     size: 1 MB
     time: 1492447382967
     revision: 2
+    
+# GET /OwnerDepartment/:id
+# Get Owner Department
+
+# [Request]
+-
+# [Response]
+
+id: 2,
+name: Developer
 
 #############
 # Share API #

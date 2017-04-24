@@ -5,23 +5,31 @@ package com.shareservice;
  */
 public class ServiceStatus {
 
-    private boolean response;
+    private String response;
     private String message;
 
     public ServiceStatus() {
     }
 
-    public ServiceStatus(boolean response, String message) {
-        this.setResponse(response);
-        this.setMessage(message);
+    public ServiceStatus(String response, String message) {
+        this.response = response;
+        this.message = message;
     }
 
+    public Boolean isResponse(){
+        if (this.response.equals("success")){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
-    public boolean isResponse() {
+    public String getResponse() {
         return response;
     }
 
-    public void setResponse(boolean response) {
+    public void setResponse(String response) {
         this.response = response;
     }
 

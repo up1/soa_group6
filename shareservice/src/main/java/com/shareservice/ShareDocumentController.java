@@ -26,11 +26,11 @@ public class ShareDocumentController {
         this.shareDocumentRepository = shareDocumentRepository;
     }
 
-    @DeleteMapping("/documents/{doc_id}/share")
+    @DeleteMapping("/documents/{documentId}/shares")
     public @ResponseBody
-    ResponseEntity<ServiceStatus> revokeDepartmentFromDoc (@PathVariable String doc_id,
-                                                           @RequestBody Map<String, Integer> dep_id){
-        ServiceStatus status = shareDocumentRepository.revokeDepartmentFromDoc(Integer.parseInt(doc_id), dep_id.get("dep_id"));
+    ResponseEntity<ServiceStatus> revokeDepartmentFromDoc (@PathVariable String documentId,
+                                                           @RequestBody Map<String, Integer> departmentId){
+        ServiceStatus status = shareDocumentRepository.revokeDepartmentFromDoc(Integer.parseInt(documentId), departmentId.get("departmentId"));
         if(status.isResponse()){
             return new ResponseEntity<ServiceStatus>(status, HttpStatus.FOUND);
         }
@@ -40,13 +40,11 @@ public class ShareDocumentController {
 
     }
 
-    @PostMapping("/documents/{doc_id}/share")
+    @PostMapping("/documents/{documentId}/shares")
     public @ResponseBody
-    ResponseEntity<ServiceStatus> addDepartmentToDoc (@PathVariable String doc_id,
-                                                      @RequestBody Map<String, Integer> dep_id){
-        ServiceStatus status = shareDocumentRepository.postShareToOtherDepartment(Integer.parseInt(doc_id), dep_id.get("dep_id"));
-        System.out.println(dep_id.get("dep_id"));
-        System.out.println(status.getMessage());
+    ResponseEntity<ServiceStatus> addDepartmentToDoc (@PathVariable String documentId,
+                                                      @RequestBody Map<String, Integer> departmentId){
+        ServiceStatus status = shareDocumentRepository.postShareToOtherDepartment(Integer.parseInt(documentId), departmentId.get("departmentId"));
 
         if(status.isResponse()){
             return new ResponseEntity<ServiceStatus>(status, HttpStatus.FOUND);
@@ -56,28 +54,20 @@ public class ShareDocumentController {
         }
     }
 
-    @GetMapping("/documents/{doc_id}/share")
+    @GetMapping("/documents/{documentId}/shares")
     public @ResponseBody
-    ResponseEntity<List<Department>> getShareDepartmentByDoc
-            (@PathVariable String doc_id){
+    ResponseEntity<List<DepartmentStatus>> getListDepartmentStatusByDoc
+            (@PathVariable String documentId){
 
-        List<Department> listdep;
-        listdep = shareDocumentRepository.getListShareDepartmentByDoc(Integer.parseInt(doc_id));
-        if(listdep.size() > 0){
-            return new ResponseEntity<List<Department>>(listdep, HttpStatus.FOUND);
+        List<DepartmentStatus> listDepartmentWithStatusByDoc = shareDocumentRepository.getListDepartmentWithStatusByDoc(Integer.parseInt(documentId));
+        if(listDepartmentWithStatusByDoc.size() > 0){
+            return new ResponseEntity<List<DepartmentStatus>>(listDepartmentWithStatusByDoc, HttpStatus.FOUND);
         }
         else{
-            return new ResponseEntity<List<Department>>(new ArrayList<Department>(){}, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<DepartmentStatus>>(new ArrayList<DepartmentStatus>(){}, HttpStatus.NOT_FOUND);
         }
     }
-
-
-
-    @PostMapping("/debug/documents/{documentId}/share")
-    public Integer getDocument(@PathVariable String documentId, @RequestBody Map<String, Integer> department) {
-        return department.get("departmentId");
-    }
-
-
 
 }
+
+
