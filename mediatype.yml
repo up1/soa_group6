@@ -98,7 +98,7 @@ error:
 # Get a document
 
 # [Response]
-- id: 1
+  id: 1
   tag: non-urgent
   title: I need healing!
   description: Lorem ipsum dolor sit amet...
