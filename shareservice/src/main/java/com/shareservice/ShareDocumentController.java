@@ -46,22 +46,11 @@ public class ShareDocumentController {
 
     @GetMapping("/documents/{documentId}/shares")
     public @ResponseBody
-    ResponseEntity<List<DepartmentStatus>> getListDepartmentStatusByDoc
+    List<Map<String, Object>> getListDepartmentStatusExceptOwnerByDoc
             (@PathVariable String documentId){
 
-        List<DepartmentStatus> listDepartmentWithStatusByDoc = shareDocumentRepository.getListDepartmentWithStatusByDoc(Integer.parseInt(documentId));
-        if(listDepartmentWithStatusByDoc.size() > 0){
-            return new ResponseEntity<List<DepartmentStatus>>(listDepartmentWithStatusByDoc, HttpStatus.FOUND);
-        }
-        else{
-            return new ResponseEntity<List<DepartmentStatus>>(new ArrayList<DepartmentStatus>(){}, HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/debug/shares")
-    public @ResponseBody
-    ResponseEntity<List<Map<String, Object>>> getShares (){
-        return new ResponseEntity<List<Map<String, Object>>>(this.shareDocumentRepository.getShare(), HttpStatus.FOUND);
+        List<Map<String, Object>> listDepartmentWithStatusByDoc = shareDocumentRepository.getListDepartmentWithStatusExceptOwnerByDoc(Integer.parseInt(documentId));
+        return listDepartmentWithStatusByDoc;
     }
 
 }

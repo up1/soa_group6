@@ -6,6 +6,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by melon on 4/24/2017.
@@ -14,18 +15,18 @@ import java.util.List;
 @Service
 public class DepAdapter {
 
-    public List<Department> getDepartmentAll(){
+    public List<Map<String, Object>> getDepartmentAll(){
         RestTemplate restTemplate =  new RestTemplate();
-        String url = "http://35.187.208.148:8091/departments";
-        ResponseEntity<Department[]> departmentList = restTemplate.getForEntity(url, Department[].class);
-        return Arrays.asList(departmentList.getBody());
+        String url = "http://localhost:8091/departments";
+        List<Map<String, Object>> departmentList = restTemplate.getForObject(url, List.class);
+        return departmentList;
 
     }
 
-    public Department getDepartmentById(int departmentId){
+    public Map<String, Object> getDepartmentById(int departmentId){
         RestTemplate restTemplate =  new RestTemplate();
-        String url = "http://35.187.208.148:8091/departments/" + departmentId;
-        Department department = restTemplate.getForObject(url, Department.class);
+        String url = "http://localhost:8091/departments/" + departmentId;
+        Map<String, Object> department = restTemplate.getForObject(url, Map.class);
         return department;
 
     }
