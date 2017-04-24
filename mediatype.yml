@@ -208,13 +208,9 @@ name: Developer
     name: Developer
   shared: true
 - department:
-    id: 2
-    name: Shimada Department
-  shared: false
-- department:
     id: 3
     name: HR
-  shared: true
+  shared: false
 
 # POST /documents/:id/shares
 # Share a document
@@ -225,10 +221,10 @@ departmentId: 3
 # [Response]
 # Success
 success:
-  message: Sample document has been shared to HR
+  message: Document has been shared to Human Resource department.
 # Error
 error:
-  message: Sample document cannot be shared to HR
+  message: Document cannot be shared to Human Resource department.
 
 # DELETE /documents/:id/shares
 # Revoke sharing from a document
@@ -239,10 +235,10 @@ departmentId: 3
 # [Response]
 # Success
 success:
-  message: Sample document has been revoked from HR
+  message: Document has been revoked from Human Resource department.
 # Error
 error:
-  message: Sample document cannot be revoked from HR
+  message: Document cannot be revoked from Human Resource department.
 
 ##################
 # Department API #
