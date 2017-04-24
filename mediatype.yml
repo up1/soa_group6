@@ -208,13 +208,9 @@ name: Developer
     name: Developer
   shared: true
 - department:
-    id: 2
-    name: Shimada Department
-  shared: false
-- department:
     id: 3
     name: HR
-  shared: true
+  shared: false
 
 # POST /documents/:id/shares
 # Share a document
@@ -225,10 +221,23 @@ departmentId: 3
 # [Response]
 # Success
 success:
-  message: Sample document has been shared to HR
-# Error
+  message: This document has been shared to Human Resource department.
+  
+# Error when document don't have in database
 error:
-  message: Sample document cannot be shared to HR
+  message: Unknown document.
+# Error when department don't have in database
+error:
+  message: Unknown department.
+# Error when department and document don't have in database
+error:
+  message: Unknown document and department.
+# Error when department is owner of document.
+error:
+  message: Human Resource department is a owner of this document.
+# Error when department is already shared.
+error:
+  message: This document is already shared to Human Resource department.
 
 # DELETE /documents/:id/shares
 # Revoke sharing from a document
@@ -239,10 +248,25 @@ departmentId: 3
 # [Response]
 # Success
 success:
-  message: Sample document has been revoked from HR
-# Error
+  message: This document has been revoked from Human Resource department.
+# Error when document don't have in database
 error:
-  message: Sample document cannot be revoked from HR
+  message: Unknown document.
+# Error when department don't have in database
+error:
+  message: Unknown department.
+# Error when department and document don't have in database
+error:
+  message: Unknown document and department.
+# Error when department is owner of document.
+error:
+  message: Human Resource department is a owner of this document.
+# Error when document does not share to any department.
+error:
+  message: This document does not share to any department.
+# Error when department is not shared to document.
+error:
+  message: This document does not share to Human Resource department.
 
 ##################
 # Department API #
