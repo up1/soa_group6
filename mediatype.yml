@@ -184,6 +184,16 @@ error:
     size: 1 MB
     time: 1492447382967
     revision: 2
+    
+# GET /OwnerDepartment/:id
+# Get Owner Department
+
+# [Request]
+-
+# [Response]
+
+id: 2,
+name: Developer
 
 #############
 # Share API #
