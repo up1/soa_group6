@@ -17,63 +17,106 @@ public class ShareDocumentRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Transactional(readOnly = false)
-    public ServiceStatus postShareToOtherDepartment(int documentId, int departmentId) {
+    public Map<String, Object> postShareToOtherDepartment(int documentId, int departmentId) {
+        //Declare map and get departmentname
+        Map<String, Object> resource = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+        Department departmentName = new DepAdapter().getDepartmentById(departmentId);
+
         try {
             //check documentId & departmentId
             if (!checkDepid(departmentId) && !checkDocid(documentId)) {
-                return new ServiceStatus("error", "Unknown department and document.");
+                //Return result
+                result.put("error", resource);
+                resource.put("message", "Unknown department or document.");
+                return result;
             }
             if (!checkDepid(departmentId)){
-                return new ServiceStatus("error", "Unknown department.");
+                //Return result
+                result.put("error", resource);
+                resource.put("message", "Unknown department.");
+                return result;
             }
             if (!checkDocid(documentId)){
-                return new ServiceStatus("error", "Unknown document.");
+                //Return result
+                result.put("error", resource);
+                resource.put("message", "Unknown document.");
+                return result;
             }
 
+            //INSERT SQL COMMAND
             String sql = "INSERT INTO shares_service.shares (doc_id, dep_id) VALUES(?, ?)";
             this.jdbcTemplate.update(sql, documentId, departmentId);
-            Department departmentName = new DepAdapter().getDepartmentById(departmentId);
 
-            return new ServiceStatus("success", "Document has been shared to "+ departmentName.getName() + " department.");
+            //Return result
+            result.put("success", resource);
+            resource.put("message", "Document has been shared to " + departmentName.getName() +" department.");
+            return result;
+
         } catch (Exception e) {
-            Department departmentName = new DepAdapter().getDepartmentById(departmentId);
-            return new ServiceStatus("error", "Document cannot be shared to "+ departmentName.getName() + " department.");
-
+            //Return result
+            result.put("error", resource);
+            resource.put("message", "Document cannot be shared to " + departmentName.getName() +" department.");
+            return result;
         }
     }
 
     @Transactional(readOnly = false)
-    public ServiceStatus revokeDepartmentFromDoc(int documentId, int departmentId) {
-        try {
+    public Map<String, Object> revokeDepartmentFromDoc(int documentId, int departmentId) {
+        //Declare map and get departmentname
+        Map<String, Object> resource = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+        Department departmentName = new DepAdapter().getDepartmentById(departmentId);
 
+        try {
             //check documentId & departmentId
             if (!checkDepid(departmentId) && !checkDocid(documentId)) {
-                return new ServiceStatus("error", "Unknown department and document.");
+                //Return result
+                result.put("error", resource);
+                resource.put("message", "Unknown department or document.");
+                return result;
             }
             if (!checkDepid(departmentId)){
-                return new ServiceStatus("error", "Unknown department.");
+                //Return result
+                result.put("error", resource);
+                resource.put("message", "Unknown department.");
+                return result;
             }
             if (!checkDocid(documentId)){
-                return new ServiceStatus("error", "Unknown document.");
+                //Return result
+                result.put("error", resource);
+                resource.put("message", "Unknown document.");
+                return result;
             }
+            //Get list of data in shares table that before delete
+            List<Map<String, Object>> listBefore = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares");
 
-            List<ShareDocument> listBefore = this.jdbcTemplate.query("SELECT * FROM shares_service.shares", new ShareDocumentRowMapper());
-
+            //Delete SQL command
             String deletesql = "DELETE FROM shares_service.shares WHERE doc_id = ? AND dep_id = ?";
             this.jdbcTemplate.update(deletesql, documentId, departmentId);
 
-            List<ShareDocument> listAfter = this.jdbcTemplate.query("SELECT * FROM shares_service.shares", new ShareDocumentRowMapper());
+            //Get list of data in shares table that after delete
+            List<Map<String, Object>> listAfter = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares");
 
-            Department departmentName = new DepAdapter().getDepartmentById(departmentId);
-
+            //check delete command was work;
             if (listAfter.size() == listBefore.size()) {
-                return new ServiceStatus("error", "Document cannot be revoked from " + departmentName.getName() + " department.");
+                //Return result
+                result.put("error", resource);
+                resource.put("message", "Document cannot be revoked from " + departmentName.getName() +" department.");
+                return result;
+
             } else {
-                return new ServiceStatus("success", "Document has been revoked from " + departmentName.getName() + " department.");
+                //Return result
+                result.put("success", resource);
+                resource.put("message", "Document has been revoked from " + departmentName.getName() +" department.");
+                return result;
             }
 
         } catch (Exception e) {
-            return new ServiceStatus("error", "Unknown department and document.");
+            //Return result
+            result.put("error", resource);
+            resource.put("message", "Document cannot be revoked from " + departmentName.getName() +" department.");
+            return result;
         }
     }
 
@@ -98,7 +141,16 @@ public class ShareDocumentRepository {
             }
         }
 
+
         return listDepartmentWithStatus;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getShare(){
+        List<Map<String, Object>> listShare;
+        System.out.println("hello");
+        listShare = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares");
+        return listShare;
     }
 
     @Transactional(readOnly = false)
