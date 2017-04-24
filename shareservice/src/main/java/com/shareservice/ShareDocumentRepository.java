@@ -5,8 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by super on 21/3/2560.
@@ -18,54 +17,111 @@ public class ShareDocumentRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Transactional(readOnly = false)
-    public ServiceStatus postShareToOtherDepartment(int doc_id, int dep_id) {
+    public ServiceStatus postShareToOtherDepartment(int documentId, int departmentId) {
         try {
+            //check documentId & departmentId
+            if (!checkDepid(departmentId) && !checkDocid(documentId)) {
+                return new ServiceStatus("error", "Unknown department and document.");
+            }
+            if (!checkDepid(departmentId)){
+                return new ServiceStatus("error", "Unknown department.");
+            }
+            if (!checkDocid(documentId)){
+                return new ServiceStatus("error", "Unknown document.");
+            }
+
             String sql = "INSERT INTO shares_service.shares (doc_id, dep_id) VALUES(?, ?)";
-            this.jdbcTemplate.update(sql, doc_id, dep_id);
-            return new ServiceStatus(true, "Add Department To Document Complete");
+            this.jdbcTemplate.update(sql, documentId, departmentId);
+            Department departmentName = new DepAdapter().getDepartmentById(departmentId);
+
+            return new ServiceStatus("success", "Document has been shared to "+ departmentName.getName() + " department.");
         } catch (Exception e) {
-            return new ServiceStatus(false, "Add Department To Document Fail");
+            Department departmentName = new DepAdapter().getDepartmentById(departmentId);
+            return new ServiceStatus("error", "Document cannot be shared to "+ departmentName.getName() + " department.");
+
         }
     }
 
     @Transactional(readOnly = false)
-    public ServiceStatus revokeDepartmentFromDoc(int doc_id, int dep_id) {
+    public ServiceStatus revokeDepartmentFromDoc(int documentId, int departmentId) {
         try {
-            List<ShareDocument> listBefore = this.jdbcTemplate.query("SELECT doc_id, dep_id FROM shares_service.shares", new ShareDocumentRowMapper());
+
+            //check documentId & departmentId
+            if (!checkDepid(departmentId) && !checkDocid(documentId)) {
+                return new ServiceStatus("error", "Unknown department and document.");
+            }
+            if (!checkDepid(departmentId)){
+                return new ServiceStatus("error", "Unknown department.");
+            }
+            if (!checkDocid(documentId)){
+                return new ServiceStatus("error", "Unknown document.");
+            }
+
+            List<ShareDocument> listBefore = this.jdbcTemplate.query("SELECT * FROM shares_service.shares", new ShareDocumentRowMapper());
 
             String deletesql = "DELETE FROM shares_service.shares WHERE doc_id = ? AND dep_id = ?";
-            this.jdbcTemplate.update(deletesql, doc_id, dep_id);
+            this.jdbcTemplate.update(deletesql, documentId, departmentId);
 
-            List<ShareDocument> listAfter = this.jdbcTemplate.query("SELECT doc_id, dep_id FROM shares_service.shares", new ShareDocumentRowMapper());
+            List<ShareDocument> listAfter = this.jdbcTemplate.query("SELECT * FROM shares_service.shares", new ShareDocumentRowMapper());
+
+            Department departmentName = new DepAdapter().getDepartmentById(departmentId);
 
             if (listAfter.size() == listBefore.size()) {
-                return new ServiceStatus(false, "Revoke Department From Document Fail");
+                return new ServiceStatus("error", "Document cannot be revoked from " + departmentName.getName() + " department.");
             } else {
-                return new ServiceStatus(true, "Revoke Department From Document Complete");
+                return new ServiceStatus("success", "Document has been revoked from " + departmentName.getName() + " department.");
             }
 
         } catch (Exception e) {
-            return new ServiceStatus(false, "Revoke Department From Document Fail");
+            return new ServiceStatus("error", "Unknown department and document.");
         }
     }
 
     @Transactional(readOnly = true)
-    public List<Department> getListShareDepartmentByDoc(int doc_id) {
-        List<Department> listdep;
-        String sql = "SELECT dep.dep_id, dep.dep_name\n" +
-                "FROM\n" +
-                "(SELECT s.dep_id\n" +
-                "FROM shares_service.shares s\n" +
-                "JOIN document_service.documents d\n" +
-                "USING (doc_id)\n" +
-                "JOIN users_service.users u\n" +
-                "USING (user_id)\n" +
-                "WHERE s.doc_id = ?) tab\n" +
-                "JOIN department_service.department dep\n" +
-                "ON (tab.dep_id = dep.dep_id)";
-        listdep = this.jdbcTemplate.query(sql, new Object[]{doc_id}, new DepartmentRowMapper());
+    public List<DepartmentStatus> getListDepartmentWithStatusByDoc(int documentId) {
 
-        return listdep;
+        List<DepartmentStatus> listDepartmentWithStatus = new ArrayList<>();
+        List<Department> departmentList = new DepAdapter().getDepartmentAll();
+        List<ShareDocument> listDepartmentByDoc = this.jdbcTemplate.query("SELECT * FROM shares_service.shares WHERE doc_id = ?", new Object[]{documentId}, new ShareDocumentRowMapper());
+
+        for(Department dep: departmentList){
+            int checkAddToList = 0;
+            for(ShareDocument share : listDepartmentByDoc){
+                if(share.getDepartmentId() == dep.getId()){
+                    listDepartmentWithStatus.add(new DepartmentStatus(dep, true));
+                    checkAddToList = 1;
+                    break;
+                }
+            }
+            if (checkAddToList == 0){
+                listDepartmentWithStatus.add(new DepartmentStatus(dep, false));
+            }
+        }
+
+        return listDepartmentWithStatus;
+    }
+
+    @Transactional(readOnly = false)
+    public Boolean checkDocid(int documentId){
+        List<Document> documentList = new DocAdapter().getDocumentAll();
+        for(Document doc : documentList){
+            if(doc.getId() == documentId){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    @Transactional(readOnly = false)
+    public Boolean checkDepid(int departmentId){
+        List<Department> departmentList = new DepAdapter().getDepartmentAll();
+        for(Department dep : departmentList){
+            if(dep.getId() == departmentId){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

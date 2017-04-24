@@ -4,30 +4,30 @@ package com.shareservice;
  * Created by super on 21/3/2560.
  */
 public class Department {
-    private int dep_id;
-    private String dep_name;
+    private int id;
+    private String name;
 
     public Department() {
     }
 
-    public Department(int dep_id, String dep_name) {
-        this.dep_id = dep_id;
-        this.dep_name = dep_name;
+    public Department(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public int getDep_id() {
-        return dep_id;
+    public int getId() {
+        return id;
     }
 
-    public void setDep_id(int dep_id) {
-        this.dep_id = dep_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getDep_name() {
-        return dep_name;
+    public String getName() {
+        return name;
     }
 
-    public void setDep_name(String dep_name) {
-        this.dep_name = dep_name;
+    public void setName(String name) {
+        this.name = name;
     }
 }
