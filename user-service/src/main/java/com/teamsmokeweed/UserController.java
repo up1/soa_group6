@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.json.simple.JSONObject;
 
 import java.util.UUID;
 
@@ -47,15 +48,26 @@ public class UserController {
 
     @PostMapping("/user")
     public @ResponseBody
-    ResponseEntity<PostUserResponse> PostUser(@RequestBody PostUserRequest postUserRequest){
+    JSONObject PostUser(@RequestBody PostUserRequest postUserRequest){
         if(!(this.userRepository.checkUniqueUsername(postUserRequest.getUser_username()).isUnique())){
-            return  new ResponseEntity<PostUserResponse>(new PostUserResponse("Username is already Exists!"), HttpStatus.OK);
+            //return  new ResponseEntity<PostUserResponse>(new PostUserResponse("Username is already Exists!"), HttpStatus.OK);
+            JSONObject err = new JSONObject();
+            JSONObject msg = new JSONObject();
+            msg.put("message", "User cannot be created!");
+            err.put("error", msg);
         }
         String uniqueID = UUID.randomUUID().toString();
         postUserRequest.setUser_password(uniqueID);
         postUserRequest.setUser_password(userRepository.md5(postUserRequest.getUser_password()));
         this.userRepository.PostUser(postUserRequest);
-        return new ResponseEntity<PostUserResponse>(new PostUserResponse(postUserRequest.getUser_username(), uniqueID, "User has been created!"), HttpStatus.OK);
+        //return new ResponseEntity<PostUserResponse>(new PostUserResponse(postUserRequest.getUser_username(), uniqueID, "User has been created!"), HttpStatus.OK);
+        JSONObject succ = new JSONObject();
+        JSONObject msg = new JSONObject();
+        msg.put("username", postUserRequest.getUser_username());
+        msg.put("password", postUserRequest.getUser_password());
+        msg.put("message", "User has been created!");
+        succ.put("success", msg);
+        return succ;
     }
 
     @GetMapping("/UniqueUsername")
@@ -63,8 +75,15 @@ public class UserController {
         return this.userRepository.checkUniqueUsername(username);
     }
 
-//    @GetMapping("/userInfoByID")
-//    public
+    @GetMapping("/test")
+    public JSONObject test(@RequestParam(value = "id") int id){
+        JSONObject obj = new JSONObject();
+        JSONObject errid = new JSONObject();
+        errid.put("id", id);
+        obj.put("char", "abc");
+        obj.put("error", errid);
+        return obj;
+    }
 
 
 }
