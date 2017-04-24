@@ -128,10 +128,10 @@ tag: general
 # [Response]
 # Success
 success:
-  message: Title 5 has been updated
+  message: Document has been updated
 # Error
 error:
-  message: Title 5 cannot be updated
+  message: Document cannot be updated
 
 # DELETE /documents/:id
 # Delete a document
@@ -139,10 +139,10 @@ error:
 # [Response]
 # Success
 success:
-  message: Document 1 has been deleted
+  message: This document has been deleted
 # Error
 error:
-  message: Document 1 cannot be deleted
+  message: This document cannot be deleted
 
 # GET /documents/departments/:id
 # Get documents from a department
