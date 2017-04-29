@@ -58,10 +58,12 @@ token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.p
     size: 69 KB
     time: 1492447382967
     revision: 1
+    id: 14
   - name: genji.jpg
     size: 1 MB
     time: 1492447382967
     revision: 2
+    id: 15
 - id: 2
   tag: urgent
   title: xDDDDDD
@@ -76,6 +78,7 @@ token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.p
     size: 420 KB
     time: 1492447382967
     revision: 1
+    id: 16
 
 # POST /documents
 # Create a document
@@ -162,10 +165,12 @@ error:
     size: 69 KB
     time: 1492447382967
     revision: 1
+    id: 14
   - name: genji.jpg
     size: 1 MB
     time: 1492447382967
     revision: 2
+    id: 15
 - id: 4
   tag: non-urgent
   title: I need healing!
@@ -180,13 +185,15 @@ error:
     size: 69 KB
     time: 1492447382967
     revision: 1
+    id: 16
   - name: genji.jpg
     size: 1 MB
     time: 1492447382967
     revision: 2
+    id: 17
     
 # GET /OwnerDepartment/:id
-# Get Owner Department
+# Get Owner Department By Docid
 
 # [Request]
 -
@@ -334,7 +341,7 @@ password_changed: false
 # File API #
 ############
 
-# GET /files/{filename}
+# GET /download/{docid}/{fileid}/{revision}/{filename:.+}
 # Download a file
 
 # [Response]
