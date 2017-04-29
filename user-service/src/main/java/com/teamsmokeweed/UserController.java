@@ -1,8 +1,8 @@
 package com.teamsmokeweed;
 
 import com.teamsmokeweed.model.check.unique.username.CheckUniqueUsernameResponse;
-import com.teamsmokeweed.model.dep.GetDepNameResponse;
 import com.teamsmokeweed.model.postuser.PostUserRequest;
+import com.teamsmokeweed.model.postuser.PostUserResponse;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.json.simple.JSONObject;
-
 
 import java.util.UUID;
 
@@ -61,8 +60,6 @@ public class UserController {
         postUserRequest.setUser_password(uniqueID);
         postUserRequest.setUser_password(userRepository.md5(postUserRequest.getUser_password()));
         this.userRepository.PostUser(postUserRequest);
-        //try JSONObject!
-        //below is old code... JSONObject in beta!
         //return new ResponseEntity<PostUserResponse>(new PostUserResponse(postUserRequest.getUser_username(), uniqueID, "User has been created!"), HttpStatus.OK);
         JSONObject succ = new JSONObject();
         JSONObject msg = new JSONObject();
@@ -86,11 +83,6 @@ public class UserController {
         obj.put("char", "abc");
         obj.put("error", errid);
         return obj;
-    }
-
-    @GetMapping("/debNameByUserID")
-    public GetDepNameResponse DebNameByUserID(@RequestParam(value = "userID") String userID){
-        return this.userRepository.DebNameByUserID(userID);
     }
 
 

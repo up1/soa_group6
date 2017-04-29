@@ -2,7 +2,6 @@ package com.teamsmokeweed;
 
 import com.teamsmokeweed.model.check.unique.username.CheckUniqueUsernameResponse;
 import com.teamsmokeweed.model.dep.DepAdapter;
-import com.teamsmokeweed.model.dep.GetDepNameResponse;
 import com.teamsmokeweed.model.postuser.PostUserRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoResponse;
@@ -51,7 +50,7 @@ public class UserRepository {
                 new Object[]{userRequest.getUsername(), userRequest.getPassword()}, new UserInfoResponseRowMapping());
 
         try{
-            userInfoResponse.setDep_name(depAdapter.GetDepName(userInfoResponse.getDep_id()).toString());
+            userInfoResponse.setDep_name(depAdapter.GetDepName(userInfoResponse.getDep_id()).getDep_name());
             return userInfoResponse;
         }
         catch (Exception e){
@@ -82,21 +81,5 @@ public class UserRepository {
             return new CheckUniqueUsernameResponse(true);
         }
 
-    }
-    public GetDepNameResponse DebNameByUserID(String user_id){
-        UserInfoResponse userInfoResponse = jdbcTemplate.queryForObject("SELECT user_id, dep_id, user_role, user_ispasswordchange, user_username, user_fname, user_lname FROM users WHERE user_id = ?",
-                new Object[]{user_id}, new UserInfoResponseRowMapping());
-
-        try{
-//            GetDepNameResponse response = depAdapter.GetDepName(userInfoResponse.getDep_id());
-            GetDepNameResponse getDepNameResponse = depAdapter.GetDepName(userInfoResponse.getDep_id());
-//            userInfoResponse.setDep_name();
-
-            return getDepNameResponse;
-        }
-        catch (Exception e){
-            GetDepNameResponse getDepNameResponse = new GetDepNameResponse(0, "department-service is crash");
-            return getDepNameResponse;
-        }
     }
 }
