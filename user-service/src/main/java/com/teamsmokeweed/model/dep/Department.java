@@ -11,6 +11,9 @@ public class Department {
         this.id = id;
         this.name = name;
     }
+    public Department(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;

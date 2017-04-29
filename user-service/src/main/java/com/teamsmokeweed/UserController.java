@@ -46,7 +46,7 @@ public class UserController {
     @PostMapping("/user")
     public @ResponseBody
     JSONObject PostUser(@RequestBody PostUserRequest postUserRequest){
-        if(!(this.userRepository.checkUniqueUsername(postUserRequest.getUser_username()).isUnique())){
+        if(!(this.userRepository.checkUniqueUsername(postUserRequest.getUsername()).isUnique())){
             //return  new ResponseEntity<PostUserResponse>(new PostUserResponse("Username is already Exists!"), HttpStatus.OK);
             JSONObject err = new JSONObject();
             JSONObject msg = new JSONObject();
@@ -55,14 +55,14 @@ public class UserController {
             return err;
         }
         String uniqueID = UUID.randomUUID().toString().substring(0, 6);
-        postUserRequest.setUser_password(uniqueID);
-        postUserRequest.setUser_password(userRepository.md5(postUserRequest.getUser_password()));
+        postUserRequest.setPassword(uniqueID);
+        postUserRequest.setPassword(userRepository.md5(postUserRequest.getPassword()));
         this.userRepository.PostUser(postUserRequest);
         //return new ResponseEntity<PostUserResponse>(new PostUserResponse(postUserRequest.getUser_username(), uniqueID, "User has been created!"), HttpStatus.OK);
         JSONObject succ = new JSONObject();
         JSONObject msg = new JSONObject();
-        msg.put("username", postUserRequest.getUser_username());
-        msg.put("password", postUserRequest.getUser_password());
+        msg.put("username", postUserRequest.getUsername());
+        msg.put("password", postUserRequest.getPassword());
         msg.put("message", "User has been created!");
         succ.put("success", msg);
         return succ;

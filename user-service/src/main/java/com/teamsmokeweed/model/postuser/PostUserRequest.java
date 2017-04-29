@@ -6,54 +6,64 @@ import com.teamsmokeweed.model.dep.Department;
  * Created by jongzazaal on 14/4/2560.
  */
 public class PostUserRequest {
-    String user_username, user_password, user_fname, user_lname;
+    String username, password, first_name, last_name;
     int dep_id, user_role, user_ispasswordchange;
+    Department department;
 
 
     public PostUserRequest() {
     }
 
-    public PostUserRequest(String user_username, String user_password, String user_fname, String user_lname, int dep_id, int user_role, int user_ispasswordchange) {
-        this.user_username = user_username;
-        this.user_password = user_password;
-        this.user_fname = user_fname;
-        this.user_lname = user_lname;
+    public PostUserRequest(String username, String password, String first_name, String last_name, int dep_id, int user_role, int user_ispasswordchange) {
+        this.username = username;
+        this.password = password;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.dep_id = dep_id;
         this.user_role = user_role;
         this.user_ispasswordchange = user_ispasswordchange;
     }
 
-    public String getUser_username() {
-        return user_username;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser_username(String user_username) {
-        this.user_username = user_username;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getUser_password() {
-        return user_password;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUser_password(String user_password) {
-        this.user_password = user_password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getUser_fname() {
-        return user_fname;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setUser_fname(String user_fname) {
-        this.user_fname = user_fname;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getUser_lname() {
-        return user_lname;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setUser_lname(String user_lname) {
-        this.user_lname = user_lname;
+    public void setDepartment(Department department) {
+        this.department = department;
     }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
 
     public int getDep_id() {
         return dep_id;
