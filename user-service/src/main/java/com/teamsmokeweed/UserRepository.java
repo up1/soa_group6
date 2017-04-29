@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -71,6 +70,11 @@ public class UserRepository {
                 new Object[]{postUserRequest.getUser_username(), postUserRequest.getUser_password(),
                         postUserRequest.getUser_fname(), postUserRequest.getUser_lname(), postUserRequest.getDep_id(),
                         postUserRequest.getUser_role(), postUserRequest.getUser_ispasswordchange()});
+
+    }
+    public void DeleteUser(int user_id){
+
+            jdbcTemplate.update("DELETE FROM users WHERE user_id=?", user_id);
 
     }
 

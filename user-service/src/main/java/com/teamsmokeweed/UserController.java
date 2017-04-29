@@ -1,13 +1,13 @@
 package com.teamsmokeweed;
 
 import com.teamsmokeweed.model.check.unique.username.CheckUniqueUsernameResponse;
+import com.teamsmokeweed.model.deleteuser.DeleteUserRequest;
 import com.teamsmokeweed.model.postuser.PostUserRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 import java.util.UUID;
 
@@ -52,6 +52,7 @@ public class UserController {
             JSONObject msg = new JSONObject();
             msg.put("message", "User cannot be created!");
             err.put("error", msg);
+            return err;
         }
         String uniqueID = UUID.randomUUID().toString().substring(0, 6);
         postUserRequest.setUser_password(uniqueID);
@@ -72,6 +73,18 @@ public class UserController {
         return this.userRepository.checkUniqueUsername(username);
     }
 
+    @DeleteMapping("/user")
+    public @ResponseBody
+    JSONObject DeleteUser(@RequestBody DeleteUserRequest deleteUserRequest){
+        JSONObject msg = new JSONObject();
+        try{
+            this.userRepository.DeleteUser(deleteUserRequest.getUserID());
+            msg.put("message", "User has been deleted!");
+        } catch (Exception e){
+            msg.put("message", "Error! User cannot delete!");
+        }
+        return msg;
+    }
     @GetMapping("/test")
     public JSONObject test(@RequestParam(value = "id") int id){
         JSONObject obj = new JSONObject();
@@ -86,6 +99,8 @@ public class UserController {
     public Map<String, Object> DebNameByUserID(@RequestParam(value = "userID") int userID){
         return this.userRepository.DebNameByUserID(userID);
     }
+
+
 
 
 }
