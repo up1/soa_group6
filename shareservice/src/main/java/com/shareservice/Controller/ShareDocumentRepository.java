@@ -1,5 +1,7 @@
-package com.shareservice;
+package com.shareservice.Controller;
 
+import com.shareservice.Adapter.DepAdapter;
+import com.shareservice.Adapter.DocAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -77,91 +79,72 @@ public class ShareDocumentRepository {
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> departmentName = new DepAdapter().getDepartmentById(departmentId);
 
-        try {
-            //check documentId & departmentId
-            if (!checkDepid(departmentId) && !checkDocid(documentId)) {
-                //Return result
-                result.put("error", resource);
-                resource.put("message", "Unknown department and document.");
-                return result;
-            }
-            if (!checkDepid(departmentId)){
-                //Return result
-                result.put("error", resource);
-                resource.put("message", "Unknown department.");
-                return result;
-            }
-            if (!checkDocid(documentId)){
-                //Return result
-                result.put("error", resource);
-                resource.put("message", "Unknown document.");
-                return result;
-            }
-
-            //Check doc_id in shares table
-            //Get list of data in shares table that before delete
-            List<Map<String, Object>> listBefore = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares");
-
-            for(Map<String, Object> row: listBefore){
-                if(Integer.parseInt(row.get("doc_id").toString()) == documentId){
-                   break;
-                }
-                //Return Result
-                result.put("error", resource);
-                resource.put("message", "This document does not share to any department.");
-                return result;
-            }
-
-            //Check owner of document
-            Map<String, Object> ownerByDoc= new DocAdapter().getOwnerByDoc(documentId);
-            if(departmentId == Integer.parseInt(ownerByDoc.get("id").toString())){
-                //Return Result
-                result.put("error", resource);
-                resource.put("message", ownerByDoc.get("name") + " department is a owner of this document.");
-                return result;
-            }
-
-            //Check departmentId with documentId in shares table
-            List<Map<String, Object>> listDepartmentByDoc = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares WHERE doc_id = ?", new Object[]{documentId});
-            for(Map<String, Object> row: listDepartmentByDoc){
-                if(Integer.parseInt(row.get("dep_id").toString()) == departmentId){
-                    break;
-                }
-                //Return Result
-
-                result.put("error", resource);
-                resource.put("message", "This document does not share to " + departmentName.get("name") +" department.");
-                return result;
-            }
-
-
-            //Delete SQL command
-            String deletesql = "DELETE FROM shares_service.shares WHERE doc_id = ? AND dep_id = ?";
-            this.jdbcTemplate.update(deletesql, documentId, departmentId);
-
-            //Get list of data in shares table that after delete
-            List<Map<String, Object>> listAfter = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares");
-
-            //check delete command was work;
-            if (listAfter.size() == listBefore.size()) {
-                //Return result
-                result.put("error", resource);
-                resource.put("message", "This document cannot be revoked from " + departmentName.get("name") +" department.");
-                return result;
-
-            } else {
-                //Return result
-                result.put("success", resource);
-                resource.put("message", "This document has been revoked from " + departmentName.get("name") +" department.");
-                return result;
-            }
-
-        } catch (Exception e) {
+        //check documentId & departmentId
+        if (!checkDepid(departmentId) && !checkDocid(documentId)) {
             //Return result
             result.put("error", resource);
-            resource.put("message", "This document cannot be revoked from " + departmentName.get("name") +" department.");
+            resource.put("message", "Unknown department and document.");
             return result;
         }
+        if (!checkDepid(departmentId)){
+            //Return result
+            result.put("error", resource);
+            resource.put("message", "Unknown department.");
+            return result;
+        }
+        if (!checkDocid(documentId)){
+            //Return result
+            result.put("error", resource);
+            resource.put("message", "Unknown document.");
+            return result;
+        }
+
+        //Check doc_id in shares table
+
+        //Get list of data in shares table that before delete
+        List<Map<String, Object>> listBefore = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares");
+
+        for(Map<String, Object> row: listBefore){
+            if(Integer.parseInt(row.get("doc_id").toString()) == documentId){
+               break;
+            }
+            //Return Result
+            result.put("error", resource);
+            resource.put("message", "This document does not share to any department.");
+            return result;
+        }
+
+        //Check owner of document
+        Map<String, Object> ownerByDoc= new DocAdapter().getOwnerByDoc(documentId);
+        if(departmentId == Integer.parseInt(ownerByDoc.get("id").toString())){
+            //Return Result
+            result.put("error", resource);
+            resource.put("message", ownerByDoc.get("name") + " department is a owner of this document.");
+            return result;
+        }
+
+        //Check departmentId with documentId in shares table
+        List<Map<String, Object>> listDepartmentByDoc = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares WHERE doc_id = ?", new Object[]{documentId});
+        for(Map<String, Object> row: listDepartmentByDoc){
+            if(Integer.parseInt(row.get("dep_id").toString()) == departmentId){
+                break;
+            }
+            //Return Result
+
+            result.put("error", resource);
+            resource.put("message", "This document does not share to " + departmentName.get("name") +" department.");
+            return result;
+        }
+
+        //Delete SQL command
+        String deletesql = "DELETE FROM shares_service.shares WHERE doc_id = ? AND dep_id = ?";
+        this.jdbcTemplate.update(deletesql, documentId, departmentId);
+
+        //Return result
+        result.put("success", resource);
+        resource.put("message", "This document has been revoked from " + departmentName.get("name") +" department.");
+        return result;
+
     }
 
     @Transactional(readOnly = true)
@@ -191,10 +174,8 @@ public class ShareDocumentRepository {
                     departmentWithStatus.put("department", dep);
                     listDepartmentWithStatus.add(departmentWithStatus);
                 }
-
             }
         }
-
 
         return listDepartmentWithStatus;
     }
