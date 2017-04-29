@@ -4,7 +4,6 @@ import com.teamsmokeweed.model.getalldoc.GetAllDoc;
 import com.teamsmokeweed.model.getalldoc.GetAllDocRowMapper;
 import com.teamsmokeweed.model.getalldoc.dep.DepAdapter;
 import com.teamsmokeweed.model.getalldoc.dep.GetDepNameResponse;
-import com.teamsmokeweed.model.getalldoc.files.FileResponse;
 import com.teamsmokeweed.model.getalldoc.files.FilesAdapter;
 import com.teamsmokeweed.model.getalldoc.upload.UploadAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +72,6 @@ public class DocRepository {
                 uploadAdapter.Upload(mfile, (Integer) m.get("doc_id"));
             }
 
-
-
             success.put("message", "Sample Document has been created");
             resource.put("success", success);
 
@@ -110,7 +107,7 @@ public class DocRepository {
 
         FilesAdapter filesAdapter = new FilesAdapter();
         try {
-            List<FileResponse> fileResponse = filesAdapter.GetFileInfo((Integer) map.get("id"));
+            List<Map<String, Object>> fileResponse = filesAdapter.GetFileInfo((Integer) map.get("id"));
             map.put("files", fileResponse);
         }catch (Exception e){
 //            map.put("files", "Service Files is crash");
@@ -124,12 +121,17 @@ public class DocRepository {
         return map;
     }
 
-    public Map<String, Object> UpdateDocument(int doc_id, Map<String, Object> obj){
+    public Map<String, Object> UpdateDocument(int doc_id, String title, String des, String tag, MultipartFile[] multipartFiles){
         Map<String, Object> resource = new HashMap<>();
         try {
             this.jdbcTemplate.update("UPDATE documents SET doc_title = ?, doc_desc = ?, doc_date= now(), doc_tag = ? WHERE doc_id = ?",
-                    new Object[]{(String)obj.get("title"), (String) obj.get("description"), (String) obj.get("tag"), doc_id});
+                    new Object[]{title, des, tag, doc_id});
             Map<String, Object> success = new HashMap<>();
+            for (MultipartFile mfile : multipartFiles) {
+
+                UploadAdapter uploadAdapter = new UploadAdapter();
+                uploadAdapter.Upload(mfile, doc_id);
+            }
             success.put("message", "Document has been Updated");
             resource.put("success", success);
         }catch (Exception e){

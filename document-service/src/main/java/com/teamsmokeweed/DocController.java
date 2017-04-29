@@ -3,14 +3,15 @@ package com.teamsmokeweed;
 import com.teamsmokeweed.model.getalldoc.GetAllDoc;
 import com.teamsmokeweed.model.getalldoc.dep.GetDepNameResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Created by jongzazaal on 15/4/2560.
@@ -88,8 +89,34 @@ public class DocController {
     }
 
     @PutMapping(value = "/documents/{id}")
-    public Map<String, Object> UpdateDocument(@RequestBody Map<String, Object> obj, @PathVariable(value = "id") int doc_id){
-        return this.docRepository.UpdateDocument(doc_id, obj);
+    public Map<String, Object> UpdateDocument(
+                                                @RequestParam(value = "title", required = true) String title,
+                                                @RequestParam("description") String des,
+                                                @RequestParam("tag") String tag,
+                                                @PathVariable("id") int doc_id,
+                                                @RequestParam("file") MultipartFile[] multipartFiles
+    ){
+//        System.out.println(title);
+//        Map<String, Object> a = new HashMap<>();
+//        a.put("title", title);
+//        return a;
+        return this.docRepository.UpdateDocument(doc_id, title, des, tag, multipartFiles);
+    }
+
+    @Bean
+    public MultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver() {
+            @Override
+            public boolean isMultipart(HttpServletRequest request) {
+                String method = request.getMethod().toLowerCase();
+                //By default, only POST is allowed. Since this is an 'update' we should accept PUT.
+                if (!Arrays.asList("put", "post").contains(method)) {
+                    return false;
+                }
+                String contentType = request.getContentType();
+                return (contentType != null &&contentType.toLowerCase().startsWith("multipart/"));
+            }
+        };
     }
 
     @GetMapping(value = "/OwnerDepartment/{id}")

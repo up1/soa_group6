@@ -1,9 +1,9 @@
 package com.teamsmokeweed.model.getalldoc;
 
 import com.teamsmokeweed.model.getalldoc.dep.GetDepNameResponse;
-import com.teamsmokeweed.model.getalldoc.files.FileResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jongzazaal on 16/4/2560.
@@ -17,10 +17,10 @@ public class GetAllDoc{
     GetDepNameResponse department;
     boolean shared;
 
-    List<FileResponse> files;
+    List<Map<String, Object>> files;
 
     public GetAllDoc(int id, String tag,  String title, String description, long lastUpdated,
-                     GetDepNameResponse department, boolean shared, List<FileResponse> files) {
+                     GetDepNameResponse department, boolean shared, List<Map<String, Object>> files) {
         this.id = id;
         this.tag = tag;
         this.title = title;
@@ -91,11 +91,12 @@ public class GetAllDoc{
         this.lastUpdated = lastUpdated;
     }
 
-    public List<FileResponse> getFiles() {
+
+    public List<Map<String, Object>> getFiles() {
         return files;
     }
 
-    public void setFiles(List<FileResponse> files) {
+    public void setFiles(List<Map<String, Object>> files) {
         this.files = files;
     }
 }

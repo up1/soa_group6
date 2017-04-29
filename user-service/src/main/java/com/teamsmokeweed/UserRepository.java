@@ -4,8 +4,6 @@ import com.teamsmokeweed.model.check.unique.username.CheckUniqueUsernameResponse
 import com.teamsmokeweed.model.dep.DepAdapter;
 import com.teamsmokeweed.model.postuser.PostUserRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
-import com.teamsmokeweed.model.userinfo.UserInfoResponse;
-import com.teamsmokeweed.model.userinfo.UserInfoResponseRowMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jongzazaal on 13/4/2560.
@@ -43,19 +43,24 @@ public class UserRepository {
     }
 
     @Transactional(readOnly = true)
-    public UserInfoResponse getUser(UserInfoRequest userRequest){
+    public Map<String, Object> getUser(UserInfoRequest userRequest){
 
 
-        UserInfoResponse userInfoResponse = jdbcTemplate.queryForObject("SELECT user_id, dep_id, user_role, user_ispasswordchange, user_username, user_fname, user_lname FROM users WHERE user_username = ? AND user_password = ?",
-                new Object[]{userRequest.getUsername(), userRequest.getPassword()}, new UserInfoResponseRowMapping());
+//        UserInfoResponse userInfoResponse = jdbcTemplate.queryForObject("SELECT user_id, dep_id, user_role, user_ispasswordchange, user_username, user_fname, user_lname FROM users WHERE user_username = ? AND user_password = ?",
+//                new Object[]{userRequest.getUsername(), userRequest.getPassword()}, new UserInfoResponseRowMapping());
+        Map<String, Object> result = jdbcTemplate.queryForMap("SELECT user_id AS id, user_username AS username, user_fname AS first_name, user_lname AS last_name, dep_id, user_role AS role, user_ispasswordchange AS password_changed FROM users WHERE user_username = ? AND user_password = ?",
+                new Object[]{userRequest.getUsername(), userRequest.getPassword()});
 
         try{
-            userInfoResponse.setDep_name(depAdapter.GetDepName(userInfoResponse.getDep_id()).getDep_name());
-            return userInfoResponse;
+
+            result.put("department", depAdapter.GetDepName((Integer) result.get("dep_id")));
+            result.remove("dep_id");
+//            userInfoResponse.setDep_name(depAdapter.GetDepName(userInfoResponse.getDep_id()).getDep_name());
+            return result;
         }
         catch (Exception e){
-            userInfoResponse.setDep_name("department-service is crash");
-            return userInfoResponse;
+//            userInfoResponse.setDep_name("department-service is crash");
+            return new HashMap<>();
         }
 
     }
@@ -81,5 +86,24 @@ public class UserRepository {
             return new CheckUniqueUsernameResponse(true);
         }
 
+    }
+    public Map<String, Object> DebNameByUserID(int user_id){
+//        UserInfoResponse userInfoResponse = jdbcTemplate.queryForObject("SELECT user_id, dep_id, user_role, user_ispasswordchange, user_username, user_fname, user_lname FROM users WHERE user_id = ?",
+//                new Object[]{user_id}, new UserInfoResponseRowMapping());
+        Map<String, Object> result = jdbcTemplate.queryForMap("SELECT dep_id FROM users WHERE user_id = ?",
+                new Object[]{user_id});
+        try{
+//            GetDepNameResponse response = depAdapter.GetDepName(userInfoResponse.getDep_id());
+//            GetDepNameResponse getDepNameResponse = depAdapter.GetDepName(userInfoResponse.getDep_id());
+//            userInfoResponse.setDep_name();
+            Map<String, Object> resultDep = depAdapter.GetDepName((Integer) result.get("dep_id"));
+
+            return resultDep;
+        }
+        catch (Exception e){
+//            GetDepNameResponse getDepNameResponse = new GetDepNameResponse(0,"department-service is crash");
+//            return getDepNameResponse;
+            return new HashMap<>();
+        }
     }
 }
