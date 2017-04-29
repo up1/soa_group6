@@ -2,16 +2,13 @@ package com.teamsmokeweed;
 
 import com.teamsmokeweed.model.check.unique.username.CheckUniqueUsernameResponse;
 import com.teamsmokeweed.model.postuser.PostUserRequest;
-import com.teamsmokeweed.model.postuser.PostUserResponse;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
-import com.teamsmokeweed.model.userinfo.UserInfoResponse;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.json.simple.JSONObject;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -39,11 +36,11 @@ public class UserController {
     //whoisuser
     @PostMapping("/userInfo")
     public @ResponseBody
-    ResponseEntity<UserInfoResponse> UserInfo(@RequestBody UserInfoRequest userRequest){
+    Map<String, Object> UserInfo(@RequestBody UserInfoRequest userRequest){
 
         //password md5
         userRequest.setPassword(userRepository.md5(userRequest.getPassword()));
-        return new ResponseEntity<UserInfoResponse>(this.userRepository.getUser(userRequest), HttpStatus.OK);
+        return this.userRepository.getUser(userRequest);
     }
 
     @PostMapping("/user")
@@ -56,7 +53,7 @@ public class UserController {
             msg.put("message", "User cannot be created!");
             err.put("error", msg);
         }
-        String uniqueID = UUID.randomUUID().toString();
+        String uniqueID = UUID.randomUUID().toString().substring(0, 6);
         postUserRequest.setUser_password(uniqueID);
         postUserRequest.setUser_password(userRepository.md5(postUserRequest.getUser_password()));
         this.userRepository.PostUser(postUserRequest);
@@ -82,7 +79,12 @@ public class UserController {
         errid.put("id", id);
         obj.put("char", "abc");
         obj.put("error", errid);
+
         return obj;
+    }
+    @GetMapping("/debNameByUserID")
+    public Map<String, Object> DebNameByUserID(@RequestParam(value = "userID") int userID){
+        return this.userRepository.DebNameByUserID(userID);
     }
 
 

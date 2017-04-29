@@ -1,5 +1,6 @@
 package com.shareservice;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,44 +29,28 @@ public class ShareDocumentController {
 
     @DeleteMapping("/documents/{documentId}/shares")
     public @ResponseBody
-    ResponseEntity<ServiceStatus> revokeDepartmentFromDoc (@PathVariable String documentId,
+    Map<String, Object> revokeDepartmentFromDoc (@PathVariable String documentId,
                                                            @RequestBody Map<String, Integer> departmentId){
-        ServiceStatus status = shareDocumentRepository.revokeDepartmentFromDoc(Integer.parseInt(documentId), departmentId.get("departmentId"));
-        if(status.isResponse()){
-            return new ResponseEntity<ServiceStatus>(status, HttpStatus.FOUND);
-        }
-        else{
-            return new ResponseEntity<ServiceStatus>(status, HttpStatus.NOT_FOUND);
-        }
+        Map<String, Object> status = shareDocumentRepository.revokeDepartmentFromDoc(Integer.parseInt(documentId), departmentId.get("departmentId"));
+        return status;
 
     }
 
     @PostMapping("/documents/{documentId}/shares")
     public @ResponseBody
-    ResponseEntity<ServiceStatus> addDepartmentToDoc (@PathVariable String documentId,
+    Map<String, Object> addDepartmentToDoc (@PathVariable String documentId,
                                                       @RequestBody Map<String, Integer> departmentId){
-        ServiceStatus status = shareDocumentRepository.postShareToOtherDepartment(Integer.parseInt(documentId), departmentId.get("departmentId"));
-
-        if(status.isResponse()){
-            return new ResponseEntity<ServiceStatus>(status, HttpStatus.FOUND);
-        }
-        else{
-            return new ResponseEntity<ServiceStatus>(status, HttpStatus.NOT_FOUND);
-        }
+        Map<String, Object> status = shareDocumentRepository.postShareToOtherDepartment(Integer.parseInt(documentId), departmentId.get("departmentId"));
+        return status;
     }
 
     @GetMapping("/documents/{documentId}/shares")
     public @ResponseBody
-    ResponseEntity<List<DepartmentStatus>> getListDepartmentStatusByDoc
+    List<Map<String, Object>> getListDepartmentStatusExceptOwnerByDoc
             (@PathVariable String documentId){
 
-        List<DepartmentStatus> listDepartmentWithStatusByDoc = shareDocumentRepository.getListDepartmentWithStatusByDoc(Integer.parseInt(documentId));
-        if(listDepartmentWithStatusByDoc.size() > 0){
-            return new ResponseEntity<List<DepartmentStatus>>(listDepartmentWithStatusByDoc, HttpStatus.FOUND);
-        }
-        else{
-            return new ResponseEntity<List<DepartmentStatus>>(new ArrayList<DepartmentStatus>(){}, HttpStatus.NOT_FOUND);
-        }
+        List<Map<String, Object>> listDepartmentWithStatusByDoc = shareDocumentRepository.getListDepartmentWithStatusExceptOwnerByDoc(Integer.parseInt(documentId));
+        return listDepartmentWithStatusByDoc;
     }
 
 }
