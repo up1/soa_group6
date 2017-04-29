@@ -22,10 +22,12 @@ public class TokenService {
 
     @Autowired
     private void setAuthenticationService(AuthenticationService authenticationService) {
+
         TokenService.authenticationService = authenticationService;
     }
 
     public static String generate(Map<String, Object> user) throws IOException {
+
         String userJson = new JSONObject()
                 .put("id", user.get("user_id"))
                 .put("username", user.get("user_username"))
@@ -48,6 +50,7 @@ public class TokenService {
     }
 
     public static Claims parse(String token) {
+
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)

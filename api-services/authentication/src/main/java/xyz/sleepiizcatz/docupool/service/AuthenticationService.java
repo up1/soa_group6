@@ -1,9 +1,12 @@
 package xyz.sleepiizcatz.docupool.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +20,7 @@ public class AuthenticationService {
     private String userInfoAPI;
 
     public Map<String, Object> getIdentity(Map<String, String> credentials) {
+
         Map<String, Object> user = null;
 
         HttpHeaders headers = new HttpHeaders();
@@ -27,7 +31,7 @@ public class AuthenticationService {
         RestTemplate restTemplate = new RestTemplate();
         try {
             user = restTemplate.postForObject(userInfoAPI, request, Map.class);
-        } catch (HttpServerErrorException e) { }
+        } catch (Exception e) { } // User not found
 
         return user;
     }

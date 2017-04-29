@@ -31,4 +31,5 @@ dependencies {
 	compile('io.jsonwebtoken:jjwt:0.7.0')
 	compile('org.json:json')
 	compile('com.google.code.gson:gson')
+	compile('com.moelholm:prometheus-spring-boot-starter:1.0.1')
 }
