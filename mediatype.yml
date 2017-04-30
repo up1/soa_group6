@@ -327,7 +327,6 @@ error:
   message: User cannot be created
 
 # GET /users/:id
-# GET /users?u={username}
 # Get a user information
 
 # [Response]
