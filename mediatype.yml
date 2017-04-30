@@ -210,13 +210,11 @@ name: Developer
 # Get sharing statuses from a document
 
 # [Response]
-- department:
-    id: 1
-    name: Developer
+- id: 1
+  name: Developer
   shared: true
-- department:
-    id: 3
-    name: HR
+- id: 3
+  name: HR
   shared: false
 
 # POST /documents/:id/shares
