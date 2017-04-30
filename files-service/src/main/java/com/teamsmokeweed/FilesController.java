@@ -62,8 +62,16 @@ public class FilesController {
 //        this.filesRepository.UploadFile(mfile, doc_id, file_upload_id,1);
     }
 
-    @GetMapping(value = "/download/{docid}/{fileid}/{revision}/{filename:.+}")
-    public ResponseEntity<Resource> DownloadFile(@PathVariable int docid, @PathVariable int fileid, @PathVariable int revision, @PathVariable String filename) throws MalformedURLException {
+    @GetMapping(value = "/documents/{docid}/files")
+//    @GetMapping(value = "/download/{docid}/{fileid}/{revision}/{filename:.+}")
+//    /documents/:id/files?filename={filename}&revision={fileRevision}&id={fileId}
+    public ResponseEntity<Resource> DownloadFile(@PathVariable int docid,
+                                                 @RequestParam(value = "filename") String filename,
+                                                 @RequestParam(value = "revision") int revision,
+                                                 @RequestParam(value = "id") int fileid
+
+
+    ) throws MalformedURLException {
         return this.filesRepository.DownloadFile(docid, fileid, revision, filename);
     }
 
