@@ -368,6 +368,12 @@ department:
 # [Response]
 message: Your information has been updated!
 
+# PUT /users/resetPwd
+# reset password
+# [Request]
+id: 11
+# [Response]
+message: Password has reset!
 
 ############
 # File API #

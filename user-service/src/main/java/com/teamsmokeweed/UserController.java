@@ -4,6 +4,7 @@ import com.teamsmokeweed.model.check.unique.username.CheckUniqueUsernameResponse
 import com.teamsmokeweed.model.deleteuser.DeleteUserRequest;
 import com.teamsmokeweed.model.dep.DepAdapter;
 import com.teamsmokeweed.model.postuser.PostUserRequest;
+import com.teamsmokeweed.model.putresetpwd.PutResetPwd;
 import com.teamsmokeweed.model.putuser.PutSelfUserUpdateRequest;
 import com.teamsmokeweed.model.putuser.PutUserUpdateRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
@@ -81,7 +82,7 @@ public class UserController {
     JSONObject DeleteUser(@RequestBody DeleteUserRequest deleteUserRequest){
         JSONObject msg = new JSONObject();
         try{
-            this.userRepository.DeleteUser(deleteUserRequest.getUserID());
+            this.userRepository.DeleteUser(deleteUserRequest.getId());
             msg.put("message", "User has been deleted!");
         } catch (Exception e){
             msg.put("message", "Error! User cannot delete!");
@@ -111,6 +112,7 @@ public class UserController {
             userInfo.put("last_name", rawMapUserInfo.get("last_name"));
             userInfo.put("role", rawMapUserInfo.get("role"));
             userInfo.put("department", new DepAdapter().GetDepName((int) rawMapUserInfo.get("dep_id")));
+            userInfo.put("password_changed", ((int) rawMapUserInfo.get("password_changed") != 0));
         } catch (Exception e){
             userInfo.clear();
             userInfo.put("Error", "User not found! or Department service not available.");
@@ -144,6 +146,21 @@ public class UserController {
             msg.put("message", "Error!");
         }
         return msg;
+
+    }
+    @PutMapping("/users/resetPwd")
+    public @ResponseBody
+    JSONObject PutSelfUserUpdate(@RequestBody PutResetPwd putResetPwd){
+        JSONObject msg = new JSONObject();
+        try{
+            this.userRepository.ResetPwd(putResetPwd.getId());
+            msg.put("message", "Password has reset!");
+            return msg;
+        } catch (Exception e){
+            msg.put("message", "Error! Cannot reset password!");
+            return msg;
+        }
+
 
     }
 

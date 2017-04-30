@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created by jongzazaal on 13/4/2560.
@@ -127,5 +128,11 @@ public class UserRepository {
     public void PutUserUpdate(PutUserUpdateRequest putUserUpdateRequest){
         jdbcTemplate.update("UPDATE users SET user_username = ?, user_fname = ?, user_lname = ?, dep_id = ?  WHERE user_id= ?",
                 new Object[]{putUserUpdateRequest.getUsername(), putUserUpdateRequest.getFirst_name(), putUserUpdateRequest.getLast_name(), putUserUpdateRequest.getDepartment().getId(), putUserUpdateRequest.getId()});
+    }
+    public void ResetPwd(int userID){
+        String uniqueID = UUID.randomUUID().toString().substring(0, 6);
+        uniqueID = md5(uniqueID);
+        jdbcTemplate.update("UPDATE users SET user_password = ?, user_ispasswordchange = 0 WHERE user_id = ?",
+                new Object[]{uniqueID, userID});
     }
 }

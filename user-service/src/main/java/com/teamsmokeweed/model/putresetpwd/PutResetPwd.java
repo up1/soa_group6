@@ -1,10 +1,15 @@
-package com.teamsmokeweed.model.deleteuser;
+package com.teamsmokeweed.model.putresetpwd;
 
 /**
  * Created by Sakan on 30 Apr 2017.
  */
-public class DeleteUserRequest {
+public class PutResetPwd {
+
     int id;
+
+    public PutResetPwd(){
+
+    }
 
     public int getId() {
         return id;
@@ -14,10 +19,10 @@ public class DeleteUserRequest {
         this.id = id;
     }
 
-    public DeleteUserRequest(int id) {
+    public PutResetPwd(int id) {
         this.id = id;
     }
-
-    public DeleteUserRequest() {
-    }
 }
+
+
+
