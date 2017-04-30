@@ -8,18 +8,18 @@ import com.teamsmokeweed.model.dep.Department;
 public class PostUserRequest {
     String username, password, first_name, last_name;
     int dep_id, user_role, user_ispasswordchange;
-    Department department;
+    private Department department;
 
 
     public PostUserRequest() {
     }
 
-    public PostUserRequest(String username, String password, String first_name, String last_name, int dep_id, int user_role, int user_ispasswordchange) {
+    public PostUserRequest(String username, String password, String first_name, String last_name, Department department, int user_role, int user_ispasswordchange) {
         this.username = username;
         this.password = password;
         this.first_name = first_name;
         this.last_name = last_name;
-        this.dep_id = dep_id;
+        this.department = department;
         this.user_role = user_role;
         this.user_ispasswordchange = user_ispasswordchange;
     }

@@ -68,7 +68,7 @@ public class UserRepository {
 
         jdbcTemplate.update("INSERT INTO users(user_username, user_password, user_fname, user_lname, dep_id, user_role, user_ispasswordchange) VALUES(?,?,?,?,?,?,?)",
                 new Object[]{postUserRequest.getUsername(), postUserRequest.getPassword(),
-                        postUserRequest.getFirst_name(), postUserRequest.getLast_name(), postUserRequest.getDep_id(),
+                        postUserRequest.getFirst_name(), postUserRequest.getLast_name(), postUserRequest.getDepartment().getId(),
                         postUserRequest.getUser_role(), postUserRequest.getUser_ispasswordchange()});
 
     }
