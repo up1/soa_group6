@@ -40,7 +40,10 @@ token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.p
 # Document API #
 ################
 
-# GET /documents
+# GET /documents/:keys?userID={id}&?order={order}&?orderBy={orderBy}
+# order -> DESC, ASC
+# orderBy -> id, tag, title, description, lastUpdated
+# keys->recent, message
 # Get all documents
 
 # [Response]
@@ -123,10 +126,13 @@ error:
 # PUT /documents/:id
 # Update a document
 
-# [Request]
+# [Request](form-data)
 title: Edited Title 5
 description: Edited Description 5
 tag: general
+file: file
+# Content-Type: "application/octet-stream"
+# Content-Disposition: attachment; filename="{filename}"
 
 # [Response]
 # Success
@@ -377,7 +383,8 @@ message: Password has reset!
 # File API #
 ############
 
-# GET /download/{docid}/{fileid}/{revision}/{filename:.+}
+# GET /documents/:docid/:fileid/:revision/:filename:.+}
+# /documents/:id/files?filename={filename}&revision={fileRevision}&id={fileId}
 # Download a file
 
 # [Response]
