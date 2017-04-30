@@ -101,13 +101,16 @@ public class ShareDocumentController {
         try {
             Map<String, Object> data = new TokenAdapter().getDataByToken(token);
             if(checkToken(data)){
+                System.out.println("check token pass");
                 List<Map<String, Object>> listDepartmentWithStatusByDoc = shareDocumentRepository.getListDepartmentWithStatusExceptOwnerByDoc(Integer.parseInt(documentId));
                 return listDepartmentWithStatusByDoc;
             }
             else{
+                System.out.println("check token fail");
                 return new ArrayList<>();
             }
         }catch (Exception e){
+            System.out.println("check token fail (catch)");
             return new ArrayList<>();
         }
     }

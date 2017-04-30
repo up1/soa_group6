@@ -161,7 +161,8 @@ public class ShareDocumentRepository {
                 if(Integer.parseInt(share.get("dep_id").toString()) == Integer.parseInt(dep.get("id").toString())){
                     Map<String, Object> departmentWithStatus = new HashMap<>();
                     departmentWithStatus.put("shared", true);
-                    departmentWithStatus.put("department", dep);
+                    departmentWithStatus.put("id", dep.get("id"));
+                    departmentWithStatus.put("name", dep.get("name"));
                     listDepartmentWithStatus.add(departmentWithStatus);
                     checkAddToList = 1;
                     break;
@@ -171,7 +172,8 @@ public class ShareDocumentRepository {
                 if(Integer.parseInt(owner.get("id").toString()) != Integer.parseInt(dep.get("id").toString())){
                     Map<String, Object> departmentWithStatus = new HashMap<>();
                     departmentWithStatus.put("shared", false);
-                    departmentWithStatus.put("department", dep);
+                    departmentWithStatus.put("id", dep.get("id"));
+                    departmentWithStatus.put("name", dep.get("name"));
                     listDepartmentWithStatus.add(departmentWithStatus);
                 }
             }
