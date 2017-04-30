@@ -56,7 +56,7 @@ public class ShareDocumentRepository {
             }
 
             //INSERT SQL COMMAND
-            String sql = "INSERT INTO shares_service.shares (doc_id, dep_id) VALUES(?, ?)";
+            String sql = "INSERT INTO shares (doc_id, dep_id) VALUES(?, ?)";
             this.jdbcTemplate.update(sql, documentId, departmentId);
 
             //Return result
@@ -102,7 +102,7 @@ public class ShareDocumentRepository {
         //Check doc_id in shares table
 
         //Get list of data in shares table that before delete
-        List<Map<String, Object>> listBefore = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares");
+        List<Map<String, Object>> listBefore = this.jdbcTemplate.queryForList("SELECT * FROM shares");
 
         for(Map<String, Object> row: listBefore){
             if(Integer.parseInt(row.get("doc_id").toString()) == documentId){
@@ -124,7 +124,7 @@ public class ShareDocumentRepository {
         }
 
         //Check departmentId with documentId in shares table
-        List<Map<String, Object>> listDepartmentByDoc = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares WHERE doc_id = ?", new Object[]{documentId});
+        List<Map<String, Object>> listDepartmentByDoc = this.jdbcTemplate.queryForList("SELECT * FROM shares WHERE doc_id = ?", new Object[]{documentId});
         for(Map<String, Object> row: listDepartmentByDoc){
             if(Integer.parseInt(row.get("dep_id").toString()) == departmentId){
                 break;
@@ -137,7 +137,7 @@ public class ShareDocumentRepository {
         }
 
         //Delete SQL command
-        String deletesql = "DELETE FROM shares_service.shares WHERE doc_id = ? AND dep_id = ?";
+        String deletesql = "DELETE FROM shares WHERE doc_id = ? AND dep_id = ?";
         this.jdbcTemplate.update(deletesql, documentId, departmentId);
 
         //Return result
@@ -152,7 +152,7 @@ public class ShareDocumentRepository {
 
         List<Map<String, Object>> listDepartmentWithStatus = new ArrayList<>();
         List<Map<String, Object>> departmentList = new DepAdapter().getDepartmentAll();
-        List<Map<String, Object>> listDepartmentByDoc = this.jdbcTemplate.queryForList("SELECT * FROM shares_service.shares WHERE doc_id = ?", new Object[]{documentId});
+        List<Map<String, Object>> listDepartmentByDoc = this.jdbcTemplate.queryForList("SELECT * FROM shares WHERE doc_id = ?", new Object[]{documentId});
         Map<String, Object> owner = new DocAdapter().getOwnerByDoc(documentId);
 
         for(Map<String, Object> dep: departmentList){
