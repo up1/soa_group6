@@ -5,21 +5,31 @@ import com.teamsmokeweed.model.getalldoc.GetAllDocRowMapper;
 import com.teamsmokeweed.model.getalldoc.dep.DepAdapter;
 import com.teamsmokeweed.model.getalldoc.dep.GetDepNameResponse;
 import com.teamsmokeweed.model.getalldoc.files.FilesAdapter;
+import com.teamsmokeweed.model.getalldoc.share.ShareAdapter;
 import com.teamsmokeweed.model.getalldoc.upload.UploadAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jongzazaal on 15/4/2560.
  */
 @Repository
 public class DocRepository {
+    private DepAdapter depAdapter;
+    private ShareAdapter shareAdapter;
+    private FilesAdapter filesAdapter;
+
+    public DocRepository() {
+        this.depAdapter = new DepAdapter();
+        this.shareAdapter = new ShareAdapter();
+        this.filesAdapter = new FilesAdapter();
+
+    }
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -29,6 +39,83 @@ public class DocRepository {
 
 
         return getAllDocs;
+    }
+
+    public List<Map<String, Object>> GetDocument(int key, int user_id, String order, String orderBy, String token){
+//        0->recent เห็นของเรากับของคนที่แชร์ให้เรา
+//        1->message เห็นของคนที่แชร์ให้เรา ไม่เห็นของเรา
+        int myDepartment = 0;
+
+        if(user_id>0) {
+            myDepartment = (Integer) this.depAdapter.getDepepartment(user_id).get("id");
+        }
+
+        List<Map<String, Object>> result = this.jdbcTemplate.queryForList("SELECT doc_id AS id, doc_tag AS tag, doc_title AS title, doc_desc AS description, doc_date AS lastUpdated, user_id FROM documents ORDER BY ? ?",
+                new Object[]{orderBy, order});
+        List<Map<String, Object>> result2 = new ArrayList<>();
+//        System.out.println("MyDepartment: "+myDepartment);
+//        System.out.println(result);
+
+
+        if (order.equals("ASC")){
+            for (int i = 0; i <result.size();i++) {
+                result2 = checkShare(result, result2, key,myDepartment,i, user_id, token);
+            }
+        }
+        else {
+            for (int i = result.size()-1; i >=0;i--) {
+                result2 = checkShare(result, result2, key,myDepartment,i, user_id, token);
+            }
+        }
+
+//        System.out.println(result);
+//        System.out.println(result2);
+        return result2;
+    }
+
+    private List<Map<String, Object>> checkShare(List< Map<String, Object>> result, List< Map<String, Object>> result2,
+                                                 int key, int myDepartment, int i, int user_id, String token){
+//        0->recent เห็นของเรากับของคนที่แชร์ให้เรา
+//        1->message เห็นของคนที่แชร์ให้เรา ไม่เห็นของเรา
+        Map<String, Object> r = result.get(i);
+        List<Map<String, Object>> share = this.shareAdapter.getShare((Integer) r.get("id"), token);
+
+        int otherDepartment = (Integer) this.depAdapter.getDepepartment((Integer) r.get("user_id")).get("id");
+        if(user_id==0){
+//            r.put("department",this.depAdapter.getDepepartment((Integer) r.get("user_id")).get("id")));
+//            r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+//            r.remove("user_id");
+//            result2.add(r);
+            return AddToList(r,result2);
+        }
+
+        if(key==0 && myDepartment==otherDepartment){
+//            r.put("department",this.depAdapter.getDepepartment(user_id));
+//            r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+//            r.remove("user_id");
+//            result2.add(r);
+            r.put("shared", true);
+            return AddToList(r,result2);
+        }
+        if(this.shareAdapter.isShare(share, myDepartment)){
+//                System.out.println(r);
+//            r.put("department",this.depAdapter.getDepepartment(user_id));
+//            r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+//            r.remove("user_id");
+//            result2.add(r);
+            r.put("shared", false);
+            return AddToList(r,result2);
+        }
+        return result2;
+
+    }
+
+    public List<Map<String, Object>> AddToList(Map<String, Object> r, List<Map<String, Object>> result2){
+        r.put("department",this.depAdapter.getDepepartment((Integer) r.get("user_id")).get("id"));
+        r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+        r.remove("user_id");
+        result2.add(r);
+        return result2;
     }
 
     public Map<String, Object> CreateDocument(Map<String, Object> obj){

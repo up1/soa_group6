@@ -1,6 +1,5 @@
 package com.teamsmokeweed;
 
-import com.teamsmokeweed.model.getalldoc.GetAllDoc;
 import com.teamsmokeweed.model.getalldoc.dep.GetDepNameResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,9 +31,40 @@ public class DocController {
 //        return this.docRepository.GetAllDoc();
 //    }
 
-    @GetMapping("/documents")
-    public List<GetAllDoc> GetRecentDoc() {
-        return this.docRepository.GetAllDoc();
+//    @GetMapping("/documents")
+//    public List<GetAllDoc> GetRecentDoc() {
+//        return this.docRepository.GetAllDoc();
+//    }
+
+    @GetMapping("/documents/{keys}")
+    public List<Map<String, Object>> GetDocument(@RequestParam(value = "userID", defaultValue = "0") int r_user_id,
+                                                 @RequestParam(value = "order", defaultValue = "ASC") String r_order,
+                                                 @RequestParam(value = "orderBy", defaultValue = "id") String r_orderBy,
+                                                 @PathVariable(value = "keys") String k,
+                                                 @RequestHeader("Authorization") String authorization){
+        //split ("Bearer ") and get token
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("userID", r_user_id);
+        request.put("order", r_order);
+        request.put("orderBy", r_orderBy);
+        String[] authorizationSplit = authorization.split("Bearer ");
+        String token = authorizationSplit[1];
+//        0->recent
+//        1->message
+        int key = 0;
+        if (k.equals("message")){
+            key = 1;
+        }
+//        System.out.println(key);
+        List<String> orderRequest = Arrays.asList("id","tag", "title", "description", "lastUpdated");
+        List<String> orderResponse = Arrays.asList("doc_id","doc_tag", "doc_title", "doc_desc", "doc_date");
+//        AES, DESC
+        String order = request.get("order").toString();
+//        id, tag, title
+        String orderBy = orderResponse.get(orderRequest.indexOf(request.get("orderBy").toString()));
+        return this.docRepository.GetDocument(key,(Integer) request.get("userID"), order, orderBy, token);
+
     }
 //    @PostMapping("/test")
 //    public void PostFile(@RequestParam("file") MultipartFile mfile){
@@ -82,6 +112,7 @@ public class DocController {
                                               ){
         return this.docRepository.CreateDocument(title, des, tag, id, multipartFiles);
     }
+
 
     @GetMapping(value = "/documents/{id}")
     public Map<String, Object> GetDocumentByIdDoc(@PathVariable(value = "id") int doc_id){
