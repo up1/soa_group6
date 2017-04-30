@@ -337,6 +337,38 @@ department:
   name: Developer
 password_changed: false
 
+# DELETE /users
+# Delete user
+
+# [Request]
+id: 11
+
+# [Response]
+message: User has been deleted!
+
+# PUT /users/selfUpdate
+# Let's user update pass and username by him self.
+# [Request]
+id: 11
+username: melonmint
+password: 123456
+# [Response]
+message: Your information has been updated!
+
+# PUT /users
+# Update user information
+# [Request]
+id: 11
+username: melonmint
+first_name: Thanaphat
+last_name: Thanawatpanya
+department:
+  id: 4
+
+# [Response]
+message: Your information has been updated!
+
+
 ############
 # File API #
 ############

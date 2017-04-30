@@ -2,7 +2,10 @@ package com.teamsmokeweed;
 
 import com.teamsmokeweed.model.check.unique.username.CheckUniqueUsernameResponse;
 import com.teamsmokeweed.model.deleteuser.DeleteUserRequest;
+import com.teamsmokeweed.model.dep.DepAdapter;
 import com.teamsmokeweed.model.postuser.PostUserRequest;
+import com.teamsmokeweed.model.putuser.PutSelfUserUpdateRequest;
+import com.teamsmokeweed.model.putuser.PutUserUpdateRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +46,7 @@ public class UserController {
         return this.userRepository.getUser(userRequest);
     }
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public @ResponseBody
     JSONObject PostUser(@RequestBody PostUserRequest postUserRequest){
         if(!(this.userRepository.checkUniqueUsername(postUserRequest.getUsername()).isUnique())){
@@ -73,7 +76,7 @@ public class UserController {
         return this.userRepository.checkUniqueUsername(username);
     }
 
-    @DeleteMapping("/user")
+    @DeleteMapping("/users")
     public @ResponseBody
     JSONObject DeleteUser(@RequestBody DeleteUserRequest deleteUserRequest){
         JSONObject msg = new JSONObject();
@@ -85,6 +88,7 @@ public class UserController {
         }
         return msg;
     }
+
     @GetMapping("/test")
     public JSONObject test(@RequestParam(value = "id") int id){
         JSONObject obj = new JSONObject();
@@ -95,6 +99,54 @@ public class UserController {
 
         return obj;
     }
+
+    @GetMapping("/users/{id}")
+    public JSONObject GetUserInfo(@PathVariable int id){
+        JSONObject userInfo = new JSONObject();
+        try {
+            Map<String, Object> rawMapUserInfo = this.userRepository.GetUserInfo(id);
+            userInfo.put("id", id);
+            userInfo.put("username", rawMapUserInfo.get("username"));
+            userInfo.put("first_name", rawMapUserInfo.get("first_name"));
+            userInfo.put("last_name", rawMapUserInfo.get("last_name"));
+            userInfo.put("role", rawMapUserInfo.get("role"));
+            userInfo.put("department", new DepAdapter().GetDepName((int) rawMapUserInfo.get("dep_id")));
+        } catch (Exception e){
+            userInfo.clear();
+            userInfo.put("Error", "User not found! or Department service not available.");
+        }
+        return userInfo;
+    }
+
+    @PutMapping("/users")
+    public @ResponseBody
+    JSONObject PutUser(@RequestBody PutUserUpdateRequest putUserUpdateRequest){
+        JSONObject msg = new JSONObject();
+        try{
+            this.userRepository.PutUserUpdate(putUserUpdateRequest);
+            msg.put("message", "User information has been updated!");
+        } catch (Exception e){
+            msg.put("message", "Error! user cannot be updated!");
+        }
+        return msg;
+
+    }
+
+    @PutMapping("/users/selfUpdate")
+    public @ResponseBody
+    JSONObject PutSelfUserUpdate(@RequestBody PutSelfUserUpdateRequest putSelfUserUpdateRequest){
+        JSONObject msg = new JSONObject();
+        try{
+            putSelfUserUpdateRequest.setPassword(userRepository.md5(putSelfUserUpdateRequest.getPassword()));
+            this.userRepository.PutSelfUserUpdate(putSelfUserUpdateRequest);
+            msg.put("message", "Your information has been updated!");
+        } catch (Exception e){
+            msg.put("message", "Error!");
+        }
+        return msg;
+
+    }
+
     @GetMapping("/debNameByUserID")
     public Map<String, Object> DebNameByUserID(@RequestParam(value = "userID") int userID){
         return this.userRepository.DebNameByUserID(userID);

@@ -3,6 +3,8 @@ package com.teamsmokeweed;
 import com.teamsmokeweed.model.check.unique.username.CheckUniqueUsernameResponse;
 import com.teamsmokeweed.model.dep.DepAdapter;
 import com.teamsmokeweed.model.postuser.PostUserRequest;
+import com.teamsmokeweed.model.putuser.PutSelfUserUpdateRequest;
+import com.teamsmokeweed.model.putuser.PutUserUpdateRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by jongzazaal on 13/4/2560.
@@ -74,7 +77,13 @@ public class UserRepository {
     }
     public void DeleteUser(int user_id){
 
-            jdbcTemplate.update("DELETE FROM users WHERE user_id=?", user_id);
+        jdbcTemplate.update("DELETE FROM users WHERE user_id=?", user_id);
+
+    }
+
+    public void PutSelfUserUpdate(PutSelfUserUpdateRequest putSelfUserUpdateRequest){
+
+        jdbcTemplate.update("UPDATE users SET user_username = ?, user_password = ?, user_ispasswordchange = 1 WHERE user_id= ?", new Object[]{putSelfUserUpdateRequest.getUsername(), putSelfUserUpdateRequest.getPassword(), putSelfUserUpdateRequest.getUserID()});
 
     }
 
@@ -109,5 +118,14 @@ public class UserRepository {
 //            return getDepNameResponse;
             return new HashMap<>();
         }
+    }
+    public Map<String, Object> GetUserInfo(int userID){
+        return jdbcTemplate.queryForMap("SELECT user_id AS id, user_username AS username, user_fname AS first_name, user_lname AS last_name, dep_id, user_role AS role, user_ispasswordchange AS password_changed FROM users WHERE user_id = ?",
+                userID);
+
+    }
+    public void PutUserUpdate(PutUserUpdateRequest putUserUpdateRequest){
+        jdbcTemplate.update("UPDATE users SET user_username = ?, user_fname = ?, user_lname = ?, dep_id = ?  WHERE user_id= ?",
+                new Object[]{putUserUpdateRequest.getUsername(), putUserUpdateRequest.getFirst_name(), putUserUpdateRequest.getLast_name(), putUserUpdateRequest.getDepartment().getId(), putUserUpdateRequest.getId()});
     }
 }
