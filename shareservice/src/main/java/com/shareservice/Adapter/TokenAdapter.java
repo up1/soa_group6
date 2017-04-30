@@ -16,6 +16,7 @@ public class TokenAdapter {
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://35.185.183.178:9000/auth?token=" + token;
         Map<String, Object> data = restTemplate.getForObject(url, Map.class);
+        System.out.println("token adapter pass");
         return data;
     }
 }
