@@ -9,7 +9,7 @@ import java.util.Map;
  * Created by jongzazaal on 24/4/2560.
  */
 public class FilesAdapter {
-    public List<Map<String, Object>> GetFileInfo(int doc_id){
+    public List<Map<String, Object>> getFileInfo(int doc_id){
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8099/files?doc_id=" +doc_id;
 //        List<FileResponse[]> fileResponse = restTemplate.getForEntity(url, FileResponse[].class);

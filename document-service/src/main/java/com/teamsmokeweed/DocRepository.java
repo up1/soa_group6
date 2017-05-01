@@ -1,7 +1,5 @@
 package com.teamsmokeweed;
 
-import com.teamsmokeweed.model.getalldoc.GetAllDoc;
-import com.teamsmokeweed.model.getalldoc.GetAllDocRowMapper;
 import com.teamsmokeweed.model.getalldoc.dep.DepAdapter;
 import com.teamsmokeweed.model.getalldoc.dep.GetDepNameResponse;
 import com.teamsmokeweed.model.getalldoc.files.FilesAdapter;
@@ -12,7 +10,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jongzazaal on 15/4/2560.
@@ -33,15 +34,15 @@ public class DocRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<GetAllDoc> GetAllDoc(){
+//    public List<GetAllDoc> GetAllDoc(){
+//
+//        List<GetAllDoc> getAllDocs = this.jdbcTemplate.query("SELECT doc_id, doc_title, doc_desc, doc_date, doc_tag, user_id FROM documents", new GetAllDocRowMapper());
+//
+//
+//        return getAllDocs;
+//    }
 
-        List<GetAllDoc> getAllDocs = this.jdbcTemplate.query("SELECT doc_id, doc_title, doc_desc, doc_date, doc_tag, user_id FROM documents", new GetAllDocRowMapper());
-
-
-        return getAllDocs;
-    }
-
-    public List<Map<String, Object>> GetDocument(int key, int user_id, String order, String orderBy, String token){
+    public List<Map<String, Object>> getDocument(int key, int user_id, String order, String orderBy, String token){
 //        0->recent เห็นของเรากับของคนที่แชร์ให้เรา
 //        1->message เห็นของคนที่แชร์ให้เรา ไม่เห็นของเรา
         int myDepartment = 0;
@@ -83,37 +84,37 @@ public class DocRepository {
         int otherDepartment = (Integer) this.depAdapter.getDepepartment((Integer) r.get("user_id")).get("id");
         if(user_id==0){
 //            r.put("department",this.depAdapter.getDepepartment((Integer) r.get("user_id")).get("id")));
-//            r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+//            r.put("files", this.filesAdapter.getFileInfo((Integer)r.get("id")));
 //            r.remove("user_id");
 //            result2.add(r);
-            return AddToList(r,result2);
+            return addToList(r,result2);
         }
 
         if(key==0 && myDepartment==otherDepartment){
 //            r.put("department",this.depAdapter.getDepepartment(user_id));
-//            r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+//            r.put("files", this.filesAdapter.getFileInfo((Integer)r.get("id")));
 //            r.remove("user_id");
 //            result2.add(r);
             r.put("shared", true);
-            return AddToList(r,result2);
+            return addToList(r,result2);
         }
         if(this.shareAdapter.isShare(share, myDepartment)){
 //                System.out.println(r);
 //            r.put("department",this.depAdapter.getDepepartment(user_id));
-//            r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+//            r.put("files", this.filesAdapter.getFileInfo((Integer)r.get("id")));
 //            r.remove("user_id");
 //            result2.add(r);
             r.put("shared", false);
-            return AddToList(r,result2);
+            return addToList(r,result2);
         }
         return result2;
 
     }
 
-    public List<Map<String, Object>> AddToList(Map<String, Object> r, List<Map<String, Object>> result2){
+    public List<Map<String, Object>> addToList(Map<String, Object> r, List<Map<String, Object>> result2){
         r.put("department",this.depAdapter.getDepepartment((Integer) r.get("user_id")).get("id"));
         try {
-            r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+            r.put("files", this.filesAdapter.getFileInfo((Integer)r.get("id")));
         }
         catch (Exception e){
             Map<String, Object> resource = new HashMap<>();
@@ -126,33 +127,33 @@ public class DocRepository {
         result2.add(r);
         return result2;
     }
+//
+//    public Map<String, Object> createDocument(Map<String, Object> obj){
+////        List<Map<String, Object>> map = this.jdbcTemplate.queryForList("SELECT doc_id, doc_title, doc_desc FROM documents");
+////        Map<String, Object> resource = new HashMap<>();
+//
+//        Map<String, Object> resource = null;
+//        try {
+//            this.jdbcTemplate.update("INSERT INTO documents(doc_title, doc_desc, user_id, doc_tag) VALUES (?, ?, ?, ?)",
+//                    new Object[]{obj.get("title"), obj.get("description"), obj.get("user_id"), obj.get("tag")});
+//
+////            Map<String, Object> success = new HashMap<>();
+////            success.put("message", "Sample Document has been created");
+////            resource.put("success", success);
+//            resource = setResource(true, "Sample Document has been created");
+//
+//
+//        }
+//        catch (Exception e){
+////            Map<String, Object> error = new HashMap<>();
+////            error.put("message", "Sample Document cannot be created");
+////            resource.put("errror", error);
+//            resource = setResource(true, "Sample Document cannot be created");
+//        }
+//        return resource;
+//    }
 
-    public Map<String, Object> CreateDocument(Map<String, Object> obj){
-//        List<Map<String, Object>> map = this.jdbcTemplate.queryForList("SELECT doc_id, doc_title, doc_desc FROM documents");
-//        Map<String, Object> resource = new HashMap<>();
-
-        Map<String, Object> resource = null;
-        try {
-            this.jdbcTemplate.update("INSERT INTO documents(doc_title, doc_desc, user_id, doc_tag) VALUES (?, ?, ?, ?)",
-                    new Object[]{obj.get("title"), obj.get("description"), obj.get("user_id"), obj.get("tag")});
-
-//            Map<String, Object> success = new HashMap<>();
-//            success.put("message", "Sample Document has been created");
-//            resource.put("success", success);
-            resource = SetResource(true, "Sample Document has been created");
-
-
-        }
-        catch (Exception e){
-//            Map<String, Object> error = new HashMap<>();
-//            error.put("message", "Sample Document cannot be created");
-//            resource.put("errror", error);
-            resource = SetResource(true, "Sample Document cannot be created");
-        }
-        return resource;
-    }
-
-    public Map<String, Object> CreateDocument(String title, String des, String tag, int user_id, MultipartFile[] multipartFiles){
+    public Map<String, Object> createDocument(String title, String des, String tag, int user_id, MultipartFile[] multipartFiles){
 
         Map<String, Object> resource = null;
         try {
@@ -171,14 +172,14 @@ public class DocRepository {
                 uploadAdapter.Upload(mfile, (Integer) m.get("doc_id"));
             }
 
-            resource = SetResource(true, "Sample Document has been created");
+            resource = setResource(true, "Sample Document has been created");
 
         }
         catch (Exception e){
 //            Map<String, Object> error = new HashMap<>();
 //            error.put("message", "Sample Document cannot be created");
 //            resource.put("errror", error);
-             resource = SetResource(false, "Sample Document cannot be created");
+             resource = setResource(false, "Sample Document cannot be created");
         }
 //        return resource;
 
@@ -186,16 +187,16 @@ public class DocRepository {
 
     }
 
-    public Map<String, Object> GetDocumentByIdDoc (int doc_id){
+    public Map<String, Object> getDocumentByIdDoc(int doc_id){
         Map<String, Object> map = this.jdbcTemplate.queryForMap("SELECT doc_id AS id, doc_tag AS tag, doc_title AS title, doc_desc AS description, doc_date AS lastUpdated, user_id FROM documents WHERE doc_id = ?",
                 new Object[]{doc_id});
 
         DepAdapter depAdapter = new DepAdapter();
         try {
-            GetDepNameResponse response = depAdapter.GetDepName((Integer) map.get("user_id"));
+            GetDepNameResponse response = depAdapter.getDepName((Integer) map.get("user_id"));
             map.put("department", response);
         }catch (Exception e){
-            Map<String, Object> resource = SetResource(false, "Service is not available now");
+            Map<String, Object> resource = setResource(false, "Service is not available now");
 //            Map<String, Object> error = new HashMap<>();
 //            error.put("message", "");
 //            resource.put("errror", error);
@@ -206,18 +207,18 @@ public class DocRepository {
 
         FilesAdapter filesAdapter = new FilesAdapter();
         try {
-            List<Map<String, Object>> fileResponse = filesAdapter.GetFileInfo((Integer) map.get("id"));
+            List<Map<String, Object>> fileResponse = filesAdapter.getFileInfo((Integer) map.get("id"));
             map.put("files", fileResponse);
         }catch (Exception e){
 //            map.put("files", "Service Files is crash");
-            Map<String, Object> resource = SetResource(false, "Service is not available now");
+            Map<String, Object> resource = setResource(false, "Service is not available now");
             map.put("files", resource);
         }
 
         return map;
     }
 
-    public Map<String, Object> UpdateDocument(int doc_id, String title, String des, String tag, MultipartFile[] multipartFiles){
+    public Map<String, Object> updateDocument(int doc_id, String title, String des, String tag, MultipartFile[] multipartFiles){
 //        Map<String, Object> resource = new HashMap<>();
         try {
             this.jdbcTemplate.update("UPDATE documents SET doc_title = ?, doc_desc = ?, doc_date= now(), doc_tag = ? WHERE doc_id = ?",
@@ -231,35 +232,35 @@ public class DocRepository {
 //            Map<String, Object> success = new HashMap<>();
 //            success.put("message", );
 //            resource.put("success", success);
-            return SetResource(true, "Document has been Updated");
+            return setResource(true, "Document has been Updated");
         }catch (Exception e){
 //            Map<String, Object> error = new HashMap<>();
 //            error.put("message", ");
 //            resource.put("errror", error);
-            return SetResource(false, "Document cannot be updated");
+            return setResource(false, "Document cannot be updated");
         }
 //        return resource;
     }
 
-    public GetDepNameResponse OwnerDepartment(int doc_id){
+    public GetDepNameResponse ownerDepartment(int doc_id){
         Map<String, Object> map = this.jdbcTemplate.queryForMap("SELECT user_id FROM documents WHERE doc_id = ?", new Object[]{doc_id});
         DepAdapter depAdapter = new DepAdapter();
-        GetDepNameResponse response = depAdapter.GetDepName((Integer) map.get("user_id"));
+        GetDepNameResponse response = depAdapter.getDepName((Integer) map.get("user_id"));
         return response;
     }
-    public Map<String, Object> DeleteDocument(int id_doc){
+    public Map<String, Object> deleteDocument(int id_doc){
 
         try {
             this.jdbcTemplate.update("DELETE FROM documents WHERE doc_id = ?", new Object[]{id_doc});
-            return SetResource(true, "Document has been deleted");
+            return setResource(true, "Document has been deleted");
         }
         catch (Exception e){
-            return SetResource(false, "Document cannot be deleted");
+            return setResource(false, "Document cannot be deleted");
         }
 
 
     }
-    public Map<String, Object> SetResource(boolean result, String message){
+    public Map<String, Object> setResource(boolean result, String message){
         Map<String, Object> resource = new HashMap<>();
 
         if(result){

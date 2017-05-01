@@ -26,14 +26,14 @@ public class FilesController {
     }
 
     @PostMapping(value = "/upload")
-    public void UpladFile(@RequestParam("file") MultipartFile mfile,
+    public void upladFile(@RequestParam("file") MultipartFile mfile,
                           RedirectAttributes redirectAttributes,
                           @RequestParam(value = "doc_id", defaultValue = "0") int doc_id
 //                          @RequestParam(value = "file_upload_id", defaultValue = "0") int file_upload_id,
 //                          @RequestParam(value = "file_upload_revision", defaultValue = "0") int file_upload_revision
     ) throws IOException {
 //        if(file_upload_revision == 1) {
-//            file_upload_id = this.filesRepository.UploadFileToDB(mfile, doc_id);
+//            file_upload_id = this.filesRepository.uploadFileToDB(mfile, doc_id);
 //        }
 //        else {
 //
@@ -44,43 +44,43 @@ public class FilesController {
         //upload newrevision
         if(!result.isEmpty()){
 //          Uploadnewfile
-            resultUploadFile = this.filesRepository.UploadFileToDB(mfile.getOriginalFilename(), mfile.getSize(), doc_id,
+            resultUploadFile = this.filesRepository.uploadFileToDB(mfile.getOriginalFilename(), mfile.getSize(), doc_id,
                     (Integer) result.get("file_upload_id"));
         }
         //uploadnewfile
         else {
 //          Insert Into DB
-            resultUploadFile = this.filesRepository.UploadFileToDB(mfile.getOriginalFilename(), mfile.getSize(), doc_id);
+            resultUploadFile = this.filesRepository.uploadFileToDB(mfile.getOriginalFilename(), mfile.getSize(), doc_id);
         }
 
         //UploadFileToserver
-        this.filesRepository.UploadFile(mfile, (Integer) resultUploadFile.get("doc_id"),
+        this.filesRepository.uploadFile(mfile, (Integer) resultUploadFile.get("doc_id"),
                 (Integer) resultUploadFile.get("file_upload_id"),
                 (Integer) resultUploadFile.get("file_upload_revision")
                 );
 
-//        this.filesRepository.UploadFile(mfile, doc_id, file_upload_id,1);
+//        this.filesRepository.uploadFile(mfile, doc_id, file_upload_id,1);
     }
 
     @GetMapping(value = "/documents/{docid}/files")
 //    @GetMapping(value = "/download/{docid}/{fileid}/{revision}/{filename:.+}")
 //    /documents/:id/files?filename={filename}&revision={fileRevision}&id={fileId}
-    public ResponseEntity<Resource> DownloadFile(@PathVariable int docid,
+    public ResponseEntity<Resource> downloadFile(@PathVariable int docid,
                                                  @RequestParam(value = "filename") String filename,
                                                  @RequestParam(value = "revision") int revision,
                                                  @RequestParam(value = "id") int fileid
 
 
     ) throws MalformedURLException {
-        return this.filesRepository.DownloadFile(docid, fileid, revision, filename);
+        return this.filesRepository.downloadFile(docid, fileid, revision, filename);
     }
 
     @GetMapping(value = "/files")
-    public List<Map<String, Object>> GetFileInfo(@RequestParam int doc_id){
-        return this.filesRepository.GetFileInfo(doc_id);
+    public List<Map<String, Object>> getFileInfo(@RequestParam int doc_id){
+        return this.filesRepository.getFileInfo(doc_id);
     }
 
-    @DeleteMapping(value = "")
+//    @DeleteMapping(value = "")
 
 
 }

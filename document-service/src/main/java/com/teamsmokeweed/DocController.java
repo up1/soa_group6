@@ -38,7 +38,7 @@ public class DocController {
 //    }
 
     @GetMapping("/documents/all/{keys}")
-    public List<Map<String, Object>> GetDocument(@RequestParam(value = "userID", defaultValue = "0") int r_user_id,
+    public List<Map<String, Object>> getDocument(@RequestParam(value = "userID", defaultValue = "0") int r_user_id,
                                                  @RequestParam(value = "order", defaultValue = "ASC") String r_order,
                                                  @RequestParam(value = "orderBy", defaultValue = "id") String r_orderBy,
                                                  @PathVariable(value = "keys") String k,
@@ -64,14 +64,14 @@ public class DocController {
         String order = request.get("order").toString();
 //        id, tag, title
         String orderBy = orderResponse.get(orderRequest.indexOf(request.get("orderBy").toString()));
-        return this.docRepository.GetDocument(key,(Integer) request.get("userID"), order, orderBy, token);
+        return this.docRepository.getDocument(key,(Integer) request.get("userID"), order, orderBy, token);
 
     }
 //    @PostMapping("/test")
 //    public void PostFile(@RequestParam("file") MultipartFile mfile){
 //
 //        UploadAdapter uploadAdapter = new UploadAdapter();
-//        uploadAdapter.GetDepName(mfile);
+//        uploadAdapter.getDepName(mfile);
 //
 //    }
     @PostMapping("test")
@@ -101,27 +101,27 @@ public class DocController {
     }
 
 //    @PostMapping(value = "/documents")
-//    public Map<String, Object> CreateDocument(@RequestBody Map<String, Object> obj){
-//        return this.docRepository.CreateDocument(obj);
+//    public Map<String, Object> createDocument(@RequestBody Map<String, Object> obj){
+//        return this.docRepository.createDocument(obj);
 //    }
     @PostMapping(value = "/documents")
-    public Map<String, Object> CreateDocument(@RequestParam("title") String title,
+    public Map<String, Object> createDocument(@RequestParam("title") String title,
                                               @RequestParam("description") String des,
                                               @RequestParam("tag") String tag,
                                               @RequestParam("user_id") int id,
                                               @RequestParam("file") MultipartFile[] multipartFiles
                                               ){
-        return this.docRepository.CreateDocument(title, des, tag, id, multipartFiles);
+        return this.docRepository.createDocument(title, des, tag, id, multipartFiles);
     }
 
 
     @GetMapping(value = "/documents/{id}")
-    public Map<String, Object> GetDocumentByIdDoc(@PathVariable(value = "id") int doc_id){
-        return this.docRepository.GetDocumentByIdDoc(doc_id);
+    public Map<String, Object> getDocumentByIdDoc(@PathVariable(value = "id") int doc_id){
+        return this.docRepository.getDocumentByIdDoc(doc_id);
     }
 
     @PutMapping(value = "/documents/{id}")
-    public Map<String, Object> UpdateDocument(
+    public Map<String, Object> updateDocument(
                                                 @RequestParam(value = "title", required = true) String title,
                                                 @RequestParam("description") String des,
                                                 @RequestParam("tag") String tag,
@@ -132,7 +132,7 @@ public class DocController {
 //        Map<String, Object> a = new HashMap<>();
 //        a.put("title", title);
 //        return a;
-        return this.docRepository.UpdateDocument(doc_id, title, des, tag, multipartFiles);
+        return this.docRepository.updateDocument(doc_id, title, des, tag, multipartFiles);
     }
 
     @Bean
@@ -152,18 +152,18 @@ public class DocController {
     }
 
     @GetMapping(value = "/OwnerDepartment/{id}")
-    public GetDepNameResponse OwnerDepartment(@PathVariable(value = "id") int doc_id){
-        return this.docRepository.OwnerDepartment(doc_id);
+    public GetDepNameResponse ownerDepartment(@PathVariable(value = "id") int doc_id){
+        return this.docRepository.ownerDepartment(doc_id);
     }
 
     @DeleteMapping(value = "/documents/{id}")
-    public Map<String, Object> DeleteDocument(@PathVariable(value = "id") int doc_id,
+    public Map<String, Object> deleteDocument(@PathVariable(value = "id") int doc_id,
                                               @RequestHeader("Authorization") String authorization){
         String[] authorizationSplit = authorization.split("Bearer ");
         String token = authorizationSplit[1];
         ShareAdapter shareAdapter = new ShareAdapter();
-//        shareAdapter.DeleteShare(doc_id, , token);
-        return this.docRepository.DeleteDocument(doc_id);
+        shareAdapter.deleteShare(doc_id, token);
+        return this.docRepository.deleteDocument(doc_id);
     }
 
 }

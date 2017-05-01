@@ -6,7 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,16 +45,15 @@ public class ShareAdapter {
         }
         return isShare;
     }
-    public void DeleteShare(int doc_id,int dep_id, String token){
+    public void deleteShare(int doc_id, String token){
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://35.187.208.148:8097/documents/"+doc_id+"/shares";
+        String url = "http://35.187.208.148:8097/documents/"+doc_id+"/shares/all";
 
         HttpHeaders headers = new HttpHeaders();
 
         headers.set("Authorization", "Bearer "+token);
 //        HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(headers);
-        Map<String, Object> request = new HashMap<>();
-        request.put("departmentId", dep_id);
+
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
         Map<String, Object> result = restTemplate.exchange(url, HttpMethod.DELETE, entity, Map.class).getBody();

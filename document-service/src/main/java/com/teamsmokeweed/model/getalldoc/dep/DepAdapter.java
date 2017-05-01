@@ -10,7 +10,7 @@ import java.util.Map;
  */
 @Service
 public class DepAdapter {
-    public GetDepNameResponse GetDepName(int user_id){
+    public GetDepNameResponse getDepName(int user_id){
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8092/debNameByUserID?userID=" +user_id;
         GetDepNameResponse getDepNameResponse = restTemplate.getForObject(url, GetDepNameResponse.class);

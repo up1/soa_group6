@@ -29,7 +29,7 @@ public class FilesRepository {
         this.fileSystemStorageService = fileSystemStorageService;
     }
 
-    public void UploadFile(MultipartFile file, int doc_id, int file_upload_id, int file_upload_revision) throws IOException {
+    public void uploadFile(MultipartFile file, int doc_id, int file_upload_id, int file_upload_revision) throws IOException {
         StorageProperties storageProperties = new StorageProperties();
         storageProperties.setLocation("upload/"+doc_id+"/"+file_upload_id+"/"+file_upload_revision+"/");
         fileSystemStorageService = new FileSystemStorageService(storageProperties);
@@ -44,7 +44,7 @@ public class FilesRepository {
     }
 
     //newDocument, oldDocument newFile
-    public Map<String, Object> UploadFileToDB(String fileName, long fileSize, int doc_id){
+    public Map<String, Object> uploadFileToDB(String fileName, long fileSize, int doc_id){
 
         jdbcTemplate.update("INSERT INTO file_upload(doc_id, file_upload_revision, file_name, file_size) VALUES (?, ?, ?, ?);",
                 new Object[]{ doc_id, 1, fileName, fileSize});
@@ -55,7 +55,7 @@ public class FilesRepository {
 //        return (Integer) response.get("file_upload_id");
     }
     //oldDocument oleFile
-    public Map<String, Object> UploadFileToDB(String fileName, long fileSize, int doc_id, int file_upload_id){
+    public Map<String, Object> uploadFileToDB(String fileName, long fileSize, int doc_id, int file_upload_id){
 
 //        GetFileInfoResponse response = jdbcTemplate.queryForObject("", new Object[]{}, GetFileInfoResponse.class)
         jdbcTemplate.update("INSERT INTO file_upload(file_upload_id, doc_id, file_upload_revision, file_name, file_size) VALUES ( ?, ?, (SELECT MAX(a.file_upload_revision)+1 AS file_upload_revision FROM file_upload a WHERE a.file_upload_id = ? AND a.doc_id = ? GROUP BY a.file_upload_id), ?, ?)",
@@ -67,7 +67,7 @@ public class FilesRepository {
     }
 
 
-    public ResponseEntity<Resource> DownloadFile(int doc_id, int file_upload_id, int file_upload_revision, String filename) throws MalformedURLException {
+    public ResponseEntity<Resource> downloadFile(int doc_id, int file_upload_id, int file_upload_revision, String filename) throws MalformedURLException {
         StorageProperties storageProperties = new StorageProperties();
         storageProperties.setLocation("upload/"+doc_id+"/"+file_upload_id+"/"+file_upload_revision+"/");
         this.fileSystemStorageService = new FileSystemStorageService(storageProperties);
@@ -78,7 +78,7 @@ public class FilesRepository {
                 .body(file);
     }
 
-    public List<Map<String, Object>> GetFileInfo(int doc_id){
+    public List<Map<String, Object>> getFileInfo(int doc_id){
 
 //        List<GetFileInfoResponse> list = jdbcTemplate.query("SELECT file_upload_id, doc_id, file_upload_revision, file_name, file_upload_date, file_size FROM file_upload WHERE doc_id = ? GROUP BY file_upload_id DESC",
 //                new Object[]{doc_id}, new GetFileInfoRowMapper());

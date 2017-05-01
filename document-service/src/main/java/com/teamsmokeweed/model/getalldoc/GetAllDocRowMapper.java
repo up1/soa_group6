@@ -23,8 +23,8 @@ public class GetAllDocRowMapper implements RowMapper<GetAllDoc>{
         try {
             getAllDoc = new GetAllDoc(rs.getInt("doc_id"), rs.getString("doc_tag"),
                     rs.getString("doc_title"),
-                    rs.getString("doc_desc"), StringTodate(rs.getString("doc_date")),
-                    depAdapter.GetDepName(rs.getInt("user_id")), true, filesAdapter.GetFileInfo(rs.getInt("doc_id")));
+                    rs.getString("doc_desc"), stringToDate(rs.getString("doc_date")),
+                    depAdapter.getDepName(rs.getInt("user_id")), true, filesAdapter.getFileInfo(rs.getInt("doc_id")));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -32,7 +32,7 @@ public class GetAllDocRowMapper implements RowMapper<GetAllDoc>{
         return getAllDoc;
 
     }
-    public long StringTodate(String ori) throws ParseException {
+    public long stringToDate(String ori) throws ParseException {
 
 //        2017-03-01 17:05:00
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
