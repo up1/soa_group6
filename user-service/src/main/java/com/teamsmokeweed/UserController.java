@@ -63,7 +63,7 @@ public class UserController {
         String uniqueID = UUID.randomUUID().toString().substring(0, 6);
         postUserRequest.setPassword(uniqueID);
         postUserRequest.setPassword(userRepository.md5(postUserRequest.getPassword()));
-        this.userRepository.PostUser(postUserRequest);
+        this.userRepository.postUser(postUserRequest);
         JSONObject succ = new JSONObject();
         JSONObject msg = new JSONObject();
         msg.put("username", postUserRequest.getUsername());
@@ -83,7 +83,7 @@ public class UserController {
     JSONObject deleteUser(@RequestBody DeleteUserRequest deleteUserRequest){
         JSONObject msg = new JSONObject();
         try{
-            this.userRepository.DeleteUser(deleteUserRequest.getId());
+            this.userRepository.deleteUser(deleteUserRequest.getId());
             msg.put("message", "User has been deleted!");
         } catch (Exception e){
             msg.put("message", "Error! User cannot delete!");
@@ -106,7 +106,7 @@ public class UserController {
     public JSONObject getUserInfo(@PathVariable int id){
         JSONObject userInfo = new JSONObject();
         try {
-            Map<String, Object> rawMapUserInfo = this.userRepository.GetUserInfo(id);
+            Map<String, Object> rawMapUserInfo = this.userRepository.getUserInfo(id);
             userInfo.put("id", id);
             userInfo.put("username", rawMapUserInfo.get("username"));
             userInfo.put("first_name", rawMapUserInfo.get("first_name"));
@@ -123,7 +123,7 @@ public class UserController {
     @GetMapping("/users/all")
     public List<Map<String, Object>> getAllUserInfo(){
         JSONObject userInfo = new JSONObject();
-        List<Map<String, Object>> allUserList = userRepository.GetAllUserInfo();
+        List<Map<String, Object>> allUserList = userRepository.getAllUserInfo();
         for(Map<String, Object> i : allUserList){
             i.put("department", new DepAdapter().getDepName((int) i.get("dep_id")));
             i.remove("dep_id");
@@ -136,8 +136,12 @@ public class UserController {
     public @ResponseBody
     JSONObject putUser(@RequestBody PutUserUpdateRequest putUserUpdateRequest){
         JSONObject msg = new JSONObject();
+        if(!(this.userRepository.checkUniqueUsername(putUserUpdateRequest.getUsername()).isUnique())){
+            msg.put("message", "User cannot be updated! username is already in use by other member");
+            return msg;
+        }
         try{
-            this.userRepository.PutUserUpdate(putUserUpdateRequest);
+            this.userRepository.putUserUpdate(putUserUpdateRequest);
             msg.put("message", "User information has been updated!");
         } catch (Exception e){
             msg.put("message", "Error! user cannot be updated!");
@@ -150,9 +154,20 @@ public class UserController {
     public @ResponseBody
     JSONObject putSelfUserUpdate(@RequestBody PutSelfUserUpdateRequest putSelfUserUpdateRequest){
         JSONObject msg = new JSONObject();
+        if(!(this.userRepository.checkUniqueUsername(putSelfUserUpdateRequest.getUsername()).isUnique())){
+            msg.put("message", "User cannot be updated! username is already in use by other member");
+            return msg;
+        }
         try{
-            this.userRepository.PutSelfUserUpdate(putSelfUserUpdateRequest);
-            msg.put("message", "Your username has been updated!");
+            putSelfUserUpdateRequest.setPassword(this.userRepository.md5(putSelfUserUpdateRequest.getPassword()));
+            if(this.userRepository.checkPassword(putSelfUserUpdateRequest.getUsername(), putSelfUserUpdateRequest.getPassword()))
+            {
+                this.userRepository.putSelfUserUpdate(putSelfUserUpdateRequest);
+                msg.put("message", "Your username has been updated!");
+            }
+            else {
+                msg.put("message", "Error! Invalid usernqme or password");
+            }
         } catch (Exception e){
             msg.put("message", "Error! Can't change your username!");
         }
@@ -164,9 +179,16 @@ public class UserController {
     JSONObject putSelfPasswordUpdate(@RequestBody PutSelfPasswordUpdateRequest putSelfPasswordUpdateRequest){
         JSONObject msg = new JSONObject();
         try{
-            putSelfPasswordUpdateRequest.setPassword(userRepository.md5(putSelfPasswordUpdateRequest.getPassword()));
-            this.userRepository.PutSelfPasswordUpdate(putSelfPasswordUpdateRequest);
-            msg.put("message", "Your password has been updated!");
+            putSelfPasswordUpdateRequest.setOldPassword(userRepository.md5(putSelfPasswordUpdateRequest.getOldPassword()));
+            putSelfPasswordUpdateRequest.setNewPassword(userRepository.md5(putSelfPasswordUpdateRequest.getNewPassword()));
+            if (this.userRepository.checkPassword(putSelfPasswordUpdateRequest.getId(), putSelfPasswordUpdateRequest.getOldPassword())){
+                this.userRepository.putSelfPasswordUpdate(putSelfPasswordUpdateRequest);
+                msg.put("message", "Your password has been updated!");
+            }
+            else {
+                msg.put("message", "Error! Can't change your password!");
+            }
+
         } catch (Exception e){
             msg.put("message", "Error! Can't change your password!");
         }
@@ -178,7 +200,7 @@ public class UserController {
     JSONObject putSelfUserUpdate(@RequestBody PutResetPwd putResetPwd){
         JSONObject msg = new JSONObject();
         try{
-            this.userRepository.ResetPwd(putResetPwd.getId());
+            this.userRepository.resetPwd(putResetPwd.getId());
             msg.put("message", "Password has reset!");
             return msg;
         } catch (Exception e){
@@ -191,7 +213,7 @@ public class UserController {
 
     @GetMapping("/debNameByUserID")
     public Map<String, Object> debNameByUserID(@RequestParam(value = "userID") int userID){
-        return this.userRepository.DebNameByUserID(userID);
+        return this.userRepository.debNameByUserID(userID);
     }
 
 
