@@ -369,6 +369,7 @@ message: User has been deleted!
 # [Request]
 id: 11
 username: melonmint
+password: melonmint
 # [Response]
 message: Your username has been updated!
 
@@ -376,7 +377,8 @@ message: Your username has been updated!
 # Let's user update password by him self.
 # [Request]
 id: 11
-password: 123456
+oldPassword: 1234567
+newPassword: 123456
 # [Response]
 message: Your password has been updated!
 
