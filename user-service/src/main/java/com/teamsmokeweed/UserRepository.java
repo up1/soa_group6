@@ -15,6 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -55,9 +56,9 @@ public class UserRepository {
 
         try{
 
-            result.put("department", depAdapter.getDepName((Integer) result.get("dep_id")));
+            result.put("department", depAdapter.GetDepName((Integer) result.get("dep_id")));
             result.remove("dep_id");
-//            userInfoResponse.setDep_name(depAdapter.getDepName(userInfoResponse.getDep_id()).getDep_name());
+//            userInfoResponse.setDep_name(depAdapter.GetDepName(userInfoResponse.getDep_id()).getDep_name());
             return result;
         }
         catch (Exception e){
@@ -67,7 +68,7 @@ public class UserRepository {
 
     }
 
-    public void postUser(PostUserRequest postUserRequest){
+    public void PostUser(PostUserRequest postUserRequest){
 
         jdbcTemplate.update("INSERT INTO users(user_username, user_password, user_fname, user_lname, dep_id, user_role, user_ispasswordchange) VALUES(?,?,?,?,?,?,?)",
                 new Object[]{postUserRequest.getUsername(), postUserRequest.getPassword(),
@@ -75,15 +76,15 @@ public class UserRepository {
                         postUserRequest.getUser_role(), postUserRequest.getUser_ispasswordchange()});
 
     }
-    public void deleteUser(int user_id){
+    public void DeleteUser(int user_id){
 
         jdbcTemplate.update("DELETE FROM users WHERE user_id=?", user_id);
 
     }
 
-    public void putSelfUserUpdate(PutSelfUserUpdateRequest putSelfUserUpdateRequest){
+    public void PutSelfUserUpdate(PutSelfUserUpdateRequest putSelfUserUpdateRequest){
 
-        jdbcTemplate.update("UPDATE users SET user_username = ?, user_password = ?, user_ispasswordchange = 1 WHERE user_id= ?", new Object[]{putSelfUserUpdateRequest.getUsername(), putSelfUserUpdateRequest.getPassword(), putSelfUserUpdateRequest.getUserID()});
+        jdbcTemplate.update("UPDATE users SET user_username = ?, user_password = ?, user_ispasswordchange = 1 WHERE user_id= ?", new Object[]{putSelfUserUpdateRequest.getUsername(), putSelfUserUpdateRequest.getPassword(), putSelfUserUpdateRequest.getId()});
 
     }
 
@@ -100,16 +101,16 @@ public class UserRepository {
         }
 
     }
-    public Map<String, Object> debNameByUserID(int user_id){
+    public Map<String, Object> DebNameByUserID(int user_id){
 //        UserInfoResponse userInfoResponse = jdbcTemplate.queryForObject("SELECT user_id, dep_id, user_role, user_ispasswordchange, user_username, user_fname, user_lname FROM users WHERE user_id = ?",
 //                new Object[]{user_id}, new UserInfoResponseRowMapping());
         Map<String, Object> result = jdbcTemplate.queryForMap("SELECT dep_id FROM users WHERE user_id = ?",
                 new Object[]{user_id});
         try{
-//            GetDepNameResponse response = depAdapter.getDepName(userInfoResponse.getDep_id());
-//            GetDepNameResponse getDepNameResponse = depAdapter.getDepName(userInfoResponse.getDep_id());
+//            GetDepNameResponse response = depAdapter.GetDepName(userInfoResponse.getDep_id());
+//            GetDepNameResponse getDepNameResponse = depAdapter.GetDepName(userInfoResponse.getDep_id());
 //            userInfoResponse.setDep_name();
-            Map<String, Object> resultDep = depAdapter.getDepName((Integer) result.get("dep_id"));
+            Map<String, Object> resultDep = depAdapter.GetDepName((Integer) result.get("dep_id"));
 
             return resultDep;
         }
@@ -119,16 +120,16 @@ public class UserRepository {
             return new HashMap<>();
         }
     }
-    public Map<String, Object> getUserInfo(int userID){
+    public Map<String, Object> GetUserInfo(int userID){
         return jdbcTemplate.queryForMap("SELECT user_id AS id, user_username AS username, user_fname AS first_name, user_lname AS last_name, dep_id, user_role AS role, user_ispasswordchange AS password_changed FROM users WHERE user_id = ?",
                 userID);
 
     }
-    public void putUserUpdate(PutUserUpdateRequest putUserUpdateRequest){
+    public void PutUserUpdate(PutUserUpdateRequest putUserUpdateRequest){
         jdbcTemplate.update("UPDATE users SET user_username = ?, user_fname = ?, user_lname = ?, dep_id = ?  WHERE user_id= ?",
                 new Object[]{putUserUpdateRequest.getUsername(), putUserUpdateRequest.getFirst_name(), putUserUpdateRequest.getLast_name(), putUserUpdateRequest.getDepartment().getId(), putUserUpdateRequest.getId()});
     }
-    public void resetPwd(int userID){
+    public void ResetPwd(int userID){
         String uniqueID = UUID.randomUUID().toString().substring(0, 6);
         uniqueID = md5(uniqueID);
         jdbcTemplate.update("UPDATE users SET user_password = ?, user_ispasswordchange = 0 WHERE user_id = ?",

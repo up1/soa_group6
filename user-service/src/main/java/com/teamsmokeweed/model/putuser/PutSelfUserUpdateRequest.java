@@ -5,23 +5,23 @@ package com.teamsmokeweed.model.putuser;
  *
  */
 public class PutSelfUserUpdateRequest {
-    int userID;
+    int id;
     String username, password;
     public PutSelfUserUpdateRequest(){}
 
-    public PutSelfUserUpdateRequest(int userID, String username, String password) {
-        this.userID = userID;
+    public PutSelfUserUpdateRequest(int id, String username, String password) {
+        this.id = id;
         this.username = username;
         this.password = password;
 
     }
 
-    public int getUserID() {
-        return userID;
+    public int getId() {
+        return id;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {
