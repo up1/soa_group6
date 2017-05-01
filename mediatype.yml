@@ -43,7 +43,8 @@ token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.p
 # GET /documents/all/:keys?userID={id}&?order={order}&?orderBy={orderBy}
 # order -> DESC, ASC
 # orderBy -> id, tag, title, description, lastUpdated
-# keys->recent, message
+# keys->recent, message, pool
+# share -> docเป็นของคนในแผนกเดียวกับเราไหม
 # Get all documents
 
 # [Response]
