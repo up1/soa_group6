@@ -1,6 +1,7 @@
 package xyz.sleepiizcatz.docupool.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

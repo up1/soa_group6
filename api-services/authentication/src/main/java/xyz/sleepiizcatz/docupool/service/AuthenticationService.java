@@ -31,7 +31,7 @@ public class AuthenticationService {
         RestTemplate restTemplate = new RestTemplate();
         try {
             user = restTemplate.postForObject(userInfoAPI, request, Map.class);
-        } catch (Exception e) { } // User not found
+        } catch (Exception e) { }
 
         return user;
     }

@@ -28,20 +28,22 @@ public class TokenService {
 
     public static String generate(Map<String, Object> user) throws IOException {
 
+        Map<String, Object> userDepartment = (Map<String, Object>) user.get("department");
+
         String userJson = new JSONObject()
-                .put("id", user.get("user_id"))
-                .put("username", user.get("user_username"))
-                .put("admin", (Integer) user.get("user_role") == 0 ? false : true)
-                .put("passwordChanged", (Integer) user.get("user_ispasswordchange") == 0 ? false : true)
-                .put("firstName", user.get("user_fname"))
-                .put("lastName", user.get("user_lname"))
+                .put("id", user.get("id"))
+                .put("username", user.get("username"))
+                .put("admin", (Integer) user.get("role") == 0 ? false : true)
+                .put("passwordChanged", (Integer) user.get("password_changed") == 0 ? false : true)
+                .put("firstName", user.get("first_name"))
+                .put("lastName", user.get("last_name"))
                 .put("department", new JSONObject()
-                        .put("id", user.get("dep_id"))
-                        .put("name", user.get("dep_name")))
+                        .put("id", userDepartment.get("id"))
+                        .put("name", userDepartment.get("name")))
                 .toString();
 
         return Jwts.builder()
-                .setSubject((String) user.get("user_username"))
+                .setSubject((String) user.get("username"))
                 .setIssuedAt(Date.from(Instant.now()))
                 .setIssuer("DocuPool")
                 .claim("user", new ObjectMapper().readValue(userJson, HashMap.class))
