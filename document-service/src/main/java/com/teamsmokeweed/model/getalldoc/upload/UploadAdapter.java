@@ -38,7 +38,6 @@ public class UploadAdapter {
         tempFile = RenameFile(tempFile, oriFileName);
         map.add("file", new FileSystemResource(tempFile));
         map.add("doc_id", doc_id);
-//        map.add("file_upload_revision", 1);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
@@ -46,48 +45,12 @@ public class UploadAdapter {
 
         try {
             restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
-//            document = responseEntity.getBody();
         } catch (Exception e) {
             e.getMessage();
         }
         tempFile.delete();
 
     }
-
-//    oldDocument oleFile
-//    public void Upload(MultipartFile multipartFile, int doc_id, int file_upload_id){
-//        RestTemplate restTemplate = new RestTemplate();
-//        String url = "http://localhost:8099/upload";
-//
-//        String oriFileName = multipartFile.getOriginalFilename();
-//        File tempFile = null;
-//        try {
-//            String extension = "." + getFileExtention(multipartFile.getOriginalFilename());
-//            tempFile = File.createTempFile("temp", extension);
-//            multipartFile.transferTo(tempFile);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-//
-//        tempFile = RenameFile(tempFile, oriFileName);
-//        map.add("file", new FileSystemResource(tempFile));
-//        map.add("doc_id", doc_id);
-//        map.add("file_upload_id", file_upload_id);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//        HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-//
-//
-//        try {
-//            restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
-////            document = responseEntity.getBody();
-//        } catch (Exception e) {
-//            e.getMessage();
-//        }
-//
-//    }
 
     private String getFileExtention(String originalFilename) {
         return originalFilename.substring(originalFilename.indexOf(".")+1);

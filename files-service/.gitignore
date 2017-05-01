@@ -1,6 +1,7 @@
 .gradle
 /build/
 /upload/
+/classes/
 !gradle/wrapper/gradle-wrapper.jar
 
 ### STS ###

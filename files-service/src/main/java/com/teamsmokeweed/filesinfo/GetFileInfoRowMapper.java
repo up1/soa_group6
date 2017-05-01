@@ -30,7 +30,6 @@ public class GetFileInfoRowMapper implements RowMapper<GetFileInfoResponse>{
             fileName = strList;
         }
 
-//        String fileName = "-";
         GetFileInfoResponse response = new GetFileInfoResponse(fileName,
                 rs.getLong("file_size"), rs.getInt("file_upload_revision"));
         String time = rs.getString("file_upload_date");
@@ -49,8 +48,6 @@ public class GetFileInfoRowMapper implements RowMapper<GetFileInfoResponse>{
 //        2017-03-01 17:05:00
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = formatter.parse(ori);
-//        System.out.println(ori);
-//        System.out.println(formatter.format(date.getTime()));
         return date.getTime();
     }
 }

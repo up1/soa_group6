@@ -34,12 +34,7 @@ public class FilesRepository {
         storageProperties.setLocation("upload/"+doc_id+"/"+file_upload_id+"/"+file_upload_revision+"/");
         fileSystemStorageService = new FileSystemStorageService(storageProperties);
         this.fileSystemStorageService.init();
-//        try {
-//            this.fileSystemStorageService.init();
-//        }
-//        catch (Exception e){
-//
-//        }
+
         this.fileSystemStorageService.store(file);
     }
 
@@ -52,12 +47,12 @@ public class FilesRepository {
         Map<String, Object> response = this.jdbcTemplate.queryForMap("SELECT file_upload_id, doc_id, MAX(file_upload_revision) AS file_upload_revision FROM file_upload WHERE doc_id = ? AND file_name = ? GROUP BY file_upload_id",
                 new Object[]{ doc_id, fileName});
         return response;
-//        return (Integer) response.get("file_upload_id");
+
     }
     //oldDocument oleFile
     public Map<String, Object> uploadFileToDB(String fileName, long fileSize, int doc_id, int file_upload_id){
 
-//        GetFileInfoResponse response = jdbcTemplate.queryForObject("", new Object[]{}, GetFileInfoResponse.class)
+
         jdbcTemplate.update("INSERT INTO file_upload(file_upload_id, doc_id, file_upload_revision, file_name, file_size) VALUES ( ?, ?, (SELECT MAX(a.file_upload_revision)+1 AS file_upload_revision FROM file_upload a WHERE a.file_upload_id = ? AND a.doc_id = ? GROUP BY a.file_upload_id), ?, ?)",
                 new Object[]{file_upload_id, doc_id, file_upload_id, doc_id, fileName, fileSize});
 
@@ -80,8 +75,6 @@ public class FilesRepository {
 
     public List<Map<String, Object>> getFileInfo(int doc_id){
 
-//        List<GetFileInfoResponse> list = jdbcTemplate.query("SELECT file_upload_id, doc_id, file_upload_revision, file_name, file_upload_date, file_size FROM file_upload WHERE doc_id = ? GROUP BY file_upload_id DESC",
-//                new Object[]{doc_id}, new GetFileInfoRowMapper());
         List<Map<String, Object>> result = jdbcTemplate.queryForList("SELECT file_name AS name, file_size AS 'size', file_upload_date AS 'time', file_upload_revision AS revision , file_upload_id AS id FROM file_upload WHERE doc_id = ? GROUP BY file_upload_id DESC",
                 new Object[]{doc_id});
         return result;

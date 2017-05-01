@@ -29,15 +29,8 @@ public class FilesController {
     public void upladFile(@RequestParam("file") MultipartFile mfile,
                           RedirectAttributes redirectAttributes,
                           @RequestParam(value = "doc_id", defaultValue = "0") int doc_id
-//                          @RequestParam(value = "file_upload_id", defaultValue = "0") int file_upload_id,
-//                          @RequestParam(value = "file_upload_revision", defaultValue = "0") int file_upload_revision
+
     ) throws IOException {
-//        if(file_upload_revision == 1) {
-//            file_upload_id = this.filesRepository.uploadFileToDB(mfile, doc_id);
-//        }
-//        else {
-//
-//        }
 
         Map<String, Object> result = this.filesRepository.isNewFile(doc_id, mfile.getOriginalFilename());
         Map<String, Object> resultUploadFile = null;
@@ -59,7 +52,7 @@ public class FilesController {
                 (Integer) resultUploadFile.get("file_upload_revision")
                 );
 
-//        this.filesRepository.uploadFile(mfile, doc_id, file_upload_id,1);
+
     }
 
     @GetMapping(value = "/documents/{docid}/files")
@@ -79,8 +72,5 @@ public class FilesController {
     public List<Map<String, Object>> getFileInfo(@RequestParam int doc_id){
         return this.filesRepository.getFileInfo(doc_id);
     }
-
-//    @DeleteMapping(value = "")
-
 
 }

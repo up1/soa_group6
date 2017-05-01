@@ -53,9 +53,9 @@ public class FileSystemStorageService implements StorageService{
     public Resource loadAsResource(String filename) throws MalformedURLException {
         Path file = load(filename);
         Resource resource = new UrlResource(file.toUri());
-//        if(resource.exists() || resource.isReadable()) {
+
         return resource;
-//        }
+
 
     }
 

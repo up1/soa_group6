@@ -37,8 +37,6 @@ public class GetAllDocRowMapper implements RowMapper<GetAllDoc>{
 //        2017-03-01 17:05:00
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = formatter.parse(ori);
-//        System.out.println(ori);
-//        System.out.println(formatter.format(date.getTime()));
         return date.getTime();
     }
 }

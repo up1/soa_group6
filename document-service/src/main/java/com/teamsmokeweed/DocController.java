@@ -57,7 +57,10 @@ public class DocController {
         if (k.equals("message")){
             key = 1;
         }
-//        System.out.println(key);
+        else if (k.equals("pool")){
+            key = 2;
+        }
+
         List<String> orderRequest = Arrays.asList("id","tag", "title", "description", "lastUpdated");
         List<String> orderResponse = Arrays.asList("doc_id","doc_tag", "doc_title", "doc_desc", "doc_date");
 //        AES, DESC
@@ -67,31 +70,6 @@ public class DocController {
         return this.docRepository.getDocument(key,(Integer) request.get("userID"), order, orderBy, token);
 
     }
-//    @PostMapping("/test")
-//    public void PostFile(@RequestParam("file") MultipartFile mfile){
-//
-//        UploadAdapter uploadAdapter = new UploadAdapter();
-//        uploadAdapter.getDepName(mfile);
-//
-//    }
-    @PostMapping("test")
-    public List<Map<String, Object>> test(@RequestBody Map <String,Object> a){
-        Map<String, Object> map = new HashMap<>();
-        map.put("a", "ccc");
-        map.put("b", "ddd");
-
-        List<Map<String, Object>> list = new ArrayList<>();
-        list.add(map);
-        map.replace("a", "asd");
-        map = changValue(map, "a", "as");
-        list.add(map);
-        list.add(a);
-
-        Map<String, Object> map2 = new HashMap<>();
-        map2.put("cv", 5);
-        map2.put("list",list);
-        return list;
-    }
 
     public Map<String, Object> changValue(Map<String, Object> oldMap, String k, Object v){
         Map<String, Object> newMap = new HashMap<>();
@@ -100,10 +78,6 @@ public class DocController {
         return newMap;
     }
 
-//    @PostMapping(value = "/documents")
-//    public Map<String, Object> createDocument(@RequestBody Map<String, Object> obj){
-//        return this.docRepository.createDocument(obj);
-//    }
     @PostMapping(value = "/documents")
     public Map<String, Object> createDocument(@RequestParam("title") String title,
                                               @RequestParam("description") String des,
@@ -128,10 +102,7 @@ public class DocController {
                                                 @PathVariable("id") int doc_id,
                                                 @RequestParam("file") MultipartFile[] multipartFiles
     ){
-//        System.out.println(title);
-//        Map<String, Object> a = new HashMap<>();
-//        a.put("title", title);
-//        return a;
+
         return this.docRepository.updateDocument(doc_id, title, des, tag, multipartFiles);
     }
 
