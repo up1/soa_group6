@@ -1,6 +1,7 @@
 package com.teamsmokeweed;
 
 import com.teamsmokeweed.model.getalldoc.dep.GetDepNameResponse;
+import com.teamsmokeweed.model.getalldoc.share.ShareAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
@@ -36,7 +37,7 @@ public class DocController {
 //        return this.docRepository.GetAllDoc();
 //    }
 
-    @GetMapping("/documents/{keys}")
+    @GetMapping("/documents/all/{keys}")
     public List<Map<String, Object>> GetDocument(@RequestParam(value = "userID", defaultValue = "0") int r_user_id,
                                                  @RequestParam(value = "order", defaultValue = "ASC") String r_order,
                                                  @RequestParam(value = "orderBy", defaultValue = "id") String r_orderBy,
@@ -153,6 +154,16 @@ public class DocController {
     @GetMapping(value = "/OwnerDepartment/{id}")
     public GetDepNameResponse OwnerDepartment(@PathVariable(value = "id") int doc_id){
         return this.docRepository.OwnerDepartment(doc_id);
+    }
+
+    @DeleteMapping(value = "/documents/{id}")
+    public Map<String, Object> DeleteDocument(@PathVariable(value = "id") int doc_id,
+                                              @RequestHeader("Authorization") String authorization){
+        String[] authorizationSplit = authorization.split("Bearer ");
+        String token = authorizationSplit[1];
+        ShareAdapter shareAdapter = new ShareAdapter();
+//        shareAdapter.DeleteShare(doc_id, , token);
+        return this.docRepository.DeleteDocument(doc_id);
     }
 
 }

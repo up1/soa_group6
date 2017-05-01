@@ -112,7 +112,16 @@ public class DocRepository {
 
     public List<Map<String, Object>> AddToList(Map<String, Object> r, List<Map<String, Object>> result2){
         r.put("department",this.depAdapter.getDepepartment((Integer) r.get("user_id")).get("id"));
-        r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+        try {
+            r.put("files", this.filesAdapter.GetFileInfo((Integer)r.get("id")));
+        }
+        catch (Exception e){
+            Map<String, Object> resource = new HashMap<>();
+            Map<String, Object> error = new HashMap<>();
+            error.put("message", "Service is not available now");
+            resource.put("errror", error);
+            r.put("files", resource);
+        }
         r.remove("user_id");
         result2.add(r);
         return result2;
@@ -122,27 +131,30 @@ public class DocRepository {
 //        List<Map<String, Object>> map = this.jdbcTemplate.queryForList("SELECT doc_id, doc_title, doc_desc FROM documents");
 //        Map<String, Object> resource = new HashMap<>();
 
-        Map<String, Object> resource = new HashMap<>();
+        Map<String, Object> resource = null;
         try {
             this.jdbcTemplate.update("INSERT INTO documents(doc_title, doc_desc, user_id, doc_tag) VALUES (?, ?, ?, ?)",
                     new Object[]{obj.get("title"), obj.get("description"), obj.get("user_id"), obj.get("tag")});
 
-            Map<String, Object> success = new HashMap<>();
-            success.put("message", "Sample Document has been created");
-            resource.put("success", success);
+//            Map<String, Object> success = new HashMap<>();
+//            success.put("message", "Sample Document has been created");
+//            resource.put("success", success);
+            resource = SetResource(true, "Sample Document has been created");
+
 
         }
         catch (Exception e){
-            Map<String, Object> error = new HashMap<>();
-            error.put("message", "Sample Document cannot be created");
-            resource.put("errror", error);
+//            Map<String, Object> error = new HashMap<>();
+//            error.put("message", "Sample Document cannot be created");
+//            resource.put("errror", error);
+            resource = SetResource(true, "Sample Document cannot be created");
         }
         return resource;
     }
 
     public Map<String, Object> CreateDocument(String title, String des, String tag, int user_id, MultipartFile[] multipartFiles){
 
-        Map<String, Object> resource = new HashMap<>();
+        Map<String, Object> resource = null;
         try {
             this.jdbcTemplate.update("INSERT INTO documents(doc_title, doc_desc, user_id, doc_tag) VALUES (?, ?, ?, ?)",
                     new Object[]{title, des, user_id, tag});
@@ -151,7 +163,7 @@ public class DocRepository {
             Map<String, Object> m = this.jdbcTemplate.queryForMap("SELECT doc_id FROM documents WHERE doc_title = ? AND doc_desc = ? AND user_id = ? AND doc_tag = ?",
                     new Object[]{title, des, user_id, tag});
 
-            Map<String, Object> success = new HashMap<>();
+
 
             for (MultipartFile mfile : multipartFiles) {
 
@@ -159,14 +171,14 @@ public class DocRepository {
                 uploadAdapter.Upload(mfile, (Integer) m.get("doc_id"));
             }
 
-            success.put("message", "Sample Document has been created");
-            resource.put("success", success);
+            resource = SetResource(true, "Sample Document has been created");
 
         }
         catch (Exception e){
-            Map<String, Object> error = new HashMap<>();
-            error.put("message", "Sample Document cannot be created");
-            resource.put("errror", error);
+//            Map<String, Object> error = new HashMap<>();
+//            error.put("message", "Sample Document cannot be created");
+//            resource.put("errror", error);
+             resource = SetResource(false, "Sample Document cannot be created");
         }
 //        return resource;
 
@@ -183,10 +195,10 @@ public class DocRepository {
             GetDepNameResponse response = depAdapter.GetDepName((Integer) map.get("user_id"));
             map.put("department", response);
         }catch (Exception e){
-            Map<String, Object> resource = new HashMap<>();
-            Map<String, Object> error = new HashMap<>();
-            error.put("message", "Service is not available now");
-            resource.put("errror", error);
+            Map<String, Object> resource = SetResource(false, "Service is not available now");
+//            Map<String, Object> error = new HashMap<>();
+//            error.put("message", "");
+//            resource.put("errror", error);
             map.put("departments", resource);
         }
 
@@ -198,10 +210,7 @@ public class DocRepository {
             map.put("files", fileResponse);
         }catch (Exception e){
 //            map.put("files", "Service Files is crash");
-            Map<String, Object> resource = new HashMap<>();
-            Map<String, Object> error = new HashMap<>();
-            error.put("message", "Service is not available now");
-            resource.put("errror", error);
+            Map<String, Object> resource = SetResource(false, "Service is not available now");
             map.put("files", resource);
         }
 
@@ -209,24 +218,27 @@ public class DocRepository {
     }
 
     public Map<String, Object> UpdateDocument(int doc_id, String title, String des, String tag, MultipartFile[] multipartFiles){
-        Map<String, Object> resource = new HashMap<>();
+//        Map<String, Object> resource = new HashMap<>();
         try {
             this.jdbcTemplate.update("UPDATE documents SET doc_title = ?, doc_desc = ?, doc_date= now(), doc_tag = ? WHERE doc_id = ?",
                     new Object[]{title, des, tag, doc_id});
-            Map<String, Object> success = new HashMap<>();
+
             for (MultipartFile mfile : multipartFiles) {
 
                 UploadAdapter uploadAdapter = new UploadAdapter();
                 uploadAdapter.Upload(mfile, doc_id);
             }
-            success.put("message", "Document has been Updated");
-            resource.put("success", success);
+//            Map<String, Object> success = new HashMap<>();
+//            success.put("message", );
+//            resource.put("success", success);
+            return SetResource(true, "Document has been Updated");
         }catch (Exception e){
-            Map<String, Object> error = new HashMap<>();
-            error.put("message", "Document cannot be updated");
-            resource.put("errror", error);
+//            Map<String, Object> error = new HashMap<>();
+//            error.put("message", ");
+//            resource.put("errror", error);
+            return SetResource(false, "Document cannot be updated");
         }
-        return resource;
+//        return resource;
     }
 
     public GetDepNameResponse OwnerDepartment(int doc_id){
@@ -234,6 +246,33 @@ public class DocRepository {
         DepAdapter depAdapter = new DepAdapter();
         GetDepNameResponse response = depAdapter.GetDepName((Integer) map.get("user_id"));
         return response;
+    }
+    public Map<String, Object> DeleteDocument(int id_doc){
+
+        try {
+            this.jdbcTemplate.update("DELETE FROM documents WHERE doc_id = ?", new Object[]{id_doc});
+            return SetResource(true, "Document has been deleted");
+        }
+        catch (Exception e){
+            return SetResource(false, "Document cannot be deleted");
+        }
+
+
+    }
+    public Map<String, Object> SetResource(boolean result, String message){
+        Map<String, Object> resource = new HashMap<>();
+
+        if(result){
+            Map<String, Object> success = new HashMap<>();
+            success.put("message", message);
+            resource.put("success", success);
+        }
+        else {
+            Map<String, Object> error = new HashMap<>();
+            error.put("message", message);
+            resource.put("errror", error);
+        }
+        return resource;
     }
 
 }

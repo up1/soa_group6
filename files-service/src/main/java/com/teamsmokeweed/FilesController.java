@@ -80,5 +80,7 @@ public class FilesController {
         return this.filesRepository.GetFileInfo(doc_id);
     }
 
+    @DeleteMapping(value = "")
+
 
 }
