@@ -6,6 +6,7 @@ import com.teamsmokeweed.model.postuser.PostUserRequest;
 import com.teamsmokeweed.model.putuser.PutSelfUserUpdateRequest;
 import com.teamsmokeweed.model.putuser.PutUserUpdateRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by jongzazaal on 13/4/2560.
@@ -56,7 +54,7 @@ public class UserRepository {
 
         try{
 
-            result.put("department", depAdapter.GetDepName((Integer) result.get("dep_id")));
+            result.put("department", depAdapter.getDepName((int) result.get("dep_id")));
             result.remove("dep_id");
 //            userInfoResponse.setDep_name(depAdapter.GetDepName(userInfoResponse.getDep_id()).getDep_name());
             return result;
@@ -110,7 +108,7 @@ public class UserRepository {
 //            GetDepNameResponse response = depAdapter.GetDepName(userInfoResponse.getDep_id());
 //            GetDepNameResponse getDepNameResponse = depAdapter.GetDepName(userInfoResponse.getDep_id());
 //            userInfoResponse.setDep_name();
-            Map<String, Object> resultDep = depAdapter.GetDepName((Integer) result.get("dep_id"));
+            Map<String, Object> resultDep = depAdapter.getDepName((Integer) result.get("dep_id"));
 
             return resultDep;
         }
@@ -123,6 +121,10 @@ public class UserRepository {
     public Map<String, Object> GetUserInfo(int userID){
         return jdbcTemplate.queryForMap("SELECT user_id AS id, user_username AS username, user_fname AS first_name, user_lname AS last_name, dep_id, user_role AS role, user_ispasswordchange AS password_changed FROM users WHERE user_id = ?",
                 userID);
+
+    }
+    public List<Map<String, Object>> GetAllUserInfo(){
+        return jdbcTemplate.queryForList("SELECT user_id AS id, user_username AS username, user_fname AS first_name, user_lname AS last_name, dep_id, user_role AS role, user_ispasswordchange AS password_changed FROM users");
 
     }
     public void PutUserUpdate(PutUserUpdateRequest putUserUpdateRequest){

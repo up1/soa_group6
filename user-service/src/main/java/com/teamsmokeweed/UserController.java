@@ -12,6 +12,8 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -61,7 +63,7 @@ public class UserController {
         String uniqueID = UUID.randomUUID().toString().substring(0, 6);
         postUserRequest.setPassword(uniqueID);
         postUserRequest.setPassword(userRepository.md5(postUserRequest.getPassword()));
-        this.userRepository.postUser(postUserRequest);
+        this.userRepository.PostUser(postUserRequest);
         //return new ResponseEntity<PostUserResponse>(new PostUserResponse(postUserRequest.getUser_username(), uniqueID, "User has been created!"), HttpStatus.OK);
         JSONObject succ = new JSONObject();
         JSONObject msg = new JSONObject();
@@ -82,7 +84,7 @@ public class UserController {
     JSONObject deleteUser(@RequestBody DeleteUserRequest deleteUserRequest){
         JSONObject msg = new JSONObject();
         try{
-            this.userRepository.deleteUser(deleteUserRequest.getId());
+            this.userRepository.DeleteUser(deleteUserRequest.getId());
             msg.put("message", "User has been deleted!");
         } catch (Exception e){
             msg.put("message", "Error! User cannot delete!");
@@ -105,7 +107,7 @@ public class UserController {
     public JSONObject getUserInfo(@PathVariable int id){
         JSONObject userInfo = new JSONObject();
         try {
-            Map<String, Object> rawMapUserInfo = this.userRepository.getUserInfo(id);
+            Map<String, Object> rawMapUserInfo = this.userRepository.GetUserInfo(id);
             userInfo.put("id", id);
             userInfo.put("username", rawMapUserInfo.get("username"));
             userInfo.put("first_name", rawMapUserInfo.get("first_name"));
@@ -119,13 +121,24 @@ public class UserController {
         }
         return userInfo;
     }
+    @GetMapping("/users/all")
+    public List<Map<String, Object>> getAllUserInfo(){
+        JSONObject userInfo = new JSONObject();
+        List<Map<String, Object>> allUserList = userRepository.GetAllUserInfo();
+        for(Map<String, Object> i : allUserList){
+            i.put("department", new DepAdapter().getDepName((int) i.get("dep_id")));
+            i.remove("dep_id");
+        }
+        return allUserList;
+
+    }
 
     @PutMapping("/users")
     public @ResponseBody
     JSONObject putUser(@RequestBody PutUserUpdateRequest putUserUpdateRequest){
         JSONObject msg = new JSONObject();
         try{
-            this.userRepository.putUserUpdate(putUserUpdateRequest);
+            this.userRepository.PutUserUpdate(putUserUpdateRequest);
             msg.put("message", "User information has been updated!");
         } catch (Exception e){
             msg.put("message", "Error! user cannot be updated!");
@@ -140,7 +153,7 @@ public class UserController {
         JSONObject msg = new JSONObject();
         try{
             putSelfUserUpdateRequest.setPassword(userRepository.md5(putSelfUserUpdateRequest.getPassword()));
-            this.userRepository.putSelfUserUpdate(putSelfUserUpdateRequest);
+            this.userRepository.PutSelfUserUpdate(putSelfUserUpdateRequest);
             msg.put("message", "Your information has been updated!");
         } catch (Exception e){
             msg.put("message", "Error!");
@@ -153,7 +166,7 @@ public class UserController {
     JSONObject putSelfUserUpdate(@RequestBody PutResetPwd putResetPwd){
         JSONObject msg = new JSONObject();
         try{
-            this.userRepository.resetPwd(putResetPwd.getId());
+            this.userRepository.ResetPwd(putResetPwd.getId());
             msg.put("message", "Password has reset!");
             return msg;
         } catch (Exception e){
@@ -166,7 +179,7 @@ public class UserController {
 
     @GetMapping("/debNameByUserID")
     public Map<String, Object> debNameByUserID(@RequestParam(value = "userID") int userID){
-        return this.userRepository.debNameByUserID(userID);
+        return this.userRepository.DebNameByUserID(userID);
     }
 
 
