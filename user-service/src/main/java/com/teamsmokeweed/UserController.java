@@ -160,13 +160,13 @@ public class UserController {
         }
         try{
             putSelfUserUpdateRequest.setPassword(this.userRepository.md5(putSelfUserUpdateRequest.getPassword()));
-            if(this.userRepository.checkPassword(putSelfUserUpdateRequest.getUsername(), putSelfUserUpdateRequest.getPassword()))
+            if(this.userRepository.checkPassword(putSelfUserUpdateRequest.getId(), putSelfUserUpdateRequest.getPassword()))
             {
                 this.userRepository.putSelfUserUpdate(putSelfUserUpdateRequest);
                 msg.put("message", "Your username has been updated!");
             }
             else {
-                msg.put("message", "Error! Invalid usernqme or password");
+                msg.put("message", "Error! Invalid password");
             }
         } catch (Exception e){
             msg.put("message", "Error! Can't change your username!");

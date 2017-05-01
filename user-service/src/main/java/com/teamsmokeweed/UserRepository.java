@@ -99,17 +99,6 @@ public class UserRepository {
             return false;
         }
     }
-    public boolean checkPassword(String username, String password){
-        int count = jdbcTemplate.queryForObject("SELECT count(user_username) FROM users WHERE user_username= ? AND user_password = ?",
-                new Object[]{username, password}, Integer.class);
-
-        if(count>=1){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
 
     public CheckUniqueUsernameResponse checkUniqueUsername(String username){
 
