@@ -28,7 +28,7 @@ public class ShareDocumentController {
 
     @DeleteMapping("/documents/{documentId}/shares")
     public @ResponseBody
-    Map<String, Object> revokeDepartmentFromDoc (@PathVariable String documentId,
+    Map<String, Object> revokeDepartmentFromDocAndDep (@PathVariable String documentId,
                                                  @RequestBody Map<String, Integer> departmentId,
                                                  @RequestHeader("Authorization") String authorization){
         //split ("Bearer ") and get token
@@ -41,7 +41,38 @@ public class ShareDocumentController {
         try{
             Map<String, Object> data = new TokenAdapter().getDataByToken(token);
             if(checkToken(data)){
-                Map<String, Object> status = shareDocumentRepository.revokeDepartmentFromDoc(Integer.parseInt(documentId), departmentId.get("departmentId"));
+                Map<String, Object> status = shareDocumentRepository.revokeDepartmentFromDocAndDep(Integer.parseInt(documentId), departmentId.get("departmentId"), token);
+                return status;
+            }
+            else {
+                result.put("error", resource);
+                resource.put("message", "Invalid Token");
+                return result;
+            }
+        }
+        catch (Exception e){
+            //return error status
+            result.put("error", resource);
+            resource.put("message", "Invalid Token");
+            return result;
+        }
+    }
+
+    @DeleteMapping("/documents/{documentId}/shares/all")
+    public @ResponseBody
+    Map<String, Object> revokeDepartmentFromDoc (@PathVariable String documentId,
+                                                 @RequestHeader("Authorization") String authorization){
+        //split ("Bearer ") and get token
+        String[] authorizationSplit = authorization.split("Bearer ");
+        String token = authorizationSplit[1];
+
+        //Declare status
+        Map<String, Object> resource = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+        try{
+            Map<String, Object> data = new TokenAdapter().getDataByToken(token);
+            if(checkToken(data)){
+                Map<String, Object> status = shareDocumentRepository.revokeDepartmentFromDoc(Integer.parseInt(documentId), token);
                 return status;
             }
             else {
@@ -73,7 +104,7 @@ public class ShareDocumentController {
         try{
             Map<String, Object> data = new TokenAdapter().getDataByToken(token);
             if(checkToken(data)){
-                Map<String, Object> status = shareDocumentRepository.postShareToOtherDepartment(Integer.parseInt(documentId), departmentId.get("departmentId"));
+                Map<String, Object> status = shareDocumentRepository.postShareToOtherDepartment(Integer.parseInt(documentId), departmentId.get("departmentId"), token);
                 return status;
             }
             else {
@@ -101,16 +132,13 @@ public class ShareDocumentController {
         try {
             Map<String, Object> data = new TokenAdapter().getDataByToken(token);
             if(checkToken(data)){
-                System.out.println("check token pass");
                 List<Map<String, Object>> listDepartmentWithStatusByDoc = shareDocumentRepository.getListDepartmentWithStatusExceptOwnerByDoc(Integer.parseInt(documentId));
                 return listDepartmentWithStatusByDoc;
             }
             else{
-                System.out.println("check token fail");
                 return new ArrayList<>();
             }
         }catch (Exception e){
-            System.out.println("check token fail (catch)");
             return new ArrayList<>();
         }
     }

@@ -19,7 +19,7 @@ public class ShareDocumentRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Transactional(readOnly = false)
-    public Map<String, Object> postShareToOtherDepartment(int documentId, int departmentId) {
+    public Map<String, Object> postShareToOtherDepartment(int documentId, int departmentId, String token) {
         //Declare map and get departmentname
         Map<String, Object> resource = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
@@ -27,7 +27,7 @@ public class ShareDocumentRepository {
 
         try {
             //check documentId & departmentId
-            if (!checkDepid(departmentId) && !checkDocid(documentId)) {
+            if (!checkDepid(departmentId) && !checkDocid(documentId, token)) {
                 //Return result
                 result.put("error", resource);
                 resource.put("message", "Unknown department and document.");
@@ -39,7 +39,7 @@ public class ShareDocumentRepository {
                 resource.put("message", "Unknown department.");
                 return result;
             }
-            if (!checkDocid(documentId)){
+            if (!checkDocid(documentId, token)){
                 //Return result
                 result.put("error", resource);
                 resource.put("message", "Unknown document.");
@@ -73,14 +73,14 @@ public class ShareDocumentRepository {
     }
 
     @Transactional(readOnly = false)
-    public Map<String, Object> revokeDepartmentFromDoc(int documentId, int departmentId) {
+    public Map<String, Object> revokeDepartmentFromDocAndDep(int documentId, int departmentId, String token) {
         //Declare map and get departmentname
         Map<String, Object> resource = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> departmentName = new DepAdapter().getDepartmentById(departmentId);
 
         //check documentId & departmentId
-        if (!checkDepid(departmentId) && !checkDocid(documentId)) {
+        if (!checkDepid(departmentId) && !checkDocid(documentId, token)) {
             //Return result
             result.put("error", resource);
             resource.put("message", "Unknown department and document.");
@@ -92,7 +92,7 @@ public class ShareDocumentRepository {
             resource.put("message", "Unknown department.");
             return result;
         }
-        if (!checkDocid(documentId)){
+        if (!checkDocid(documentId, token)){
             //Return result
             result.put("error", resource);
             resource.put("message", "Unknown document.");
@@ -100,14 +100,17 @@ public class ShareDocumentRepository {
         }
 
         //Check doc_id in shares table
-
         //Get list of data in shares table that before delete
         List<Map<String, Object>> listBefore = this.jdbcTemplate.queryForList("SELECT * FROM shares");
+        int haveInDB = 0;
 
         for(Map<String, Object> row: listBefore){
-            if(Integer.parseInt(row.get("doc_id").toString()) == documentId){
-               break;
+            if(Integer.parseInt(row.get("doc_id").toString()) == documentId) {
+                haveInDB = 1;
+                break;
             }
+        }
+        if(haveInDB == 0){
             //Return Result
             result.put("error", resource);
             resource.put("message", "This document does not share to any department.");
@@ -143,6 +146,49 @@ public class ShareDocumentRepository {
         //Return result
         result.put("success", resource);
         resource.put("message", "This document has been revoked from " + departmentName.get("name") +" department.");
+        return result;
+
+    }
+
+    @Transactional(readOnly = false)
+    public Map<String, Object> revokeDepartmentFromDoc(int documentId, String token) {
+        //Declare map and get departmentname
+        Map<String, Object> resource = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+
+        //Check documentId
+        if (!checkDocid(documentId, token)){
+            //Return result
+            result.put("error", resource);
+            resource.put("message", "Unknown document.");
+            return result;
+        }
+
+        //Check doc_id in shares table
+        //Get list of data in shares table that before delete
+        List<Map<String, Object>> listBefore = this.jdbcTemplate.queryForList("SELECT * FROM shares");
+        int haveInDB = 0;
+
+        for(Map<String, Object> row: listBefore){
+            if(Integer.parseInt(row.get("doc_id").toString()) == documentId) {
+                haveInDB = 1;
+                break;
+            }
+        }
+        if(haveInDB == 0){
+            //Return Result
+            result.put("error", resource);
+            resource.put("message", "This document does not share to any department.");
+            return result;
+        }
+
+        //Delete SQL command
+        String deletesql = "DELETE FROM shares WHERE doc_id = ?";
+        this.jdbcTemplate.update(deletesql, documentId);
+
+        //Return result
+        result.put("success", resource);
+        resource.put("message", "This document has been revoked from all departments.");
         return result;
 
     }
@@ -183,8 +229,8 @@ public class ShareDocumentRepository {
     }
 
     @Transactional(readOnly = false)
-    public Boolean checkDocid(int documentId){
-        List<Map<String, Object>> documentList = new DocAdapter().getDocumentAll();
+    public Boolean checkDocid(int documentId, String token){
+        List<Map<String, Object>> documentList = new DocAdapter().getDocumentAll(token);
         for(Map<String, Object> doc : documentList){
             if(Integer.parseInt(doc.get("id").toString()) == documentId){
                 return true;

@@ -1,5 +1,8 @@
 package com.shareservice.Adapter;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,10 +16,14 @@ import java.util.Map;
 @Service
 public class DocAdapter {
 
-    public List<Map<String, Object>> getDocumentAll(){
+    public List<Map<String, Object>> getDocumentAll(String token){
         RestTemplate restTemplate =  new RestTemplate();
-        String url = "http://localhost:8093/documents";
-        List<Map<String, Object>> documentList = restTemplate.getForObject(url, List.class);
+        String url = "http://localhost:8093/documents/all/recent";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        List<Map<String, Object>> documentList = restTemplate.exchange(url, HttpMethod.GET, entity, List.class).getBody();
         return documentList;
     }
 
