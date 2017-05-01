@@ -5,6 +5,7 @@ import com.teamsmokeweed.model.deleteuser.DeleteUserRequest;
 import com.teamsmokeweed.model.dep.DepAdapter;
 import com.teamsmokeweed.model.postuser.PostUserRequest;
 import com.teamsmokeweed.model.putresetpwd.PutResetPwd;
+import com.teamsmokeweed.model.putuser.PutSelfPasswordUpdateRequest;
 import com.teamsmokeweed.model.putuser.PutSelfUserUpdateRequest;
 import com.teamsmokeweed.model.putuser.PutUserUpdateRequest;
 import com.teamsmokeweed.model.userinfo.UserInfoRequest;
@@ -53,7 +54,6 @@ public class UserController {
     public @ResponseBody
     JSONObject postUser(@RequestBody PostUserRequest postUserRequest){
         if(!(this.userRepository.checkUniqueUsername(postUserRequest.getUsername()).isUnique())){
-            //return  new ResponseEntity<PostUserResponse>(new PostUserResponse("Username is already Exists!"), HttpStatus.OK);
             JSONObject err = new JSONObject();
             JSONObject msg = new JSONObject();
             msg.put("message", "User cannot be created!");
@@ -64,7 +64,6 @@ public class UserController {
         postUserRequest.setPassword(uniqueID);
         postUserRequest.setPassword(userRepository.md5(postUserRequest.getPassword()));
         this.userRepository.PostUser(postUserRequest);
-        //return new ResponseEntity<PostUserResponse>(new PostUserResponse(postUserRequest.getUser_username(), uniqueID, "User has been created!"), HttpStatus.OK);
         JSONObject succ = new JSONObject();
         JSONObject msg = new JSONObject();
         msg.put("username", postUserRequest.getUsername());
@@ -147,16 +146,29 @@ public class UserController {
 
     }
 
-    @PutMapping("/users/selfUpdate")
+    @PutMapping("/users/selfUpdate/username")
     public @ResponseBody
     JSONObject putSelfUserUpdate(@RequestBody PutSelfUserUpdateRequest putSelfUserUpdateRequest){
         JSONObject msg = new JSONObject();
         try{
-            putSelfUserUpdateRequest.setPassword(userRepository.md5(putSelfUserUpdateRequest.getPassword()));
             this.userRepository.PutSelfUserUpdate(putSelfUserUpdateRequest);
-            msg.put("message", "Your information has been updated!");
+            msg.put("message", "Your username has been updated!");
         } catch (Exception e){
-            msg.put("message", "Error!");
+            msg.put("message", "Error! Can't change your username!");
+        }
+        return msg;
+
+    }
+    @PutMapping("/users/selfUpdate/password")
+    public @ResponseBody
+    JSONObject putSelfPasswordUpdate(@RequestBody PutSelfPasswordUpdateRequest putSelfPasswordUpdateRequest){
+        JSONObject msg = new JSONObject();
+        try{
+            putSelfPasswordUpdateRequest.setPassword(userRepository.md5(putSelfPasswordUpdateRequest.getPassword()));
+            this.userRepository.PutSelfPasswordUpdate(putSelfPasswordUpdateRequest);
+            msg.put("message", "Your password has been updated!");
+        } catch (Exception e){
+            msg.put("message", "Error! Can't change your password!");
         }
         return msg;
 

@@ -364,14 +364,21 @@ id: 11
 # [Response]
 message: User has been deleted!
 
-# PUT /users/selfUpdate
-# Let's user update pass and username by him self.
+# PUT /users/selfUpdate/username
+# Let's user update username by him self.
 # [Request]
 id: 11
 username: melonmint
+# [Response]
+message: Your username has been updated!
+
+# PUT /users/selfUpdate/password
+# Let's user update password by him self.
+# [Request]
+id: 11
 password: 123456
 # [Response]
-message: Your information has been updated!
+message: Your password has been updated!
 
 # PUT /users
 # Update user information

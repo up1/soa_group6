@@ -13,7 +13,6 @@ public class DepAdapter {
     public Map<String, Object> getDepName(int dep_id){
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8091/departments/" +dep_id;
-//        GetDepNameResponse getDepNameResponse = restTemplate.getForObject(url, GetDepNameResponse.class);
         Map<String, Object> result = restTemplate.getForObject(url, Map.class);
         return result;
     }

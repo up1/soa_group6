@@ -6,13 +6,13 @@ package com.teamsmokeweed.model.putuser;
  */
 public class PutSelfUserUpdateRequest {
     int id;
-    String username, password;
+    String username;
     public PutSelfUserUpdateRequest(){}
 
-    public PutSelfUserUpdateRequest(int id, String username, String password) {
+    public PutSelfUserUpdateRequest(int id, String username) {
         this.id = id;
         this.username = username;
-        this.password = password;
+
 
     }
 
@@ -32,11 +32,5 @@ public class PutSelfUserUpdateRequest {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
