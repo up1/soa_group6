@@ -6,47 +6,70 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar'
-import axios from 'axios'
+import 'bootstrap/dist/js/bootstrap'
 
-const CHECK_TOKEN = 'http://35.187.208.148:8094/checkToken'
+import Navbar from '@/components/fragments/Navbar'
+
+// import axios from 'axios'
+import auth from '@/services/auth'
+import $ from 'jquery'
+import { EventBus } from './event-bus'
 
 export default {
   name: 'app',
-  components: { Navbar },
-  computed: {
-    exception () {
-      const routeNames = ['notFound', 'login']
-      return !routeNames.includes(this.$router.matcher.match(this.$route.path).name)
-    }
-  },
-  watch: {
-    '$route': function (to, from) {
-      axios.get(CHECK_TOKEN, {
-        params: {
-          token: localStorage.getItem('token')
-        }
-      }).then(response => {
-        this.$store.state.user = response.data
-      })
-    }
+  components: {
+    Navbar
   },
   created () {
-    axios.get(CHECK_TOKEN, {
-      params: {
-        token: localStorage.getItem('token')
-      }
-    }).then(response => {
-      this.$store.state.user = response.data
+    auth.setUserInfo(this.$store)
+
+    $(() => {
+      $('.modal').modal({
+        show: false,
+        keyboard: false,
+        backdrop: 'static'
+      })
+
+      $('[data-toggle="tooltip"]').tooltip({
+        animation: false
+      })
+
+      $('[data-toggle="popover"]').popover({
+        animation: false
+      })
     })
+
+    EventBus.$on('modal', (display) => {
+      typeof display === 'boolean' && !display ? this.modalLevel-- : this.modalLevel++
+
+      if (this.modalLevel > 0) $('body').addClass('modal-open')
+      else $('body').removeClass('modal-open')
+    })
+  },
+  data () {
+    return {
+      modalLevel: 0
+    }
+  },
+  computed: {
+    exception () {
+      const routeNames = ['Login']
+      return !routeNames.includes(this.$router.matcher.match(this.$route.path).name)
+    }
   }
 }
 </script>
 
-<style>
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
+<style lang="scss">
+@import "~bootstrap/scss/bootstrap";
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
-html {
-  overflow-y: auto !important;
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal-dialog {
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 }
 </style>

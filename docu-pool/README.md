@@ -1,4 +1,4 @@
-# docu-pool
+# docu-pool-frontend
 
 > A document management system
 
