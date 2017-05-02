@@ -20,10 +20,12 @@ public class ShareDocumentRepository {
 
     @Transactional(readOnly = false)
     public Map<String, Object> postShareToOtherDepartment(int documentId, int departmentId, String token) {
+        System.out.println("hello");
         //Declare map and get departmentname
         Map<String, Object> resource = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> departmentName = new DepAdapter().getDepartmentById(departmentId);
+        System.out.println("declare success");
 
         try {
             //check documentId & departmentId

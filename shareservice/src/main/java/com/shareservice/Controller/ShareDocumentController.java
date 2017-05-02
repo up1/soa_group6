@@ -114,7 +114,7 @@ public class ShareDocumentController {
             }
         }catch (Exception e){
             result.put("error", resource);
-            resource.put("message", "Invalid Token");
+            resource.put("message", "Invalid Token (catch)");
             return result;
         }
 
