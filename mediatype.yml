@@ -53,7 +53,9 @@ token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.p
   title: I need healing!
   description: Lorem ipsum dolor sit amet...
   lastUpdated: 1492447382967
-  department:3
+  department:
+    id: 3
+    name: Shimada Department
   files:
   - name: Receipt_from_angela.pdf
     size: 69 KB
@@ -70,7 +72,9 @@ token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6InVzZXIifQ.p
   title: xDDDDDD
   description: Lorem ipsum dolor sit amet...
   lastUpdated: 1492447382967
-  department:2
+  department:
+    id: 3
+    name: Shimada Department
   shared: false
   files:
   - name: test.pdf
