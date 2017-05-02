@@ -100,7 +100,7 @@ public class DocRepository {
     }
 
     public List<Map<String, Object>> addToList(Map<String, Object> r, List<Map<String, Object>> result2){
-        r.put("department",this.depAdapter.getDepepartment((Integer) r.get("user_id")).get("id"));
+        r.put("department",this.depAdapter.getDepepartment((Integer) r.get("user_id")));
         try {
             r.put("files", this.filesAdapter.getFileInfo((Integer)r.get("id")));
         }
