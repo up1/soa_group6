@@ -87,6 +87,7 @@ title: Sample Document
 description: Sample Document Description
 tag: general
 user_id: 2
+file: [abc.doc, sss.txt]
 
 # [Response]
 # Success
