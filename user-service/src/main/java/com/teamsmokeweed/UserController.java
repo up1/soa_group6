@@ -67,7 +67,7 @@ public class UserController {
         JSONObject succ = new JSONObject();
         JSONObject msg = new JSONObject();
         msg.put("username", postUserRequest.getUsername());
-        msg.put("password", postUserRequest.getPassword());
+        msg.put("password", uniqueID);
         msg.put("message", "User has been created!");
         succ.put("success", msg);
         return succ;
@@ -200,8 +200,9 @@ public class UserController {
     JSONObject putSelfUserUpdate(@RequestBody PutResetPwd putResetPwd){
         JSONObject msg = new JSONObject();
         try{
-            this.userRepository.resetPwd(putResetPwd.getId());
+            String password = this.userRepository.resetPwd(putResetPwd.getId());
             msg.put("message", "Password has reset!");
+            msg.put("password", password);
             return msg;
         } catch (Exception e){
             msg.put("message", "Error! Cannot reset password!");

@@ -141,10 +141,11 @@ public class UserRepository {
         jdbcTemplate.update("UPDATE users SET user_username = ?, user_fname = ?, user_lname = ?, dep_id = ?  WHERE user_id= ?",
                 new Object[]{putUserUpdateRequest.getUsername(), putUserUpdateRequest.getFirst_name(), putUserUpdateRequest.getLast_name(), putUserUpdateRequest.getDepartment().getId(), putUserUpdateRequest.getId()});
     }
-    public void resetPwd(int userID){
+    public String resetPwd(int userID){
         String uniqueID = UUID.randomUUID().toString().substring(0, 6);
         uniqueID = md5(uniqueID);
         jdbcTemplate.update("UPDATE users SET user_password = ?, user_ispasswordchange = 0 WHERE user_id = ?",
                 new Object[]{uniqueID, userID});
+        return  uniqueID;
     }
 }
