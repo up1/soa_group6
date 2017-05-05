@@ -16,7 +16,7 @@ public class DepAdapter {
 
     public List<Map<String, Object>> getDepartmentAll(){
         RestTemplate restTemplate =  new RestTemplate();
-        String url = "http://localhost:8091/departments";
+        String url = "http://35.187.208.148:8091/departments";
         List<Map<String, Object>> departmentList = restTemplate.getForObject(url, List.class);
         return departmentList;
 
@@ -24,7 +24,7 @@ public class DepAdapter {
 
     public Map<String, Object> getDepartmentById(int departmentId){
         RestTemplate restTemplate =  new RestTemplate();
-        String url = "http://localhost:8091/departments/" + departmentId;
+        String url = "http://35.187.208.148:8091/departments/" + departmentId;
         Map<String, Object> department = restTemplate.getForObject(url, Map.class);
         return department;
 

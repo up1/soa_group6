@@ -18,7 +18,7 @@ public class DocAdapter {
 
     public List<Map<String, Object>> getDocumentAll(String token){
         RestTemplate restTemplate =  new RestTemplate();
-        String url = "http://localhost:8093/documents/all/recent";
+        String url = "http://35.187.208.148:8093/documents/all/recent";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
@@ -29,7 +29,7 @@ public class DocAdapter {
 
     public Map<String, Object> getOwnerByDoc(int documentId){
         RestTemplate restTemplate =  new RestTemplate();
-        String url = "http://localhost:8093/OwnerDepartment/" + documentId;
+        String url = "http://35.187.208.148:8093/OwnerDepartment/" + documentId;
         Map<String, Object> department= restTemplate.getForObject(url, Map.class);
         return department;
     }

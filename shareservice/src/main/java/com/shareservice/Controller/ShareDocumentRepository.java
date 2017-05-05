@@ -20,12 +20,10 @@ public class ShareDocumentRepository {
 
     @Transactional(readOnly = false)
     public Map<String, Object> postShareToOtherDepartment(int documentId, int departmentId, String token) {
-        System.out.println("hello");
         //Declare map and get departmentname
         Map<String, Object> resource = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> departmentName = new DepAdapter().getDepartmentById(departmentId);
-        System.out.println("declare success");
 
         try {
             //check documentId & departmentId
@@ -128,18 +126,18 @@ public class ShareDocumentRepository {
             return result;
         }
 
-        //Check departmentId with documentId in shares table
-        List<Map<String, Object>> listDepartmentByDoc = this.jdbcTemplate.queryForList("SELECT * FROM shares WHERE doc_id = ?", new Object[]{documentId});
-        for(Map<String, Object> row: listDepartmentByDoc){
-            if(Integer.parseInt(row.get("dep_id").toString()) == departmentId){
-                break;
-            }
-            //Return Result
-
-            result.put("error", resource);
-            resource.put("message", "This document does not share to " + departmentName.get("name") +" department.");
-            return result;
-        }
+//        //Check departmentId with documentId in shares table
+//        List<Map<String, Object>> listDepartmentByDoc = this.jdbcTemplate.queryForList("SELECT * FROM shares WHERE doc_id = ?", new Object[]{documentId});
+//        for(Map<String, Object> row: listDepartmentByDoc){
+//            if(Integer.parseInt(row.get("dep_id").toString()) == departmentId){
+//                break;
+//            }
+//            //Return Result
+//
+//            result.put("error", resource);
+//            resource.put("message", "This document does not share to " + departmentName.get("name") +" department.");
+//            return result;
+//        }
 
         //Delete SQL command
         String deletesql = "DELETE FROM shares WHERE doc_id = ? AND dep_id = ?";
@@ -196,7 +194,7 @@ public class ShareDocumentRepository {
     }
 
     @Transactional(readOnly = true)
-    public List<Map<String, Object>> getListDepartmentWithStatusExceptOwnerByDoc(int documentId) {
+    public List<Map<String, Object>> getListDepartmentAllWithStatusExceptOwnerByDoc(int documentId) {
 
         List<Map<String, Object>> listDepartmentWithStatus = new ArrayList<>();
         List<Map<String, Object>> departmentList = new DepAdapter().getDepartmentAll();
@@ -229,6 +227,26 @@ public class ShareDocumentRepository {
 
         return listDepartmentWithStatus;
     }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getListDepartmentSharingByDoc(int documentId){
+        List<Map<String, Object>> departmentList = new DepAdapter().getDepartmentAll();
+        List<Map<String, Object>> listDepartmentSharingByDoc = this.jdbcTemplate.queryForList("SELECT dep_id AS 'id' FROM shares WHERE doc_id = ?", new Object[]{documentId});
+        List<Map<String, Object>> listDepartmentSharingWithDataByDoc = new ArrayList<>();
+
+        for(Map<String, Object> dep: departmentList){
+            for(Map<String, Object> share : listDepartmentSharingByDoc){
+                if(Integer.parseInt(share.get("id").toString()) == Integer.parseInt(dep.get("id").toString())){
+                    Map<String, Object> department = new HashMap<>();
+                    department.put("id", dep.get("id"));
+                    department.put("name", dep.get("name"));
+                    listDepartmentSharingWithDataByDoc.add(department);
+                }
+            }
+        }
+        return  listDepartmentSharingWithDataByDoc;
+    }
+
 
     @Transactional(readOnly = false)
     public Boolean checkDocid(int documentId, String token){

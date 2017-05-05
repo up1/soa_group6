@@ -132,8 +132,29 @@ public class ShareDocumentController {
         try {
             Map<String, Object> data = new TokenAdapter().getDataByToken(token);
             if(checkToken(data)){
-                List<Map<String, Object>> listDepartmentWithStatusByDoc = shareDocumentRepository.getListDepartmentWithStatusExceptOwnerByDoc(Integer.parseInt(documentId));
+                List<Map<String, Object>> listDepartmentWithStatusByDoc = shareDocumentRepository.getListDepartmentAllWithStatusExceptOwnerByDoc(Integer.parseInt(documentId));
                 return listDepartmentWithStatusByDoc;
+            }
+            else{
+                return new ArrayList<>();
+            }
+        }catch (Exception e){
+            return new ArrayList<>();
+        }
+    }
+
+    @GetMapping("/documents/{documentId}/shares/departmentlist")
+    public @ResponseBody
+    List<Map<String, Object>> getListDepartmentSharingByDoc (@PathVariable String documentId, @RequestHeader("Authorization") String authorization){
+        //split ("Bearer ") and get token
+        String[] authorizationSplit = authorization.split("Bearer ");
+        String token = authorizationSplit[1];
+
+        try {
+            Map<String, Object> data = new TokenAdapter().getDataByToken(token);
+            if(checkToken(data)){
+                List<Map<String, Object>> listDepartmentSharingWithDataByDoc= shareDocumentRepository.getListDepartmentSharingByDoc(Integer.parseInt(documentId));
+                return listDepartmentSharingWithDataByDoc;
             }
             else{
                 return new ArrayList<>();
