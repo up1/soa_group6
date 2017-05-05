@@ -222,6 +222,15 @@ name: Developer
 - id: 3
   name: HR
   shared: false
+  
+# GET /documents/:id/shares/departmentlist
+# Get sharing department list with data from a document
+
+# [Response]
+- id: 1
+  name: Developer
+- id: 3
+  name: HR
 
 # POST /documents/:id/shares
 # Share a document
