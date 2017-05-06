@@ -3,8 +3,8 @@
     type="submit"
     class="btn btn-success btn-block"
     v-html="text"
-    :disabled="loading"
-    :class="{ disabled: loading }"></button>
+    :disabled="processing"
+    :class="{ disabled: processing }"></button>
 </template>
 
 <script>
@@ -15,7 +15,7 @@ export default {
     return {
       texts: {
         idle: `<i class="fa fa-lock"></i> Login`,
-        loading: `
+        processing: `
           <i class="fa fa-spinner fa-spin"></i>
           <span class="sr-only">Loading...</span>
         `
@@ -26,7 +26,7 @@ export default {
     text () {
       return this.texts[this.state]
     },
-    loading () {
+    processing () {
       return this.state !== 'idle'
     }
   }

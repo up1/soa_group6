@@ -4,7 +4,6 @@ import Login from '@/components/login/Login'
 import Dashboard from '@/components/dashboard/Dashboard'
 import Settings from '@/components/settings/Settings'
 import auth from '@/services/auth'
-// import store from '@/store'
 import Recent from '@/components/dashboard/Recent'
 import Accounts from '@/components/dashboard/Accounts'
 
@@ -56,10 +55,6 @@ router.beforeEach((to, from, next) => {
     } else {
       next('/login')
     }
-
-    // if (auth.check() && !store.state.user.passwordChanged) {
-    //   next('/settings')
-    // }
   }
 
   next()

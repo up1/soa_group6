@@ -52,6 +52,7 @@ export default {
     confirm () {
       this.$emit('close')
       EventBus.$emit('modal:closed', 'new-document')
+      EventBus.$emit('modal:closed', 'edit-document')
     },
     cancel () {
       this.$emit('close')

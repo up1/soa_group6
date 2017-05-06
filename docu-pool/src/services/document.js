@@ -18,13 +18,20 @@ export default {
   },
   getDocuments: (key, userID) => {
     if (typeof userID === 'number') {
-      return axios.get(`${documentAPI}/documents/all/${key}?userID=${userID}&order=ASC&orderBy=id`)
+      return axios.get(`${documentAPI}/documents/all/${key}?userID=${userID}&order=DESC&orderBy=id`)
     }
 
-    return axios.get(`${documentAPI}/documents/all/${key}?order=ASC&orderBy=id`)
+    return axios.get(`${documentAPI}/documents/all/${key}?order=DESC&orderBy=id`)
   },
   createDocument: (data) => {
     return axios.post(`${documentAPI}/documents`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  },
+  updateDocument: (data, id) => {
+    return axios.put(`${documentAPI}/documents/${id}`, data, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

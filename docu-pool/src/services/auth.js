@@ -4,7 +4,8 @@ const url = 'http://35.185.183.178:9000/auth'
 
 export default {
   login: (context, creds, redirect) => {
-    context.state = 'loading'
+    context.error = {}
+    context.state = 'processing'
 
     axios.post(url, creds).then(response => {
       if (response.data.error) {

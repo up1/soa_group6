@@ -92,25 +92,25 @@ export default {
     CloseConfirmModal
   },
   created () {
-    EventBus.$on(['documents:deleted', 'documents:created'], () => {
+    EventBus.$on(['documents:deleted', 'documents:created', 'documents:updated'], () => {
       this.fetchDocuments()
     })
 
     this.loading = true
 
-    switch (this.$route.fullPath) {
-      case '/recent':
+    this.$on('fetch', () => {
+      if (this.$route.fullPath === '/recent') {
         this.fetchDocuments('recent')
-        break
+      }
 
-      case '/pool':
+      if (this.$route.fullPath === '/pool') {
         this.fetchDocuments('pool')
-        break
+      }
 
-      case '/all-documents':
+      if (this.$route.fullPath === '/all-documents') {
         this.fetchDocuments('recent', 'all-documents')
-        break
-    }
+      }
+    })
   },
   data () {
     return {
@@ -174,7 +174,7 @@ export default {
   },
   watch: {
     '$store.state.user.id' (value) {
-      this.fetchDocuments()
+      this.$emit('fetch')
     },
     '$route' (to, from) {
       if (to.fullPath === '/recent') {

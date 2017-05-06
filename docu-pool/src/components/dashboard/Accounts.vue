@@ -103,7 +103,7 @@
       </div>
       <div class="row">
         <div class="col">
-          <table class="table table-hover" id="user-table">
+          <table class="table table-hover table-responsive" id="user-table">
             <thead>
               <tr>
                 <th>
@@ -138,10 +138,10 @@
                 <td>{{ user.last_name }}</td>
                 <td>{{ user.department.name }}</td>
                 <td>{{ user.role !== 0 ? 'Admin' : 'Employee' }}</td>
-                <td><button class="btn btn-warning btn-sm"><i class="fa fa-refresh fa-fw"></i></button></td>
+                <td><button class="btn btn-warning btn-sm" @click="resetPassword(user, $event)"><i class="fa fa-refresh fa-fw"></i></button></td>
                 <td><button class="btn btn-primary btn-sm" @click="editUser(user, $event)"><i class="fa fa-pencil fa-fw"></i></button></td>
               </tr>
-              <tr v-if="enableNewAccount">
+              <tr id="new-user" v-if="enableNewAccount">
                 <td></td>
                 <td></td>
                 <td>
@@ -189,6 +189,7 @@ import { date } from '@/filters'
 import departmentService from '@/services/department'
 import userService from '@/services/user'
 import axios from 'axios'
+import $ from 'jquery'
 
 export default {
   name: 'account',
@@ -245,6 +246,9 @@ export default {
   methods: {
     newAccount () {
       this.enableNewAccount = true
+      setTimeout(() => {
+        $('html, body').animate({scrollTop: $('#new-user').offset().top})
+      }, 0)
     },
     cancel () {
       this.enableNewAccount = false
@@ -321,6 +325,11 @@ export default {
         },
         admin: false
       }
+    },
+    resetPassword (user, event) {
+      userService.resetPassword({id: user.id}).then(response => {
+        $(event.target).closest('button').after(` <small class="text-warning">${response.data.message}</small>`)
+      })
     }
   },
   created () {

@@ -6,11 +6,8 @@
 </template>
 
 <script>
-import 'bootstrap/dist/js/bootstrap'
-
 import Navbar from '@/components/fragments/Navbar'
 
-// import axios from 'axios'
 import auth from '@/services/auth'
 import $ from 'jquery'
 import { EventBus } from './event-bus'
@@ -61,8 +58,16 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css?family=Pridi:300,400,700');
 @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+
+html, body {
+  font-family: 'Pridi', serif !important;
+}
+
+input, button, select, textarea {
+  font-family: inherit !important;
+}
 
 .text-ellipsis {
   overflow: hidden;

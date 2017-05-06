@@ -1,26 +1,41 @@
 import axios from 'axios'
 
-const api = 'http://35.187.208.148:8092'
+const base = 'http://35.187.208.148:8092'
 
 export default {
   getUsers: () => {
-    const url = `${api}/users/all`
-    return axios.get(url)
+    return axios.get(`${base}/users/all`)
   },
   addUser: (user) => {
-    const url = `${api}/users`
-    return axios.post(url, user)
+    return axios.post(`${base}/users`, user)
   },
   updateUser: (user) => {
-    const url = `${api}/users`
-    return axios.put(url, user)
+    return axios.put(`${base}/users`, user)
   },
   deleteUser: (id) => {
-    const url = `${api}/users`
-    return axios.delete(url, {
+    return axios.delete(`${base}/users`, {
       data: {
         id: id
       }
     })
+  },
+  updateUserUsername: (context, payload) => {
+    context.state = 'processing'
+
+    axios.put(`${base}/users/selfUpdate/username`, payload).then(response => {
+      context.message = response.data.message
+      context.state = 'idle'
+    })
+  },
+  updateUserPassword: (context, payload) => {
+    context.state = 'processing'
+
+    axios.put(`${base}/users/selfUpdate/password`, payload).then(response => {
+      context.message = response.data.message
+      context.state = 'idle'
+    })
+  },
+  resetPassword: (payload) => {
+    return axios.put(`${base}/users/resetPwd`, payload)
   }
 }

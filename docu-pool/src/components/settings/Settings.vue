@@ -13,11 +13,7 @@
       <div class="col-md">
         <div class="row">
           <div class="col">
-            <div class="card card-inverse card-warning" style="background-color: #333; border-color: #333;">
-              <div class="card-block">
-                <user-form />
-              </div>
-            </div>
+            <user-form />
           </div>
         </div>
       </div>

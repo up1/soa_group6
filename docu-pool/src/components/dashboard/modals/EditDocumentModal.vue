@@ -1,14 +1,26 @@
 <template>
-  <div>
-    <div class="modal" id="editDocumentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edit document</h5>
-            <button type="button" class="close" aria-label="Close" @click="cancel">
-              <span aria-hidden="true">&times;</span>
-            </button>
+  <div class="modal" id="editDocumentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit document</h5>
+          <button type="button" class="close" aria-label="Close" @click="cancel">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <template v-if="loading">
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col text-center">
+                  <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+            </div>
           </div>
+        </template>
+        <template v-else>
           <div class="modal-body">
             <div class="container-fluid">
               <div class="row mb-3">
@@ -41,15 +53,41 @@
                       <h5>Attach files</h5>
                     </div>
                   </div>
+                  <div class="row" v-show="document.attachFiles.length > 0">
+                    <div class="col mb-1 d-flex justify-content-end">
+                      <button class="btn btn-danger btn-sm" @click="clearAttachFiles"><i class="fa fa-times mr-2"></i>Clear</button>
+                    </div>
+                  </div>
+                  <div class="row mb-1">
+                    <div class="col">
+                      <ul class="list-group">
+                        <li class="list-group-item py-1" v-for="attachFile, index in document.attachFiles">
+                          <div class="d-flex w-100 justify-content-between">
+                            <div style="word-break: break-all">
+                              <i class="fa fa-fw mr-1" :class="fileIcon(attachFile.type)"></i>{{attachFile.name}}
+                              <span class="badge badge-default">{{attachFile.size | unit}}</span>
+                            </div>
+                            <button class="btn btn-danger btn-sm align-self-center ml-3" @click="deleteAttachFile(index)"><i class="fa fa-times"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col d-flex">
+                      <input type="file" id="editAttachFile" multiple @change="fileChanged" v-show="false">
+                      <button class="btn btn-success btn-sm btn-block" @click="openFileDialog"><i class="fa fa-plus"></i></button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
-            <button type="button" class="btn btn-primary" @click="createDocument">Create</button>
+            <button type="button" class="btn btn-primary" @click="updateDocument">Update</button>
           </div>
-        </div>
+        </template>
       </div>
     </div>
   </div>
@@ -60,6 +98,7 @@ import DocumentTag from '@/components/fragments/DocumentTag'
 import $ from 'jquery'
 import { unit } from '@/filters'
 import { EventBus } from '@/event-bus'
+import documentService from '@/services/document'
 
 export default {
   name: 'editDocumentModal',
@@ -68,25 +107,45 @@ export default {
   },
   data () {
     return {
+      documentId: undefined,
       document: {
         title: '',
         tag: '',
         description: '',
         attachFiles: []
-      }
+      },
+      loading: false
     }
   },
   filters: {
     unit
   },
   created () {
+    // EventBus.$on('modal', (modal, display) => {
+    //   if (modal === 'new-document') {
+    //     if (typeof display === 'boolean' && !display) {
+    //       this.$emit('close')
+    //     } else {
+    //       this.$emit('open')
+    //     }
+    //   }
+    // })
+
+    EventBus.$on('modal:closed', (modal) => {
+      if (modal === 'edit-document') {
+        this.$emit('close')
+      }
+    })
+
     EventBus.$on('modal', (modal, document) => {
       if (modal === 'edit-document') {
         this.$emit('open')
-
-        this.document.title = document.title
-        this.document.tag = document.tag
-        this.document.description = document.description
+        if (document) {
+          this.documentId = document.id
+          this.document.title = document.title
+          this.document.tag = document.tag
+          this.document.description = document.description
+        }
       }
     })
 
@@ -99,12 +158,11 @@ export default {
       }
 
       $('#editDocumentModal').modal('hide')
-      EventBus.$emit('modal-level', 'close')
+      EventBus.$emit('modal', false)
     })
 
     this.$on('open', () => {
       $('#editDocumentModal').modal('show')
-      EventBus.$emit('modal-level')
     })
   },
   methods: {
@@ -142,20 +200,33 @@ export default {
       return icon
     },
     openFileDialog () {
-      $('#attachFile').click()
+      $('#editAttachFile').click()
     },
     cancel () {
       if (this.document.title ||
         this.document.tag ||
         this.document.description ||
         this.document.attachFiles.length > 0) {
-        EventBus.$emit('new-document-close-confirm')
+        EventBus.$emit('modal', 'close-confirm')
       } else {
         this.$emit('close')
       }
     },
-    createDocument () {
-      // Create document
+    updateDocument () {
+      const document = new FormData()
+      document.append('title', this.document.title)
+      document.append('description', this.document.description)
+      document.append('tag', this.document.tag)
+      for (let i = 0; i < this.document.attachFiles.length; i++) {
+        document.append('file', this.document.attachFiles[i], this.document.attachFiles[i].name)
+      }
+
+      this.loading = true
+      documentService.updateDocument(document, this.documentId).then(response => {
+        this.loading = false
+        this.$emit('close')
+        EventBus.$emit('documents:updated')
+      })
     }
   }
 }

@@ -1,10 +1,10 @@
 import axios from 'axios'
 import './config'
 
-const url = 'http://35.187.208.148:8091/departments'
+const base = 'http://35.187.208.148:8091'
 
 export default {
   getDepartments: () => {
-    return axios.get(url)
+    return axios.get(`${base}/departments`)
   }
 }

@@ -23,10 +23,16 @@
                     <div><span class="badge badge-default">Last updated</span> {{ document.lastUpdated | date }}</div>
                   </div>
                 </div>
-                <div class="ml-auto d-flex align-items-start">
+                <div class="ml-auto d-flex align-items-start" v-if="$store.state.user.department.id === document.department.id">
                   <button class="btn btn-outline-primary btn-sm mr-1" data-toggle="tooltip" title="Share" @click="share"><i class="fa fa-share fa-fw"></i></button>
                   <button class="btn btn-outline-primary btn-sm mr-1" data-toggle="tooltip" title="Edit" @click="edit"><i class="fa fa-edit fa-fw"></i></button>
                   <button class="btn btn-outline-danger btn-sm" data-toggle="tooltip" title="Delete" @click="del"><i class="fa fa-trash fa-fw"></i></button>
+                </div>
+                <div class="ml-auto d-flex align-items-start" v-if="hasBeenShared">
+                  <button class="btn btn-sm mr-1" :class="[{disabled: hasBeenClicked || hasBeenRevoked}, hasBeenRevoked ? 'btn-outline-secondary' : 'btn-outline-danger']" :disabled="hasBeenClicked || hasBeenRevoked" data-toggle="tooltip" title="Share" @click="revoke">
+                    <span v-if="!hasBeenRevoked">Revoke</span>
+                    <span v-else>Revoked</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -77,6 +83,7 @@ import $ from 'jquery'
 import DocumentTag from '@/components/fragments/DocumentTag'
 import { unit, date } from '@/filters'
 import { EventBus } from '@/event-bus'
+import documentService from '@/services/document'
 
 export default {
   name: 'documentInfoModal',
@@ -91,6 +98,14 @@ export default {
           EventBus.$emit('modal', false)
         } else {
           this.document = document
+
+          this.hasBeenShared = false
+          documentService.getShareData(document.id).then(response => {
+            const shareData = response.data
+            const search = shareData.filter(department => department.id === this.$store.state.user.department.id && department.shared)
+            this.hasBeenShared = search.length > 0 ? search.length > 0 : false
+          })
+
           this.$emit('open')
         }
       }
@@ -114,7 +129,10 @@ export default {
       document: {
         department: {},
         files: []
-      }
+      },
+      hasBeenShared: false,
+      hasBeenRevoked: false,
+      hasBeenClicked: false
     }
   },
   filters: {
@@ -134,6 +152,17 @@ export default {
     },
     del () {
       EventBus.$emit('modal', 'delete-documents', [this.document])
+    },
+    revoke () {
+      this.hasBeenRevoked = false
+      this.hasBeenClicked = true
+      documentService.revokeShare(this.document.id, {
+        departmentId: this.$store.state.user.department.id
+      }).then(response => {
+        EventBus.$emit('documents:updated')
+        this.hasBeenRevoked = true
+        this.hasBeenClicked = false
+      })
     }
   }
 }

@@ -9,7 +9,7 @@
       </div>
       <div class="row">
         <div class="col">
-          <div class="alert alert-danger" role="alert" v-show="error.message">
+          <div class="alert alert-danger" role="alert" v-if="error.message">
             {{error.message}}
           </div>
         </div>

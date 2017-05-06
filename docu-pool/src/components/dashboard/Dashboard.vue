@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="row mb-3">
         <div class="col">
-          <h2><i class="fa fa-building fa-fw"></i> {{ $store.state.user.department.name }}</h2>
+          <h2><i class="fa fa-building fa-fw"></i> {{$store.state.user.department.name}}</h2>
         </div>
       </div>
       <div class="row">
@@ -15,7 +15,7 @@
               <router-link to="/pool" class="list-group-item list-group-item-action py-1" :class="{active: currentPath === '/pool'}"><i class="fa fa-inbox fa-fw mr-3"></i>Pool</router-link>
             </div>
           </section>
-          <section v-show="$store.state.user.admin">
+          <section v-if="$store.state.user.admin">
             <h5>Administration</h5>
             <div class="list-group">
               <router-link to="/all-documents" class="list-group-item list-group-item-action py-1" :class="{active: currentPath === '/all-documents'}"><i class="fa fa-file-text fa-fw mr-3"></i>All documents</router-link>
@@ -37,6 +37,13 @@ export default {
   computed: {
     currentPath () {
       return this.$route.fullPath
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name !== from.name) {
+        window.location.reload()
+      }
     }
   }
 }
