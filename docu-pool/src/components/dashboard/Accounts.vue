@@ -328,7 +328,12 @@ export default {
     },
     resetPassword (user, event) {
       userService.resetPassword({id: user.id}).then(response => {
-        $(event.target).closest('button').after(` <small class="text-warning">${response.data.message}</small>`)
+        const button = $(event.target).closest('button')
+        if (button.next('small').length === 0) {
+          button.after(` <small class="text-warning">${response.data.message}<br>New password: <code>${response.data.password}</code></small>`)
+        } else {
+          button.next('small').html(`${response.data.message}<br>New password: <code>${response.data.password}</code>`)
+        }
       })
     }
   },
