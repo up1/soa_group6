@@ -1,0 +1,21 @@
+# Structure
+*** Settings ***
+Library         Selenium2Library
+
+*** Keywords ***
+
+*** Variables ***
+
+*** Test Cases ***
+
+0_Open Website
+    Open Browser              http://35.185.183.178/login    gc
+    Maximize Browser Window
+    Title Should Be           DocuPool™
+    Close Browser
+1_Login Website
+	Open Browser              http://35.185.183.178/login    gc
+    Maximize Browser Window
+    Input Text      username  melon
+    Input Password  password  melon
+    Click Button              xpath=//*[@class='btn btn-success btn-block']
