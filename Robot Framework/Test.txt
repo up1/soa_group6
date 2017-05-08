@@ -9,13 +9,35 @@ Library         Selenium2Library
 *** Test Cases ***
 
 0_Open Website
-    Open Browser              http://35.185.183.178/login    gc
+    Open Browser              http://35.185.183.178         gc
     Maximize Browser Window
     Title Should Be           DocuPool™
     Close Browser
-1_Login Website
-	Open Browser              http://35.185.183.178/login    gc
+1_Login Logout Website
+    Open Browser              http://35.185.183.178         gc
     Maximize Browser Window
     Input Text      username  melon
     Input Password  password  melon
+    Set Selenium Speed        1
     Click Button              xpath=//*[@class='btn btn-success btn-block']
+    Set Selenium Speed        3
+    Click Element             xpath=//*[@class='nav-link dropdown-toggle d-flex align-items-center']
+    Set Selenium Speed        1
+    Click Element             xpath=//*[@class='fa fa-sign-out fa-fw']
+    Close Browser
+2_New Document
+    Open Browser              http://35.185.183.178          gc
+    Maximize Browser Window
+    Input Text      username  melon
+    Input Password  password  melon
+    Set Selenium Speed        1
+    Click Button              xpath=//*[@class='btn btn-success btn-block']
+    Set Selenium Speed        5
+    Click Button              xpath=//*[@class='btn btn-success']
+    Set Selenium Speed        1
+    Input Text    documentTitle    SampleTitle3
+    Set Selenium Speed        0.3
+    Input Text    documentDescription    documentDescription
+    Click Element    xpath=//select/option[@value="urgent"]
+    Click Button              xpath=//*[@class='btn btn-primary']
+    Close Browser
