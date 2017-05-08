@@ -143,9 +143,9 @@ public class UserRepository {
     }
     public String resetPwd(int userID){
         String uniqueID = UUID.randomUUID().toString().substring(0, 6);
-        uniqueID = md5(uniqueID);
+        String encPass = md5(uniqueID);
         jdbcTemplate.update("UPDATE users SET user_password = ?, user_ispasswordchange = 0 WHERE user_id = ?",
-                new Object[]{uniqueID, userID});
+                new Object[]{encPass, userID});
         return  uniqueID;
     }
 }
